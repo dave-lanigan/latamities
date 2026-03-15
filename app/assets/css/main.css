@@ -1,0 +1,108 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 40 60% 98%;
+    --foreground: 204 28% 12%;
+    --card: 0 0% 100%;
+    --card-foreground: 204 28% 12%;
+    --primary: 173 76% 28%;
+    --primary-foreground: 40 60% 98%;
+    --secondary: 40 50% 92%;
+    --secondary-foreground: 204 28% 18%;
+    --muted: 40 30% 93%;
+    --muted-foreground: 204 16% 38%;
+    --accent: 349 89% 60%;
+    --accent-foreground: 0 0% 100%;
+    --border: 35 28% 84%;
+    --input: 35 28% 84%;
+    --ring: 173 76% 28%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    @apply scroll-smooth;
+  }
+
+  body {
+    @apply min-h-screen bg-sand-50 bg-map-wash font-sans text-foreground antialiased;
+  }
+
+  button {
+    @apply outline-none;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+.map-image {
+  height: 100%;
+  width: 100%;
+  object-fit: fill;
+  display: block;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.city-marker {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  transform: translate(-50%, -50%);
+  background: transparent;
+  border: none;
+  padding: 0.2rem 0.3rem;
+  cursor: pointer;
+  transition: transform 180ms ease;
+}
+
+.city-marker-dot {
+  flex-shrink: 0;
+  display: block;
+  height: 0.65rem;
+  width: 0.65rem;
+  border: 2px solid rgba(255, 255, 255, 0.95);
+  border-radius: 999px;
+  background: linear-gradient(135deg, #0f766e, #115e59);
+  box-shadow: 0 3px 10px rgba(15, 118, 110, 0.55);
+  transition: background 180ms ease, transform 180ms ease, box-shadow 180ms ease;
+}
+
+.city-marker-label {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #0f172a;
+  text-shadow: 0 0 4px #fff, 0 0 8px #fff, 0 1px 2px rgba(255,255,255,0.9);
+  white-space: nowrap;
+  letter-spacing: 0.025em;
+  line-height: 1;
+  transition: color 180ms ease;
+}
+
+.city-marker:hover .city-marker-dot,
+.city-marker[data-active='true'] .city-marker-dot {
+  background: linear-gradient(135deg, #f43f5e, #fb7185);
+  box-shadow: 0 4px 14px rgba(244, 63, 94, 0.5);
+  transform: scale(1.25);
+}
+
+.city-marker[data-active='true'] .city-marker-label {
+  color: #f43f5e;
+}
+
+.city-marker:hover .city-marker-label {
+  color: #0f766e;
+}
