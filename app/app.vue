@@ -161,8 +161,15 @@ useHead({
 
 <template>
   <div class="fixed inset-0">
-    <!-- Filter icon button + dropdown – top right -->
-    <div class="absolute right-4 top-4 z-40">
+    <!-- Title – top left -->
+    <div class="absolute left-4 top-4 z-40 pointer-events-none select-none">
+      <div class="rounded-2xl bg-white/80 backdrop-blur px-4 py-2 shadow-[0_4px_20px_rgba(15,23,42,0.15)]">
+        <span class="text-lg font-bold tracking-tight text-slate-800">LatAmities</span>
+      </div>
+    </div>
+
+    <!-- Filter icon button + dropdown – top right, hidden when detail panel is open -->
+    <div v-if="!isPanelOpen" class="absolute right-4 top-4 z-40">
       <button
         type="button"
         class="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-[0_4px_20px_rgba(15,23,42,0.18)] transition hover:bg-slate-50"
@@ -211,7 +218,7 @@ useHead({
                 v-model.number="minPopulationM"
                 type="range"
                 min="0"
-                max="25"
+                max="5"
                 step="0.5"
                 class="flex-1 accent-primary"
               />
