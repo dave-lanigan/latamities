@@ -41,6 +41,7 @@ const hoveredRain = ref<{ month: string; mm: number } | null>(null)
 const isCountriesOpen = ref(false)
 const selectedCountry = ref<CountryProfile | null>(null)
 const isMobile = ref(false)
+const minNiceWeatherDays = ref(150)
 
 const checkMobile = () => { isMobile.value = window.innerWidth < 640 }
 onMounted(() => {
@@ -110,6 +111,23 @@ const dismissBubble = () => { selectedCity.value = null }
 const openPanel = () => { isPanelOpen.value = true }
 const closePanel = () => { isPanelOpen.value = false }
 
+const cityPerfectWeatherDays = (city: CityProfile) =>
+  city.snapshot.temperatureByMonth.reduce((total, d, i) => {
+    const f = d.value * 9 / 5 + 32
+    return f >= 75 && f <= 85 ? total + DAYS_IN_MONTH[i] : total
+  }, 0)
+
+const filteredCities = computed(() =>
+  cityProfiles.filter(city => cityPerfectWeatherDays(city) >= minNiceWeatherDays.value)
+)
+
+watch(filteredCities, (cities) => {
+  if (selectedCity.value && !cities.find(c => c.id === selectedCity.value!.id)) {
+    selectedCity.value = null
+    isPanelOpen.value = false
+  }
+})
+
 const availableCountries = computed(() => {
   const names = new Set(cityProfiles.map(c => c.country))
   return [...names].sort().map(name => countryData[name]).filter(Boolean)
@@ -131,13 +149,36 @@ useHead({
 
 <template>
   <div class="fixed inset-0">
+    <!-- Nice weather days filter – top right -->
+    <div class="absolute right-4 top-4 z-40">
+      <div class="flex items-center gap-3 rounded-2xl bg-white px-4 py-3 shadow-[0_4px_20px_rgba(15,23,42,0.18)]">
+        <Sun class="h-4 w-4 shrink-0 text-amber-400" />
+        <div>
+          <label for="nice-weather-filter" class="text-[10px] font-bold uppercase tracking-wide text-slate-400">Nice weather days ≥</label>
+          <div class="mt-1 flex items-center gap-2">
+            <input
+              id="nice-weather-filter"
+              v-model.number="minNiceWeatherDays"
+              type="range"
+              min="0"
+              max="365"
+              step="5"
+              class="w-28 accent-primary"
+            />
+            <span class="w-8 text-right text-sm font-extrabold text-slate-900">{{ minNiceWeatherDays }}</span>
+          </div>
+          <p class="mt-0.5 text-[10px] text-slate-400">{{ filteredCities.length }} / {{ cityProfiles.length }} cities</p>
+        </div>
+      </div>
+    </div>
+
     <MapboxMap
       :map-id="MAP_ID"
       :options="mapOptions"
       style="width: 100%; height: 100%;"
     >
       <MapboxDefaultMarker
-        v-for="city in cityProfiles"
+        v-for="city in filteredCities"
         :key="city.id"
         :marker-id="`marker-${city.id}`"
         :lnglat="city.coordinates"
