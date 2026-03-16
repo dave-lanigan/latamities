@@ -40,6 +40,14 @@ const hoveredTemp = ref<{ month: string; f: number } | null>(null)
 const hoveredRain = ref<{ month: string; mm: number } | null>(null)
 const isCountriesOpen = ref(false)
 const selectedCountry = ref<CountryProfile | null>(null)
+const isMobile = ref(false)
+
+const checkMobile = () => { isMobile.value = window.innerWidth < 640 }
+onMounted(() => {
+  checkMobile()
+  window.addEventListener('resize', checkMobile)
+})
+onUnmounted(() => window.removeEventListener('resize', checkMobile))
 
 let _map: any = null
 
@@ -158,15 +166,25 @@ useHead({
       leave-to-class="scale-95 opacity-0"
     >
       <div
-        v-if="selectedCity && bubblePixelPos && !isPanelOpen"
-        class="pointer-events-none absolute z-20 px-3"
-        :style="{
+        v-if="selectedCity && !isPanelOpen && (isMobile || bubblePixelPos)"
+        :class="isMobile
+          ? 'fixed inset-0 z-20 flex items-center justify-center p-4'
+          : 'pointer-events-none absolute z-20 px-3'"
+        :style="!isMobile && bubblePixelPos ? {
           left: `${bubblePixelPos.x}px`,
           top: `${bubblePixelPos.y}px`,
           transform: 'translate(-50%, calc(-100% - 1.5rem))'
-        }"
+        } : {}"
       >
-          <Card class="pointer-events-auto w-[min(22rem,calc(100vw-2rem))] shadow-[0_20px_50px_rgba(15,23,42,0.28)]">
+        <!-- Mobile backdrop -->
+        <div
+          v-if="isMobile"
+          class="absolute inset-0"
+          @click="dismissBubble"
+        />
+
+        <div :class="isMobile ? 'relative z-10 w-full max-w-sm' : ''">
+          <Card :class="['shadow-[0_20px_50px_rgba(15,23,42,0.28)]', isMobile ? 'pointer-events-auto max-h-[85vh] overflow-y-auto w-full bg-slate-200 backdrop-blur-none' : 'pointer-events-auto w-[min(22rem,calc(100vw-2rem))]']">
             <CardHeader class="gap-2 pb-3">
               <div class="flex items-start justify-between gap-3">
                 <div>
@@ -269,7 +287,8 @@ useHead({
               </Button>
             </CardContent>
           </Card>
-          <div class="mx-auto h-3 w-3 rotate-45 border-b border-r border-white/50 bg-white shadow-[3px_3px_8px_rgba(15,23,42,0.08)]" />
+          <div v-if="!isMobile" class="mx-auto h-3 w-3 rotate-45 border-b border-r border-white/50 bg-white shadow-[3px_3px_8px_rgba(15,23,42,0.08)]" />
+        </div>
       </div>
     </Transition>
 
