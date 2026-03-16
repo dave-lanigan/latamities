@@ -5,6 +5,7 @@ import {
   ChevronLeft,
   ChevronUp,
   CloudRain,
+  Filter,
   Gauge,
   Globe2,
   Mountain,
@@ -12,6 +13,7 @@ import {
   ShieldAlert,
   Sun,
   Trees,
+  Users,
   Wifi,
   X
 } from 'lucide-vue-next'
@@ -42,6 +44,8 @@ const isCountriesOpen = ref(false)
 const selectedCountry = ref<CountryProfile | null>(null)
 const isMobile = ref(false)
 const minNiceWeatherDays = ref(150)
+const minPopulationM = ref(1)
+const isFiltersOpen = ref(false)
 
 const checkMobile = () => { isMobile.value = window.innerWidth < 640 }
 onMounted(() => {
@@ -117,8 +121,16 @@ const cityPerfectWeatherDays = (city: CityProfile) =>
     return f >= 75 && f <= 85 ? total + DAYS_IN_MONTH[i] : total
   }, 0)
 
+const cityPopulationM = (city: CityProfile) => {
+  const parsed = parseFloat(city.snapshot.populationMetro.replace('M', ''))
+  return isNaN(parsed) ? 0 : parsed
+}
+
 const filteredCities = computed(() =>
-  cityProfiles.filter(city => cityPerfectWeatherDays(city) >= minNiceWeatherDays.value)
+  cityProfiles.filter(city =>
+    cityPerfectWeatherDays(city) >= minNiceWeatherDays.value &&
+    cityPopulationM(city) >= minPopulationM.value
+  )
 )
 
 watch(filteredCities, (cities) => {
@@ -149,27 +161,67 @@ useHead({
 
 <template>
   <div class="fixed inset-0">
-    <!-- Nice weather days filter – top right -->
+    <!-- Filter icon button + dropdown – top right -->
     <div class="absolute right-4 top-4 z-40">
-      <div class="flex items-center gap-3 rounded-2xl bg-white px-4 py-3 shadow-[0_4px_20px_rgba(15,23,42,0.18)]">
-        <Sun class="h-4 w-4 shrink-0 text-amber-400" />
-        <div>
-          <label for="nice-weather-filter" class="text-[10px] font-bold uppercase tracking-wide text-slate-400">Nice weather days ≥</label>
-          <div class="mt-1 flex items-center gap-2">
-            <input
-              id="nice-weather-filter"
-              v-model.number="minNiceWeatherDays"
-              type="range"
-              min="0"
-              max="365"
-              step="5"
-              class="w-28 accent-primary"
-            />
-            <span class="w-8 text-right text-sm font-extrabold text-slate-900">{{ minNiceWeatherDays }}</span>
+      <button
+        type="button"
+        class="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-[0_4px_20px_rgba(15,23,42,0.18)] transition hover:bg-slate-50"
+        :aria-label="isFiltersOpen ? 'Close filters' : 'Open filters'"
+        @click="isFiltersOpen = !isFiltersOpen"
+      >
+        <Filter class="h-4 w-4 text-slate-600" />
+      </button>
+
+      <!-- Dropdown panel -->
+      <Transition
+        enter-active-class="transition duration-150 ease-out"
+        enter-from-class="-translate-y-1 opacity-0"
+        enter-to-class="translate-y-0 opacity-100"
+        leave-active-class="transition duration-100 ease-in"
+        leave-from-class="translate-y-0 opacity-100"
+        leave-to-class="-translate-y-1 opacity-0"
+      >
+        <div
+          v-if="isFiltersOpen"
+          class="mt-2 w-56 rounded-2xl bg-white px-4 py-3 shadow-[0_4px_20px_rgba(15,23,42,0.18)]"
+        >
+          <!-- Weather filter row -->
+          <div class="flex items-center gap-3">
+            <Sun class="h-4 w-4 shrink-0 text-amber-400" />
+            <div class="flex flex-1 items-center gap-2">
+              <input
+                id="nice-weather-filter"
+                v-model.number="minNiceWeatherDays"
+                type="range"
+                min="0"
+                max="365"
+                step="5"
+                class="flex-1 accent-primary"
+              />
+              <span class="w-8 text-right text-sm font-extrabold text-slate-900">{{ minNiceWeatherDays }}</span>
+            </div>
           </div>
-          <p class="mt-0.5 text-[10px] text-slate-400">{{ filteredCities.length }} / {{ cityProfiles.length }} cities</p>
+
+          <!-- Population filter row -->
+          <div class="mt-3 flex items-center gap-3">
+            <Users class="h-4 w-4 shrink-0 text-lagoon-500" />
+            <div class="flex flex-1 items-center gap-2">
+              <input
+                id="population-filter"
+                v-model.number="minPopulationM"
+                type="range"
+                min="0"
+                max="25"
+                step="0.5"
+                class="flex-1 accent-primary"
+              />
+              <span class="w-8 text-right text-sm font-extrabold text-slate-900">{{ minPopulationM }}M</span>
+            </div>
+          </div>
+
+          <p class="mt-2 text-[10px] text-slate-400">{{ filteredCities.length }} / {{ cityProfiles.length }} cities</p>
         </div>
-      </div>
+      </Transition>
     </div>
 
     <MapboxMap
