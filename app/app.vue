@@ -149,8 +149,13 @@ useHead({
 
 <template>
   <div class="fixed inset-0">
+    <!-- Floating title – top right -->
+    <div class="absolute right-4 top-4 z-40 pointer-events-none">
+      <span class="text-2xl font-extrabold tracking-tight text-slate-900 drop-shadow-[0_2px_8px_rgba(255,255,255,0.9)]">Latamities</span>
+    </div>
+
     <!-- Nice weather days filter – top right -->
-    <div class="absolute right-4 top-4 z-40">
+    <div class="absolute right-4 top-16 z-40">
       <div class="flex items-center gap-3 rounded-2xl bg-white px-4 py-3 shadow-[0_4px_20px_rgba(15,23,42,0.18)]">
         <Sun class="h-4 w-4 shrink-0 text-amber-400" />
         <div>
