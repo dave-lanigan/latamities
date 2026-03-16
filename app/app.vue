@@ -1,12 +1,16 @@
 <script setup lang="ts">
 import {
   ArrowRight,
+  ChevronDown,
+  ChevronLeft,
+  ChevronUp,
   CloudRain,
   Gauge,
   Globe2,
   Mountain,
   Plane,
   ShieldAlert,
+  Sun,
   Trees,
   Wifi,
   X
@@ -20,60 +24,96 @@ import CardDescription from '~/components/ui/CardDescription.vue'
 import CardHeader from '~/components/ui/CardHeader.vue'
 import CardTitle from '~/components/ui/CardTitle.vue'
 import cityProfiles, { type CityProfile } from '~~/data/city-profiles'
+import countryData, { type CountryProfile } from '~~/data/country-profiles'
 
-type MarkerPosition = { x: number; y: number }
-
-const MAP_BOUNDS = { west: -120, east: -30, north: 33, south: -58 }
-
-const mercatorY = (lat: number) => Math.log(Math.tan(Math.PI / 4 + lat * (Math.PI / 180) / 2))
-
-const projectCoordinates = ([lng, lat]: [number, number]): MarkerPosition => {
-  const x = ((lng - MAP_BOUNDS.west) / (MAP_BOUNDS.east - MAP_BOUNDS.west)) * 100
-  const northY = mercatorY(MAP_BOUNDS.north)
-  const southY = mercatorY(MAP_BOUNDS.south)
-  const y = ((northY - mercatorY(lat)) / (northY - southY)) * 100
-  return { x, y }
+const MAP_ID = 'main'
+const mapOptions = {
+  style: 'mapbox://styles/mapbox/light-v11',
+  center: [-75, -12] as [number, number],
+  zoom: 3
 }
 
 const selectedCity = ref<CityProfile | null>(null)
 const isPanelOpen = ref(false)
-const mapReady = ref(false)
-const mapError = ref<string | null>(null)
+const bubblePixelPos = ref<{ x: number; y: number } | null>(null)
+const hoveredTemp = ref<{ month: string; f: number } | null>(null)
+const hoveredRain = ref<{ month: string; mm: number } | null>(null)
+const isCountriesOpen = ref(false)
+const selectedCountry = ref<CountryProfile | null>(null)
 
-const mapImageUrl = '/api/map-image?width=1280&height=900'
+let _map: any = null
 
-const cityPositions = computed<Record<string, MarkerPosition>>(() =>
-  Object.fromEntries(cityProfiles.map(city => [city.id, projectCoordinates(city.coordinates)]))
-)
+const updateBubblePos = () => {
+  if (!_map || !selectedCity.value) {
+    bubblePixelPos.value = null
+    return
+  }
+  const pt = _map.project(selectedCity.value.coordinates as [number, number])
+  bubblePixelPos.value = { x: pt.x, y: pt.y }
+}
 
-const selectedMarkerPosition = computed(() =>
-  selectedCity.value ? cityPositions.value[selectedCity.value.id] : null
-)
+useMapbox(MAP_ID, (map) => {
+  _map = map
+  map.fitBounds([[-118, -56], [-32, 33]], { padding: 40, duration: 0 })
+  map.on('move', updateBubblePos)
+  map.on('zoom', updateBubblePos)
+})
+
+watch(selectedCity, () => nextTick(updateBubblePos))
+
+const DAYS_IN_MONTH = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
 const selectedClimate = computed(() => {
   if (!selectedCity.value) return null
   const { rainfallByMonth, temperatureByMonth } = selectedCity.value.snapshot
-  const avgTemp = Math.round(temperatureByMonth.reduce((t, d) => t + d.value, 0) / temperatureByMonth.length)
+  const avgTempC = temperatureByMonth.reduce((t, d) => t + d.value, 0) / temperatureByMonth.length
+  const avgTemp = Math.round(avgTempC * 9 / 5 + 32)
   const driestMonth = rainfallByMonth.reduce((a, b) => b.value < a.value ? b : a)
   const wettestMonth = rainfallByMonth.reduce((a, b) => b.value > a.value ? b : a)
-  return { avgTemp, driestMonth, wettestMonth }
+  const perfectWeatherDays = temperatureByMonth.reduce((total, d, i) => {
+    const f = d.value * 9 / 5 + 32
+    return f >= 75 && f <= 85 ? total + DAYS_IN_MONTH[i] : total
+  }, 0)
+  return { avgTemp, driestMonth, wettestMonth, perfectWeatherDays, temperatureByMonth, rainfallByMonth }
 })
+
+const tempColor = (c: number) => {
+  // map °C to a colour: cold blue → cool teal → warm amber → hot red
+  if (c <= 10) return '#93c5fd'       // blue-300
+  if (c <= 16) return '#67e8f9'       // cyan-300
+  if (c <= 20) return '#6ee7b7'       // emerald-300
+  if (c <= 24) return '#fde68a'       // amber-200
+  if (c <= 28) return '#fbbf24'       // amber-400
+  if (c <= 32) return '#f97316'       // orange-500
+  return '#ef4444'                    // red-500
+}
 
 const selectCity = (city: CityProfile) => {
   if (selectedCity.value?.id === city.id) {
     selectedCity.value = null
     isPanelOpen.value = false
-  } else {
-    selectedCity.value = city
+    return
   }
+  selectedCity.value = city
+  nextTick(updateBubblePos)
 }
 
 const dismissBubble = () => { selectedCity.value = null }
 const openPanel = () => { isPanelOpen.value = true }
 const closePanel = () => { isPanelOpen.value = false }
 
-const markMapLoaded = () => { mapReady.value = true; mapError.value = null }
-const markMapErrored = () => { mapError.value = 'Map image failed to load. Check server logs.' }
+const availableCountries = computed(() => {
+  const names = new Set(cityProfiles.map(c => c.country))
+  return [...names].sort().map(name => countryData[name]).filter(Boolean)
+})
+
+const toggleCountries = () => {
+  isCountriesOpen.value = !isCountriesOpen.value
+  if (!isCountriesOpen.value) selectedCountry.value = null
+}
+
+const fmtGdp = (b: number) => b >= 1000 ? `$${(b / 1000).toFixed(1)}T` : `$${b}B`
+const fmtPc = (n: number) => `$${n >= 1000 ? (n / 1000).toFixed(1) + 'k' : n}`
 
 useHead({
   title: 'Latamities',
@@ -82,74 +122,50 @@ useHead({
 </script>
 
 <template>
-  <div class="fixed inset-0 overflow-hidden">
-    <!-- Full-screen map -->
-    <div class="relative h-full w-full">
-      <img
-        :src="mapImageUrl"
-        alt="Map of Latin America"
-        class="map-image"
-        draggable="false"
-        @load="markMapLoaded"
-        @error="markMapErrored"
+  <div class="fixed inset-0">
+    <MapboxMap
+      :map-id="MAP_ID"
+      :options="mapOptions"
+      style="width: 100%; height: 100%;"
+    >
+      <MapboxDefaultMarker
+        v-for="city in cityProfiles"
+        :key="city.id"
+        :marker-id="`marker-${city.id}`"
+        :lnglat="city.coordinates"
       >
+        <template #marker>
+          <button
+            type="button"
+            class="city-marker"
+            :data-active="selectedCity?.id === city.id ? 'true' : 'false'"
+            :aria-label="`Show ${city.name}`"
+            @click="selectCity(city)"
+          >
+            <span class="city-marker-dot" />
+            <span class="city-marker-label">{{ city.name }}</span>
+          </button>
+        </template>
+      </MapboxDefaultMarker>
+    </MapboxMap>
 
-      <!-- City markers: only rendered once image has loaded -->
-      <div v-if="mapReady" class="absolute inset-0">
-        <button
-          v-for="city in cityProfiles"
-          :key="city.id"
-          type="button"
-          class="city-marker"
-          :data-active="selectedCity?.id === city.id ? 'true' : 'false'"
-          :aria-label="`Show ${city.name}`"
-          :style="{ left: `${cityPositions[city.id].x}%`, top: `${cityPositions[city.id].y}%` }"
-          @click="selectCity(city)"
-        >
-          <span class="city-marker-dot" />
-          <span class="city-marker-label">{{ city.name }}</span>
-        </button>
-      </div>
-
-      <!-- Loading state -->
+    <Transition
+      enter-active-class="transition duration-200 ease-out"
+      enter-from-class="scale-95 opacity-0"
+      enter-to-class="scale-100 opacity-100"
+      leave-active-class="transition duration-150 ease-in"
+      leave-from-class="scale-100 opacity-100"
+      leave-to-class="scale-95 opacity-0"
+    >
       <div
-        v-if="!mapReady && !mapError"
-        class="absolute inset-0 flex items-center justify-center bg-slate-900/20 backdrop-blur-[2px]"
+        v-if="selectedCity && bubblePixelPos && !isPanelOpen"
+        class="pointer-events-none absolute z-20 px-3"
+        :style="{
+          left: `${bubblePixelPos.x}px`,
+          top: `${bubblePixelPos.y}px`,
+          transform: 'translate(-50%, calc(-100% - 1.5rem))'
+        }"
       >
-        <p class="rounded-2xl bg-white/90 px-6 py-4 text-sm font-bold text-slate-700 shadow-lg">
-          Loading map…
-        </p>
-      </div>
-
-      <!-- Error state -->
-      <div
-        v-if="mapError"
-        class="absolute inset-0 flex items-center justify-center bg-slate-900/30 p-8 backdrop-blur-[2px]"
-      >
-        <div class="max-w-sm rounded-2xl bg-white/95 p-6 shadow-xl">
-          <p class="text-xs font-bold uppercase tracking-widest text-red-500">Map error</p>
-          <p class="mt-2 text-sm leading-6 text-slate-700">{{ mapError }}</p>
-        </div>
-      </div>
-
-      <!-- Snapshot bubble — appears above the clicked marker -->
-      <Transition
-        enter-active-class="transition duration-200 ease-out"
-        enter-from-class="scale-95 opacity-0"
-        enter-to-class="scale-100 opacity-100"
-        leave-active-class="transition duration-150 ease-in"
-        leave-from-class="scale-100 opacity-100"
-        leave-to-class="scale-95 opacity-0"
-      >
-        <div
-          v-if="selectedCity && selectedMarkerPosition && !isPanelOpen"
-          class="pointer-events-none absolute z-20 px-3"
-          :style="{
-            left: `${selectedMarkerPosition.x}%`,
-            top: `${selectedMarkerPosition.y}%`,
-            transform: 'translate(-50%, calc(-100% - 1.5rem))'
-          }"
-        >
           <Card class="pointer-events-auto w-[min(22rem,calc(100vw-2rem))] shadow-[0_20px_50px_rgba(15,23,42,0.28)]">
             <CardHeader class="gap-2 pb-3">
               <div class="flex items-start justify-between gap-3">
@@ -168,7 +184,12 @@ useHead({
               <CardDescription class="text-sm leading-5">{{ selectedCity.details.tagline }}</CardDescription>
             </CardHeader>
             <CardContent class="space-y-3 pb-4">
-              <div class="grid grid-cols-3 gap-1.5">
+              <div class="grid grid-cols-2 gap-1.5">
+                <div class="rounded-xl bg-sand-50 p-2.5 text-center">
+                  <p class="text-[10px] font-bold uppercase tracking-wide text-slate-400">Population</p>
+                  <p class="mt-1 text-base font-extrabold text-slate-900">{{ selectedCity.snapshot.populationMetro }}</p>
+                  <p class="text-[10px] text-slate-400">metro</p>
+                </div>
                 <div class="rounded-xl bg-sand-50 p-2.5 text-center">
                   <p class="text-[10px] font-bold uppercase tracking-wide text-slate-400">Download</p>
                   <p class="mt-1 text-base font-extrabold text-slate-900">{{ selectedCity.snapshot.internet.downloadMbps }}</p>
@@ -176,28 +197,82 @@ useHead({
                 </div>
                 <div class="rounded-xl bg-sand-50 p-2.5 text-center">
                   <p class="text-[10px] font-bold uppercase tracking-wide text-slate-400">Avg temp</p>
-                  <p class="mt-1 text-base font-extrabold text-slate-900">{{ selectedClimate?.avgTemp }}°C</p>
+                  <p class="mt-1 text-base font-extrabold text-slate-900">{{ selectedClimate?.avgTemp }}°F</p>
                   <p class="text-[10px] text-slate-400">&nbsp;</p>
                 </div>
                 <div class="rounded-xl bg-sand-50 p-2.5 text-center">
                   <p class="text-[10px] font-bold uppercase tracking-wide text-slate-400">Altitude</p>
-                  <p class="mt-1 text-base font-extrabold text-slate-900">{{ selectedCity.snapshot.altitudeM }}</p>
-                  <p class="text-[10px] text-slate-400">m</p>
+                  <p class="mt-1 text-base font-extrabold text-slate-900">{{ Math.round(selectedCity.snapshot.altitudeM * 3.28084) }}</p>
+                  <p class="text-[10px] text-slate-400">ft</p>
+                </div>
+                <div class="col-span-2 rounded-xl bg-sand-50 p-2.5 text-center">
+                  <p class="text-[10px] font-bold uppercase tracking-wide text-slate-400">Perfect weather days</p>
+                  <p class="mt-1 text-base font-extrabold text-slate-900">{{ selectedClimate?.perfectWeatherDays }}</p>
+                  <p class="text-[10px] text-slate-400">75–85°F per year</p>
                 </div>
               </div>
+
+              <!-- Temperature bar -->
+              <div>
+                <p class="mb-1 text-[10px] font-bold uppercase tracking-wide text-slate-400">Avg temperature</p>
+                <div class="flex gap-px">
+                  <div
+                    v-for="d in selectedClimate?.temperatureByMonth"
+                    :key="d.month"
+                    class="group relative flex-1 cursor-default rounded-sm"
+                    style="height:28px"
+                    :style="{ backgroundColor: tempColor(d.value) }"
+                    @mouseenter="hoveredTemp = { month: d.month, f: Math.round(d.value * 9/5 + 32) }"
+                    @mouseleave="hoveredTemp = null"
+                  >
+                    <div
+                      v-if="hoveredTemp?.month === d.month"
+                      class="pointer-events-none absolute bottom-full left-1/2 z-50 mb-1 -translate-x-1/2 whitespace-nowrap rounded bg-slate-800 px-1.5 py-0.5 text-[10px] font-semibold text-white shadow"
+                    >{{ d.month }} {{ hoveredTemp.f }}°F</div>
+                  </div>
+                </div>
+                <div class="mt-0.5 flex justify-between px-px">
+                  <span class="text-[9px] text-slate-400">J</span>
+                  <span class="text-[9px] text-slate-400">J</span>
+                  <span class="text-[9px] text-slate-400">D</span>
+                </div>
+              </div>
+
+              <!-- Rainfall bar -->
+              <div>
+                <p class="mb-1 text-[10px] font-bold uppercase tracking-wide text-slate-400">Avg rainfall</p>
+                <div class="flex items-end gap-px" style="height:32px">
+                  <div
+                    v-for="d in selectedClimate?.rainfallByMonth"
+                    :key="d.month"
+                    class="group relative flex-1 cursor-default rounded-sm bg-blue-400"
+                    :style="{ height: `${Math.round((d.value / Math.max(...(selectedClimate?.rainfallByMonth.map(r => r.value) ?? [1]))) * 100)}%`, minHeight: '2px' }"
+                    @mouseenter="hoveredRain = { month: d.month, mm: d.value }"
+                    @mouseleave="hoveredRain = null"
+                  >
+                    <div
+                      v-if="hoveredRain?.month === d.month"
+                      class="pointer-events-none absolute bottom-full left-1/2 z-50 mb-1 -translate-x-1/2 whitespace-nowrap rounded bg-slate-800 px-1.5 py-0.5 text-[10px] font-semibold text-white shadow"
+                    >{{ d.month }} {{ d.value }}mm</div>
+                  </div>
+                </div>
+                <div class="mt-0.5 flex justify-between px-px">
+                  <span class="text-[9px] text-slate-400">J</span>
+                  <span class="text-[9px] text-slate-400">J</span>
+                  <span class="text-[9px] text-slate-400">D</span>
+                </div>
+              </div>
+
               <Button class="w-full justify-center" size="sm" @click="openPanel">
                 Full profile
                 <ArrowRight class="h-3.5 w-3.5" />
               </Button>
             </CardContent>
           </Card>
-          <!-- Pointer triangle -->
           <div class="mx-auto h-3 w-3 rotate-45 border-b border-r border-white/50 bg-white shadow-[3px_3px_8px_rgba(15,23,42,0.08)]" />
-        </div>
-      </Transition>
-    </div>
+      </div>
+    </Transition>
 
-    <!-- Detail panel — slides in from the right, overlays the map -->
     <Transition
       enter-active-class="transition-transform duration-300 ease-out"
       enter-from-class="translate-x-full"
@@ -210,7 +285,6 @@ useHead({
         v-if="isPanelOpen && selectedCity"
         class="absolute right-0 top-0 z-30 h-full w-[min(30rem,100vw)] overflow-y-auto bg-white shadow-[-8px_0_40px_rgba(15,23,42,0.18)]"
       >
-        <!-- Sticky header -->
         <div class="sticky top-0 z-10 flex items-center justify-between border-b border-slate-100 bg-white px-6 py-5">
           <div>
             <p class="text-xs font-bold uppercase tracking-[0.2em] text-primary">Profile</p>
@@ -245,7 +319,7 @@ useHead({
               <div class="flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.18em] text-slate-500">
                 <Mountain class="h-3.5 w-3.5" /> Terrain
               </div>
-              <p class="mt-2 text-lg font-extrabold text-slate-900">{{ selectedCity.snapshot.altitudeM }} m</p>
+              <p class="mt-2 text-lg font-extrabold text-slate-900">{{ Math.round(selectedCity.snapshot.altitudeM * 3.28084) }} ft</p>
               <p class="mt-1 text-xs leading-5 text-slate-500">{{ selectedCity.snapshot.landscape }}</p>
             </div>
 
@@ -267,6 +341,14 @@ useHead({
               </div>
               <p class="mt-2 text-sm font-bold leading-6 text-slate-900">{{ selectedCity.details.pace }}</p>
               <p class="mt-1 text-xs text-slate-500">Pop. {{ selectedCity.snapshot.populationMetro }}</p>
+            </div>
+
+            <div class="col-span-2 rounded-2xl bg-sand-50 p-4">
+              <div class="flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.18em] text-slate-500">
+                <Sun class="h-3.5 w-3.5" /> Perfect weather days
+              </div>
+              <p class="mt-2 text-2xl font-extrabold text-slate-900">{{ selectedClimate?.perfectWeatherDays }} <span class="text-sm font-normal text-slate-500">days / year</span></p>
+              <p class="mt-1 text-xs text-slate-500">Days with avg temperature between 75°F and 85°F</p>
             </div>
           </div>
 
@@ -319,5 +401,107 @@ useHead({
         </div>
       </div>
     </Transition>
+
+    <!-- Floating Countries Widget -->
+    <div class="absolute bottom-6 left-1/2 z-40 -translate-x-1/2 flex flex-col items-center">
+      <Transition
+        enter-active-class="transition duration-200 ease-out"
+        enter-from-class="translate-y-2 opacity-0"
+        enter-to-class="translate-y-0 opacity-100"
+        leave-active-class="transition duration-150 ease-in"
+        leave-from-class="translate-y-0 opacity-100"
+        leave-to-class="translate-y-2 opacity-0"
+      >
+        <div
+          v-if="isCountriesOpen"
+          class="mb-2 w-72 overflow-hidden rounded-2xl bg-white shadow-[0_20px_50px_rgba(15,23,42,0.28)]"
+        >
+          <!-- Country list -->
+          <div v-if="!selectedCountry">
+            <div class="border-b border-slate-100 px-4 py-3">
+              <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">Countries on map</p>
+            </div>
+            <div class="max-h-72 overflow-y-auto">
+              <button
+                v-for="c in availableCountries"
+                :key="c.id"
+                class="flex w-full items-center gap-3 px-4 py-2.5 text-left transition hover:bg-slate-50"
+                @click="selectedCountry = c"
+              >
+                <span class="text-xl leading-none">{{ c.flag }}</span>
+                <span class="text-sm font-semibold text-slate-800">{{ c.name }}</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Country detail -->
+          <div v-else>
+            <div class="flex items-center gap-3 border-b border-slate-100 px-3 py-3">
+              <button
+                class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-slate-400 transition hover:bg-slate-100 hover:text-slate-900"
+                aria-label="Back to countries"
+                @click="selectedCountry = null"
+              >
+                <ChevronLeft class="h-4 w-4" />
+              </button>
+              <span class="text-2xl leading-none">{{ selectedCountry.flag }}</span>
+              <div>
+                <p class="text-sm font-extrabold text-slate-900">{{ selectedCountry.name }}</p>
+                <p class="text-[11px] text-slate-500">{{ selectedCountry.capital }}</p>
+              </div>
+            </div>
+            <div class="p-4 space-y-4">
+              <div class="grid grid-cols-2 gap-3">
+                <div class="rounded-xl bg-sand-50 p-3 text-center">
+                  <p class="text-[10px] font-bold uppercase tracking-wide text-slate-400">Population</p>
+                  <p class="mt-1 text-base font-extrabold text-slate-900">{{ selectedCountry.populationM }}M</p>
+                </div>
+                <div class="rounded-xl bg-sand-50 p-3 text-center">
+                  <p class="text-[10px] font-bold uppercase tracking-wide text-slate-400">Median Age</p>
+                  <p class="mt-1 text-base font-extrabold text-slate-900">{{ selectedCountry.medianAge }} <span class="text-xs font-normal text-slate-500">yrs</span></p>
+                </div>
+              </div>
+              <div>
+                <p class="mb-2 text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">Economy</p>
+                <div class="space-y-1.5">
+                  <div class="flex justify-between text-sm">
+                    <span class="text-slate-500">GDP</span>
+                    <span class="font-semibold text-slate-900">{{ fmtGdp(selectedCountry.gdpB) }}</span>
+                  </div>
+                  <div class="flex justify-between text-sm">
+                    <span class="text-slate-500">GDP (PPP)</span>
+                    <span class="font-semibold text-slate-900">{{ fmtGdp(selectedCountry.gdpPppB) }}</span>
+                  </div>
+                  <div class="h-px bg-slate-100" />
+                  <div class="flex justify-between text-sm">
+                    <span class="text-slate-500">GDP per Capita</span>
+                    <span class="font-semibold text-slate-900">{{ fmtPc(selectedCountry.gdpPerCapita) }}</span>
+                  </div>
+                  <div class="flex justify-between text-sm">
+                    <span class="text-slate-500">GDP per Capita (PPP)</span>
+                    <span class="font-semibold text-slate-900">{{ fmtPc(selectedCountry.gdpPerCapitaPpp) }}</span>
+                  </div>
+                  <div class="flex justify-between text-sm">
+                    <span class="text-slate-500">PPP to Nominal Ratio</span>
+                    <span class="font-semibold text-slate-900">{{ (selectedCountry.gdpPerCapitaPpp / selectedCountry.gdpPerCapita).toFixed(1) }}×</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Transition>
+
+      <button
+        class="flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-[0_4px_20px_rgba(15,23,42,0.18)] transition hover:shadow-[0_4px_24px_rgba(15,23,42,0.26)] hover:text-slate-900"
+        @click="toggleCountries"
+      >
+        <Globe2 class="h-4 w-4" />
+        Countries
+        <ChevronUp v-if="isCountriesOpen" class="h-3.5 w-3.5 text-slate-400" />
+        <ChevronDown v-else class="h-3.5 w-3.5 text-slate-400" />
+      </button>
+    </div>
+
   </div>
 </template>

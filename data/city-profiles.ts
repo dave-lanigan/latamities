@@ -110,6 +110,102 @@ const climate = {
   sanSalvadorWarm: {
     temperatureByMonth: series([31, 32, 33, 33, 31, 30, 30, 30, 30, 30, 30, 30]),
     rainfallByMonth: series([6, 5, 10, 42, 192, 300, 285, 265, 305, 250, 60, 12])
+  },
+  cuencaHighland: {
+    temperatureByMonth: series([17, 17, 16, 16, 16, 15, 15, 16, 16, 16, 16, 17]),
+    rainfallByMonth: series([50, 65, 120, 110, 80, 40, 30, 35, 60, 100, 90, 65])
+  },
+  arequipaHighland: {
+    temperatureByMonth: series([17, 17, 16, 15, 13, 12, 11, 12, 14, 16, 17, 17]),
+    rainfallByMonth: series([28, 24, 16, 4, 1, 0, 0, 1, 2, 5, 12, 24])
+  },
+  salvadorCoastal: {
+    temperatureByMonth: series([28, 28, 27, 27, 26, 25, 25, 25, 26, 27, 27, 28]),
+    rainfallByMonth: series([70, 80, 170, 300, 285, 190, 150, 100, 85, 90, 120, 90])
+  },
+  cartagenaCaribbean: {
+    temperatureByMonth: series([31, 31, 31, 32, 32, 31, 31, 31, 31, 31, 31, 31]),
+    rainfallByMonth: series([15, 5, 3, 5, 70, 130, 145, 155, 165, 165, 120, 40])
+  },
+  cuscoAltitude: {
+    temperatureByMonth: series([13, 13, 13, 12, 11, 9, 9, 10, 12, 14, 14, 13]),
+    rainfallByMonth: series([145, 120, 100, 45, 8, 2, 2, 5, 22, 60, 95, 130])
+  },
+  trujilloCoastal: {
+    temperatureByMonth: series([24, 25, 24, 22, 20, 18, 17, 17, 18, 19, 21, 23]),
+    rainfallByMonth: series([0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0])
+  },
+  bucaramangaClimate: {
+    temperatureByMonth: series([25, 25, 25, 24, 24, 24, 25, 26, 25, 24, 24, 25]),
+    rainfallByMonth: series([55, 80, 120, 165, 135, 75, 50, 50, 95, 155, 140, 70])
+  },
+  pereiraCoffee: {
+    temperatureByMonth: series([22, 22, 21, 21, 22, 22, 22, 22, 22, 22, 22, 22]),
+    rainfallByMonth: series([115, 135, 195, 215, 175, 100, 75, 80, 135, 195, 205, 140])
+  },
+  sanJoseHighland: {
+    temperatureByMonth: series([22, 23, 24, 25, 26, 26, 25, 26, 26, 25, 24, 22]),
+    rainfallByMonth: series([15, 5, 10, 40, 215, 235, 185, 255, 285, 295, 145, 30])
+  },
+  cordobaArgentina: {
+    temperatureByMonth: series([27, 26, 24, 20, 17, 13, 12, 14, 17, 21, 24, 26]),
+    rainfallByMonth: series([85, 75, 90, 55, 35, 20, 15, 15, 28, 55, 75, 80])
+  },
+  manausEquatorial: {
+    temperatureByMonth: series([28, 28, 28, 28, 28, 28, 28, 29, 30, 30, 30, 29]),
+    rainfallByMonth: series([290, 290, 310, 285, 205, 100, 65, 45, 65, 100, 140, 205])
+  },
+  beloHorizonteClimate: {
+    temperatureByMonth: series([26, 27, 26, 24, 22, 20, 20, 22, 24, 25, 25, 26]),
+    rainfallByMonth: series([270, 215, 175, 60, 25, 10, 8, 12, 40, 110, 185, 250])
+  },
+  florianopolisClimate: {
+    temperatureByMonth: series([28, 28, 27, 24, 21, 19, 19, 20, 21, 23, 25, 27]),
+    rainfallByMonth: series([185, 175, 155, 110, 115, 90, 80, 75, 115, 140, 150, 165])
+  },
+  fortalezaClimate: {
+    temperatureByMonth: series([30, 30, 30, 29, 29, 29, 29, 29, 30, 30, 30, 30]),
+    rainfallByMonth: series([210, 295, 355, 340, 195, 75, 30, 15, 10, 15, 25, 85])
+  },
+  recifeClimate: {
+    temperatureByMonth: series([30, 30, 30, 29, 28, 27, 27, 27, 28, 29, 30, 30]),
+    rainfallByMonth: series([100, 125, 210, 320, 360, 340, 270, 190, 115, 65, 55, 70])
+  },
+  meridaClimate: {
+    temperatureByMonth: series([24, 26, 29, 33, 34, 33, 32, 33, 32, 30, 27, 24]),
+    rainfallByMonth: series([25, 18, 10, 18, 75, 155, 145, 145, 165, 115, 40, 28])
+  },
+  leonMexicoClimate: {
+    temperatureByMonth: series([18, 20, 23, 26, 28, 27, 25, 25, 24, 22, 20, 18]),
+    rainfallByMonth: series([8, 5, 5, 8, 25, 135, 190, 175, 135, 55, 12, 6])
+  },
+  tegucigalpaClimate: {
+    temperatureByMonth: series([24, 25, 27, 28, 28, 27, 26, 27, 26, 25, 24, 23]),
+    rainfallByMonth: series([8, 5, 8, 22, 105, 145, 75, 95, 145, 120, 40, 12])
+  },
+  guatemalaCityClimate: {
+    temperatureByMonth: series([19, 20, 22, 23, 23, 22, 22, 22, 22, 21, 20, 19]),
+    rainfallByMonth: series([5, 3, 10, 40, 155, 250, 200, 215, 240, 175, 40, 10])
+  },
+  managuaClimate: {
+    temperatureByMonth: series([31, 32, 34, 35, 35, 32, 31, 31, 31, 31, 31, 31]),
+    rainfallByMonth: series([4, 2, 3, 12, 130, 200, 105, 145, 190, 175, 55, 10])
+  },
+  sanPedroSulaClimate: {
+    temperatureByMonth: series([24, 25, 27, 28, 28, 27, 27, 27, 27, 26, 25, 24]),
+    rainfallByMonth: series([35, 20, 18, 40, 110, 135, 95, 100, 145, 145, 80, 40])
+  },
+  valparaisoClimate: {
+    temperatureByMonth: series([20, 20, 18, 16, 13, 11, 10, 11, 13, 15, 17, 19]),
+    rainfallByMonth: series([2, 2, 5, 12, 45, 85, 95, 70, 35, 14, 6, 3])
+  },
+  concepcionClimate: {
+    temperatureByMonth: series([19, 19, 17, 14, 11, 9, 8, 9, 11, 14, 16, 18]),
+    rainfallByMonth: series([38, 35, 55, 95, 155, 190, 210, 175, 125, 80, 55, 42])
+  },
+  mendozaClimate: {
+    temperatureByMonth: series([29, 28, 25, 20, 15, 11, 10, 13, 17, 21, 25, 28]),
+    rainfallByMonth: series([28, 24, 18, 10, 8, 6, 5, 5, 8, 12, 18, 24])
   }
 }
 
@@ -652,6 +748,680 @@ const cityProfilesByName: Record<string, CityProfile> = {
       pace: 'Efficient, pragmatic, and increasingly polished.',
       airport: 'SAL is one of Central America’s more useful regional hubs.',
       timeToNature: 'Volcano viewpoints and surf breaks are reachable within an hour or so.'
+    }  },
+  Cuenca: {
+    id: 'cuenca',
+    name: 'Cuenca',
+    country: 'Ecuador',
+    coordinates: [-79.0045, -2.8974],
+    snapshot: {
+      populationMetro: '0.7M',
+      altitudeM: 2550,
+      landscape: 'Andean basin with four rivers',
+      purchasingPowerRank: 21,
+      internet: { downloadMbps: 82, uploadMbps: 30, latencyMs: 28 },
+      ...climate.cuencaHighland
+    },
+    details: {
+      tagline: "Ecuador's most handsome colonial city, with a spring climate and relaxed pace at altitude.",
+      overview: 'Cuenca draws a disproportionate number of expats and long-stay visitors for its size. The historic center is a UNESCO site, the climate is among the most comfortable in the Andes, and the cost of living remains low. It rewards people who want beauty, calm, and a strong expat social layer without the friction of a larger capital.',
+      bestFor: ['Long-stay apartment living', 'Cooler highland climate', 'Architecture and café culture'],
+      watchouts: ['Altitude needs acclimatization', 'Internet speeds are slower than major capitals', 'Nightlife and event density are limited'],
+      neighborhoods: ['El Centro Histórico', 'El Ejido', 'Ordoñez Lasso', 'Challuabamba'],
+      mobility: 'Walking covers the historic core easily; taxis and ride apps handle wider movement.',
+      climateNote: 'Two mild rainy seasons with dry spells in summer and early winter.',
+      workstyle: 'Great for focused apartment work with a good café rotation in the historic district.',
+      pace: 'Slow, beautiful, and very easy to settle into.',
+      airport: 'CUE with regional connections to Quito and Guayaquil.',
+      timeToNature: 'Mountain trails and nature reserves are easy day outings.'
+    }
+  },
+  Arequipa: {
+    id: 'arequipa',
+    name: 'Arequipa',
+    country: 'Peru',
+    coordinates: [-71.5375, -16.3988],
+    snapshot: {
+      populationMetro: '1.2M',
+      altitudeM: 2336,
+      landscape: 'Volcanic highland valley',
+      purchasingPowerRank: 22,
+      internet: { downloadMbps: 95, uploadMbps: 36, latencyMs: 26 },
+      ...climate.arequipaHighland
+    },
+    details: {
+      tagline: 'The White City — a striking colonial highland with volcano views and dry sunny days.',
+      overview: "Arequipa is one of Peru's most livable cities, built largely from white volcanic sillar stone and framed by three volcanoes including El Misti. The Yanahuara and Cayma districts offer calm residential life, while the historic center gives you strong café and restaurant options. A much gentler altitude than Cusco with similar Andean character.",
+      bestFor: ['Sunny dry climate', 'Andean atmosphere without Cusco altitude', 'Colonial architecture fans'],
+      watchouts: ['Altitude still affects some visitors', 'Smaller expat and nomad scene than Lima', 'Evenings can get cold year-round'],
+      neighborhoods: ['Yanahuara', 'Cayma', 'Miraflores', 'San Lázaro'],
+      mobility: 'Taxis and ride apps cover daily needs; the compact historic core is walkable.',
+      climateNote: 'Very dry and sunny with a brief rainy season from December to March.',
+      workstyle: 'Solid apartment-first city with a growing café scene in the historic center.',
+      pace: 'Unhurried, proud, and deeply local.',
+      airport: 'AQP with connections to Lima and Cusco.',
+      timeToNature: 'El Misti hikes and Colca Canyon are serious nature options within a short drive.'
+    }
+  },
+  Puebla: {
+    id: 'puebla',
+    name: 'Puebla',
+    country: 'Mexico',
+    coordinates: [-98.2063, 19.0414],
+    snapshot: {
+      populationMetro: '3.2M',
+      altitudeM: 2135,
+      landscape: 'Highland valley near Popocatépetl',
+      purchasingPowerRank: 23,
+      internet: { downloadMbps: 135, uploadMbps: 52, latencyMs: 19 },
+      ...climate.mexicanHighland
+    },
+    details: {
+      tagline: 'A grand colonial city with outstanding food, lower costs, and easy Mexico City proximity.',
+      overview: "Puebla is often treated as a day trip from Mexico City, but it is a compelling standalone base with a UNESCO historic center, one of Mexico's finest food traditions, and a lower cost of living than the capital. The Analco, Centro Histórico, and Cholula neighborhoods give remote workers pleasant walkable options.",
+      bestFor: ['Mexican food culture', 'Colonial city atmosphere', 'Lower cost than CDMX'],
+      watchouts: ['Nomad infrastructure is thinner than Mexico City', 'Smog from Popocatépetl activity can occur', 'Rainy season afternoons are heavy'],
+      neighborhoods: ['Centro Histórico', 'Analco', 'Cholula', 'La Paz'],
+      mobility: 'Rideshare works well across the city; Cholula is walkable on its own.',
+      climateNote: 'Dry and bright October to May, then afternoon rains through the summer.',
+      workstyle: 'Strong home-office and café culture, especially near the university zones.',
+      pace: 'Proud, culinary-forward, and slightly quieter than Guadalajara.',
+      airport: 'PBC is small; most travelers use MEX or the Puebla-CDMX express highway.',
+      timeToNature: 'Popocatépetl views are immediate and Malinche national park is close.'
+    }
+  },
+  Salvador: {
+    id: 'salvador',
+    name: 'Salvador',
+    country: 'Brazil',
+    coordinates: [-38.5014, -12.9714],
+    snapshot: {
+      populationMetro: '4.0M',
+      altitudeM: 8,
+      landscape: 'Coastal peninsula with bays and cliffs',
+      purchasingPowerRank: 24,
+      internet: { downloadMbps: 148, uploadMbps: 62, latencyMs: 22 },
+      ...climate.salvadorCoastal
+    },
+    details: {
+      tagline: 'The Afro-Brazilian capital of culture — electric, warm, and unlike anywhere else in the country.',
+      overview: "Salvador is Brazil's most culturally distinctive city, with the strongest African heritage in the country, outstanding music and food, and a coastal setting of real drama. Barra and Graça offer comfortable modern bases while the Pelourinho gives a vivid historic quarter. It suits people who want immersion over infrastructure polish.",
+      bestFor: ['Music and cultural depth', 'Warm coastal living', 'Brazilian food and nightlife'],
+      watchouts: ['Rain season (June-August) is persistent', 'Digital nomad infrastructure is thinner than São Paulo or Rio', 'Street awareness matters outside main tourist zones'],
+      neighborhoods: ['Barra', 'Graça', 'Rio Vermelho', 'Pelourinho'],
+      mobility: 'Rideshare is practical for most trips; the Pelourinho area is best on foot.',
+      climateNote: 'Warm year-round with a pronounced wet season from April through August.',
+      workstyle: 'Better as an apartment city than a café-hopping base; coworking is growing but limited.',
+      pace: 'Vivid, musical, and deeply rhythmic.',
+      airport: 'SSA with good domestic coverage and some international routes.',
+      timeToNature: 'Beaches, reefs, and the Chapada Diamantina highlands are all accessible.'
+    }
+  },
+  Cartagena: {
+    id: 'cartagena',
+    name: 'Cartagena',
+    country: 'Colombia',
+    coordinates: [-75.5136, 10.3997],
+    snapshot: {
+      populationMetro: '1.3M',
+      altitudeM: 2,
+      landscape: 'Caribbean coast and historic walled city',
+      purchasingPowerRank: 25,
+      internet: { downloadMbps: 98, uploadMbps: 38, latencyMs: 25 },
+      ...climate.cartagenaCaribbean
+    },
+    details: {
+      tagline: 'The Caribbean jewel — colonial walls, turquoise water, and relentless heat.',
+      overview: "Cartagena is Colombia's most photogenic city and a serious tourist magnet, which cuts both ways. The walled old city is genuinely beautiful for short stays, but for longer remote work the Bocagrande and Getsemani districts offer more practical living. Heat and humidity are constant factors.",
+      bestFor: ['Short coastal stays', 'Architecture and history', 'Weekend beach access'],
+      watchouts: ['Heat and humidity are intense year-round', 'Tourist pricing in the old city', 'Fewer coworking options than Bogota or Medellin'],
+      neighborhoods: ['Centro Histórico', 'Getsemaní', 'Bocagrande', 'Manga'],
+      mobility: 'Taxis and rideshare are the practical default; the old city is compact on foot.',
+      climateNote: 'Hot all year with a wetter second half; the dry season from December to April is the most comfortable.',
+      workstyle: 'Best from apartments with strong AC; café culture is limited by the heat.',
+      pace: 'Tourist-forward, festive, and intensely warm.',
+      airport: 'CTG with solid domestic links and growing Caribbean routes.',
+      timeToNature: 'The Rosario Islands and nearby beaches are easy boat trips.'
+    }
+  },
+  Cusco: {
+    id: 'cusco',
+    name: 'Cusco',
+    country: 'Peru',
+    coordinates: [-71.9675, -13.5266],
+    snapshot: {
+      populationMetro: '0.5M',
+      altitudeM: 3399,
+      landscape: 'High Andean valley, gateway to Machu Picchu',
+      purchasingPowerRank: 26,
+      internet: { downloadMbps: 72, uploadMbps: 26, latencyMs: 32 },
+      ...climate.cuscoAltitude
+    },
+    details: {
+      tagline: 'Inca capital at altitude — extraordinary history, brutal acclimatization.',
+      overview: "Cusco is not a plug-and-play remote work base, but for travelers who can handle the altitude it offers a unique and deeply rewarding stay. The dry season from May to October is when the city is at its best. The San Blas and Cusco Centro neighborhoods give good access to cafés and the extraordinary historic fabric.",
+      bestFor: ['Cultural immersion', 'Dry season base for Machu Picchu trips', 'People who thrive at altitude'],
+      watchouts: ['Altitude sickness is a real risk above 3,000m', 'Tourism concentration raises prices', 'Cold nights year-round and cold days in winter'],
+      neighborhoods: ['San Blas', 'Centro', 'San Sebastián', 'Wanchaq'],
+      mobility: 'Taxis and walking cover most daily movement; the center is compact.',
+      climateNote: 'Dry and sunny May through October; rainy and mild November through April.',
+      workstyle: 'Small café scene works for shorter stays; apartment internet is adequate.',
+      pace: 'Tourist-paced in the center, deeply local just outside it.',
+      airport: 'CUZ with good Lima connections and some direct international routes.',
+      timeToNature: 'Sacred Valley and Machu Picchu are the immediate draws; trekking options are extensive.'
+    }
+  },
+  Trujillo: {
+    id: 'trujillo',
+    name: 'Trujillo',
+    country: 'Peru',
+    coordinates: [-79.0291, -8.112],
+    snapshot: {
+      populationMetro: '1.1M',
+      altitudeM: 34,
+      landscape: 'Coastal desert plain near the Pacific',
+      purchasingPowerRank: 27,
+      internet: { downloadMbps: 88, uploadMbps: 32, latencyMs: 29 },
+      ...climate.trujilloCoastal
+    },
+    details: {
+      tagline: "Peru's second city, dry and affordable with great surf and pre-Inca ruins at the door.",
+      overview: 'Trujillo is an underrated coastal base with a handsome colonial center, adjacent surf at Huanchaco, and the extraordinary Chan Chan citadel nearby. Lower costs and less complexity than Lima make it viable for longer stays, though the nomad infrastructure is thinner.',
+      bestFor: ['Surfers and outdoor-first lifestyles', 'Low-cost coastal living', 'Archaeology and history'],
+      watchouts: ['Fewer coworking and café options than Lima', 'Dust and dryness are constants', 'Security awareness matters in some neighborhoods'],
+      neighborhoods: ['Centro Histórico', 'El Golf', 'California', 'Huanchaco'],
+      mobility: 'Taxis and mototaxis handle most local movement; Huanchaco is a short ride away.',
+      climateNote: 'Almost no rain year-round; foggy winters and sunny summers like Lima but a touch warmer.',
+      workstyle: 'Apartment-first with selective café use; the scene is limited but functional.',
+      pace: 'Relaxed, local, and less cosmopolitan than Lima.',
+      airport: 'TRU with domestic connections to Lima and occasionally Cusco.',
+      timeToNature: 'Chan Chan ruins, Huanchaco beach, and nearby wetlands are immediate options.'
+    }
+  },
+  Bucaramanga: {
+    id: 'bucaramanga',
+    name: 'Bucaramanga',
+    country: 'Colombia',
+    coordinates: [-73.1198, 7.1194],
+    snapshot: {
+      populationMetro: '1.2M',
+      altitudeM: 959,
+      landscape: 'Highland mesa above a canyon',
+      purchasingPowerRank: 28,
+      internet: { downloadMbps: 118, uploadMbps: 45, latencyMs: 22 },
+      ...climate.bucaramangaClimate
+    },
+    details: {
+      tagline: "Colombia's most underrated city — warm climate, low cost, and a genuinely pleasant daily pace.",
+      overview: 'Bucaramanga sits on a mesa with a comfortable year-round temperature and a reputation as one of the cleanest, most livable mid-size cities in Colombia. The Cabecera del Llano and Sotomayor neighborhoods cover most remote-work needs. Less international visibility than Bogotá or Medellín is part of the appeal.',
+      bestFor: ['Low-profile affordable living', 'Comfortable year-round temperature', 'Less tourist traffic than major hubs'],
+      watchouts: ['Smaller expat and nomad community', 'Fewer direct international flights', 'Limited premium coworking options'],
+      neighborhoods: ['Cabecera del Llano', 'Sotomayor', 'Cañaveral', 'La Aurora'],
+      mobility: 'Rideshare and taxis are the practical default; some areas are walkable.',
+      climateNote: 'Warm and pleasant most of the year with two wetter periods in spring and autumn.',
+      workstyle: 'Good apartment internet; growing café scene but thinner than bigger cities.',
+      pace: 'Calm, local, and genuinely friendly.',
+      airport: 'BGA with domestic links but limited direct international services.',
+      timeToNature: "Chicamocha Canyon is close and one of Colombia's most dramatic natural sites."
+    }
+  },
+  Pereira: {
+    id: 'pereira',
+    name: 'Pereira',
+    country: 'Colombia',
+    coordinates: [-75.6921, 4.8133],
+    snapshot: {
+      populationMetro: '0.7M',
+      altitudeM: 1411,
+      landscape: 'Coffee region valley',
+      purchasingPowerRank: 29,
+      internet: { downloadMbps: 105, uploadMbps: 40, latencyMs: 23 },
+      ...climate.pereiraCoffee
+    },
+    details: {
+      tagline: 'Heart of the coffee region — affordable highland living with direct Salento access.',
+      overview: "Pereira is the most practical base in Colombia's Coffee Cultural Landscape, a UNESCO-recognized zone of stunning mountain scenery and the best coffee in the country. It is smaller and less polished than Medellín, but the combination of mild weather, low cost, and easy access to Salento and the Cocora Valley makes it quietly compelling.",
+      bestFor: ['Coffee tourism base', 'Budget-conscious highland living', 'Access to Salento and Cocora Valley'],
+      watchouts: ['Smaller city with fewer nomad amenities', 'Rain is frequent year-round', 'Limited direct international flight access'],
+      neighborhoods: ['Pinares', 'Álamos', 'Centro', 'Cerritos'],
+      mobility: 'Taxis and rideshare cover the city well; Salento is a short bus or taxi ride.',
+      climateNote: 'Mild and green year-round with two rainy seasons; umbrellas are essential.',
+      workstyle: 'Best from apartments or hotel bases with occasional café use.',
+      pace: 'Relaxed, agricultural, and warm in character.',
+      airport: 'PEI with growing domestic and some international connections.',
+      timeToNature: 'Cocora Valley and coffee farm tours are within 30 to 90 minutes.'
+    }
+  },
+  'San José': {
+    id: 'san-jose',
+    name: 'San José',
+    country: 'Costa Rica',
+    coordinates: [-84.0907, 9.9281],
+    snapshot: {
+      populationMetro: '2.4M',
+      altitudeM: 1172,
+      landscape: 'Central Valley highland basin',
+      purchasingPowerRank: 30,
+      internet: { downloadMbps: 162, uploadMbps: 74, latencyMs: 18 },
+      ...climate.sanJoseHighland
+    },
+    details: {
+      tagline: 'The most stable and infrastructure-rich base in Central America.',
+      overview: 'San José divides opinion — it lacks the obvious charm of the beaches or colonial cities, but its infrastructure, political stability, strong English proficiency, and proximity to nature make it the most functional long-stay base in Central America. Escazú and Santa Ana skew expat-polished while Barrio Escalante and Los Yoses have more local texture.',
+      bestFor: ['Central American regional base', 'Strong English and infrastructure', 'Nature access without full beach isolation'],
+      watchouts: ['The city center is not particularly scenic', 'Traffic management is important', 'Higher cost than most of Central America'],
+      neighborhoods: ['Escazú', 'Santa Ana', 'Barrio Escalante', 'Los Yoses'],
+      mobility: 'Rideshare is most practical; traffic patterns reward planning.',
+      climateNote: 'Dry and pleasant December through April; heavy rains from May with a short dry break in July.',
+      workstyle: 'Good coworking and café options especially in the west side suburbs.',
+      pace: 'Calm, organized, and less intense than South American capitals.',
+      airport: 'SJO is the major regional hub with strong US and European connections.',
+      timeToNature: 'Cloud forests, volcanoes, and both coasts are within two hours.'
+    }
+  },
+  'Córdoba': {
+    id: 'cordoba',
+    name: 'Córdoba',
+    country: 'Argentina',
+    coordinates: [-64.1888, -31.4201],
+    snapshot: {
+      populationMetro: '1.9M',
+      altitudeM: 423,
+      landscape: 'Pampa hills and river plains',
+      purchasingPowerRank: 31,
+      internet: { downloadMbps: 155, uploadMbps: 68, latencyMs: 16 },
+      ...climate.cordobaArgentina
+    },
+    details: {
+      tagline: "Argentina's student capital — high energy, low cost, and a strong creative scene.",
+      overview: "Córdoba is Argentina's second city and home to one of Latin America's oldest universities, which gives it a youthful, intellectual energy that Buenos Aires lacks in some ways. Nueva Córdoba and Güemes are the main nomad zones, with good café density and lower prices than Buenos Aires. The peso dynamics that apply in BA apply here too.",
+      bestFor: ['University-town energy', 'Lower cost than Buenos Aires', 'Strong arts and nightlife scene'],
+      watchouts: ['Same currency complexity as Buenos Aires', 'Summers are very hot', 'Less international connectivity than BA'],
+      neighborhoods: ['Nueva Córdoba', 'Güemes', 'General Paz', 'Cerro de las Rosas'],
+      mobility: 'Bus network is functional; rideshare and walking cover most nomad-relevant movement.',
+      climateNote: 'Hot dry summers and mild winters; spring and autumn are the sweet spots.',
+      workstyle: 'Excellent café culture driven by the student population.',
+      pace: 'Active, intellectual, and a bit rawer than Buenos Aires.',
+      airport: 'COR with domestic links and some direct international routes.',
+      timeToNature: 'Sierras de Córdoba hills are quick day-trip escapes with hiking and rivers.'
+    }
+  },
+  Manaus: {
+    id: 'manaus',
+    name: 'Manaus',
+    country: 'Brazil',
+    coordinates: [-60.0212, -3.1019],
+    snapshot: {
+      populationMetro: '2.3M',
+      altitudeM: 92,
+      landscape: 'Amazon basin at the confluence of the Negro and Solimões rivers',
+      purchasingPowerRank: 32,
+      internet: { downloadMbps: 132, uploadMbps: 55, latencyMs: 24 },
+      ...climate.manausEquatorial
+    },
+    details: {
+      tagline: "The Amazon metropolis — a genuine city in the middle of the world's largest rainforest.",
+      overview: 'Manaus is one of the most geographically extraordinary cities anywhere — a city of over two million people accessible primarily by boat or plane, surrounded entirely by the Amazon. The Ponta Negra and Adrianópolis neighborhoods are the most comfortable for daily life. It suits travelers who want an authentic jungle-edge urban experience over polished nomad infrastructure.',
+      bestFor: ['Amazon nature access', 'Unique urban experience', 'Jungle and river expeditions'],
+      watchouts: ['Heat and humidity are extreme year-round', 'The rainy season brings intense flooding risk in low areas', 'Nomad infrastructure is thinner than southern Brazilian cities'],
+      neighborhoods: ['Ponta Negra', 'Adrianópolis', 'Vieiralves', 'Centro'],
+      mobility: 'Rideshare and taxis are practical; river access is central to any extended stay.',
+      climateNote: 'Hot and very wet most of the year; slightly drier from June to September but never truly dry.',
+      workstyle: 'Apartment-first with reliable broadband; the coworking scene is limited.',
+      pace: 'Hot, river-paced, and viscerally different from any other city on this list.',
+      airport: 'MAO is one of the most important airports in the Amazon region.',
+      timeToNature: 'The Amazon is immediate — river tours, jungle lodges, and the Meeting of the Waters are minutes away.'
+    }
+  },
+  'Belo Horizonte': {
+    id: 'belo-horizonte',
+    name: 'Belo Horizonte',
+    country: 'Brazil',
+    coordinates: [-43.9378, -19.9208],
+    snapshot: {
+      populationMetro: '6.0M',
+      altitudeM: 858,
+      landscape: 'Highland plateau ringed by hills',
+      purchasingPowerRank: 33,
+      internet: { downloadMbps: 210, uploadMbps: 102, latencyMs: 13 },
+      ...climate.beloHorizonteClimate
+    },
+    details: {
+      tagline: "Brazil's bar capital — a livable highland city with strong food culture and no beaches to distract you.",
+      overview: "Belo Horizonte is one of Brazil's most underrated large cities for remote work. It has São Paulo-level broadband, a cooler highland climate, and a famously dense bar and restaurant scene driven by the local pagode and boteco culture. Savassi, Lourdes, and Funcionários are the core nomad-friendly neighborhoods. Less touristy and more genuinely local than Rio.",
+      bestFor: ['Food and bar culture', 'Cooler than coastal Brazil', 'Affordable big-city living'],
+      watchouts: ['The rainy season is heavy from November to March', 'Less scenic than coastal cities', 'Traffic is significant across most of the city'],
+      neighborhoods: ['Savassi', 'Lourdes', 'Funcionários', 'Santa Tereza'],
+      mobility: 'Metro is useful on core lines; rideshare fills the gaps efficiently.',
+      climateNote: 'Warm and wet in summer, dry and mild in winter — the most comfortable season runs from May to September.',
+      workstyle: 'Strong broadband, growing coworking scene, and excellent café density in Savassi.',
+      pace: 'Social, food-forward, and less frenetic than São Paulo.',
+      airport: 'CNF (Confins) for major routes; PLU (Pampulha) for select domestic hops.',
+      timeToNature: 'Serra do Cipó and Inhotim (world-class outdoor art museum) are easy day trips.'
+    }
+  },
+  'Florianópolis': {
+    id: 'florianopolis',
+    name: 'Florianópolis',
+    country: 'Brazil',
+    coordinates: [-48.5482, -27.5954],
+    snapshot: {
+      populationMetro: '1.1M',
+      altitudeM: 3,
+      landscape: 'Atlantic island with beaches and lagoons',
+      purchasingPowerRank: 34,
+      internet: { downloadMbps: 195, uploadMbps: 88, latencyMs: 14 },
+      ...climate.florianopolisClimate
+    },
+    details: {
+      tagline: 'Brazil meets surf town — a tech-forward island city with beaches and a growing startup scene.',
+      overview: "Florianópolis sits on an island connected to the mainland by bridge, with over 40 beaches and a reputation as Brazil's most livable mid-size city. Trindade and João Paulo cater to the tech and startup crowd, while Lagoa da Conceição offers a laid-back surf lifestyle node. It combines genuine urban services with beach access that no other city on this list can match.",
+      bestFor: ['Beach-plus-work lifestyle', 'Tech and startup community', 'Outdoor-first living'],
+      watchouts: ['Peak summer (Jan-Feb) brings intense crowds and price spikes', 'Getting around the island can be slow', 'Winters are mild but rainy and grey'],
+      neighborhoods: ['Trindade', 'João Paulo', 'Lagoa da Conceição', 'Jurerê'],
+      mobility: 'Car or rideshare is effectively essential to move between beaches and districts.',
+      climateNote: 'Warm summers and mild winters; rain is spread throughout the year.',
+      workstyle: 'Strong coworking and café scene concentrated in Trindade and near UFSC.',
+      pace: 'Tech-startup energy meets surf-town relaxation.',
+      airport: 'FLN with solid domestic connections.',
+      timeToNature: 'Beaches and lagoons are immediate; Serra Gaúcha is a weekend trip.'
+    }
+  },
+  Fortaleza: {
+    id: 'fortaleza',
+    name: 'Fortaleza',
+    country: 'Brazil',
+    coordinates: [-38.5247, -3.7172],
+    snapshot: {
+      populationMetro: '4.1M',
+      altitudeM: 21,
+      landscape: 'Northeast coastal city on the Atlantic',
+      purchasingPowerRank: 35,
+      internet: { downloadMbps: 158, uploadMbps: 68, latencyMs: 20 },
+      ...climate.fortalezaClimate
+    },
+    details: {
+      tagline: "The Northeast sun capital — constant warmth, strong beaches, and Brazil's most affordable major city.",
+      overview: 'Fortaleza is a large, hot, coastal city with near-constant sunshine outside the February-to-May rain season, world-class kite-surfing beaches, and costs well below the southern Brazilian cities. Meireles and Aldeota are the functional remote-work zones, while Jericoacoara is a legendary beach town reachable in a few hours.',
+      bestFor: ['Budget coastal living', 'Kite-surfing and beach lifestyle', 'Northeast Brazilian culture'],
+      watchouts: ['Security awareness is important outside main tourist zones', 'Heat is relentless', 'Rainy season is very wet from February to May'],
+      neighborhoods: ['Meireles', 'Aldeota', 'Cocó', 'Varjota'],
+      mobility: 'Rideshare and taxis are the practical standard; some beachfront areas are walkable.',
+      climateNote: 'Hot and sunny most of the year; heavy rains concentrated from February through May.',
+      workstyle: 'Decent broadband and a growing coworking base, especially in Aldeota.',
+      pace: 'Warm, sun-forward, and distinctly northeastern in energy.',
+      airport: 'FOR with domestic coverage and some international routes.',
+      timeToNature: 'Jericoacoara and the Lençóis Maranhenses are within a day of travel.'
+    }
+  },
+  Recife: {
+    id: 'recife',
+    name: 'Recife',
+    country: 'Brazil',
+    coordinates: [-34.8811, -8.0539],
+    snapshot: {
+      populationMetro: '4.3M',
+      altitudeM: 10,
+      landscape: 'Coastal delta city with reefs and mangroves',
+      purchasingPowerRank: 36,
+      internet: { downloadMbps: 152, uploadMbps: 64, latencyMs: 21 },
+      ...climate.recifeClimate
+    },
+    details: {
+      tagline: "Brazil's Venice — a reef-fringed northeastern city with strong culture and low costs.",
+      overview: 'Recife is a city of canals, bridges, and some of the most natural reef pools in South America. Boa Viagem is the main beachfront nomad zone, while the Recife Antigo historic district and the hipster enclave of Olinda just north add cultural depth. Costs are below São Paulo and Rio, and the Brazilian northeast has a distinct festive identity.',
+      bestFor: ['Budget coastal living', 'Frevo and Carnaval culture', 'Reef swimming without an island trip'],
+      watchouts: ['Heavy rains from March to July', 'Security awareness needed outside main zones', 'Humidity is persistent year-round'],
+      neighborhoods: ['Boa Viagem', 'Recife Antigo', 'Boa Vista', 'Derby'],
+      mobility: 'Metro is useful north–south; rideshare covers the rest.',
+      climateNote: 'Warm year-round with a very pronounced wet season from March through July.',
+      workstyle: 'Strong broadband in Boa Viagem; coworking is growing but thinner than southern cities.',
+      pace: 'Hot, festive, and deeply northeastern in character.',
+      airport: 'REC with solid domestic coverage and some international routes.',
+      timeToNature: 'Natural reef pools at Porto de Galinhas are among the best in Brazil, around an hour away.'
+    }
+  },
+  'Mérida': {
+    id: 'merida',
+    name: 'Mérida',
+    country: 'Mexico',
+    coordinates: [-89.6228, 20.9674],
+    snapshot: {
+      populationMetro: '1.3M',
+      altitudeM: 8,
+      landscape: 'Flat Yucatán Peninsula lowlands',
+      purchasingPowerRank: 37,
+      internet: { downloadMbps: 120, uploadMbps: 48, latencyMs: 20 },
+      ...climate.meridaClimate
+    },
+    details: {
+      tagline: 'The safest city in Mexico, with a grand colonial core and easy Yucatán access.',
+      overview: "Mérida is frequently cited as one of Mexico's safest and most livable cities, with a magnificent colonial center, strong culinary identity, and proximity to cenotes, ruins, and the Caribbean coast. The heat from April to June is extreme, but the rest of the year is manageable and the lifestyle rewards are high.",
+      bestFor: ['Safety-first travelers', 'Colonial city atmosphere', 'Yucatán exploration base'],
+      watchouts: ['Heat from April to June is brutal', 'Less developed nomad infrastructure than CDMX or GDL', 'Flat terrain and car dependence outside the centro'],
+      neighborhoods: ['Centro Histórico', 'Paseo de Montejo', 'Altabrisa', 'García Ginerés'],
+      mobility: 'Rideshare and taxis cover the city well; bike-friendly in parts of the center.',
+      climateNote: 'Hot and dry in spring, rainy July through October, pleasant November through February.',
+      workstyle: 'Growing digital nomad scene with coworking near Paseo de Montejo.',
+      pace: 'Gracious, slow-burning, and deeply rooted in Yucatecan identity.',
+      airport: 'MID with good domestic links and some US connections.',
+      timeToNature: 'Cenotes and Chichén Itzá are within an hour or two; the Gulf coast is close.'
+    }
+  },
+  'León': {
+    id: 'leon',
+    name: 'León',
+    country: 'Mexico',
+    coordinates: [-101.6832, 21.1167],
+    snapshot: {
+      populationMetro: '1.7M',
+      altitudeM: 1883,
+      landscape: 'Highland basin in the Bajío region',
+      purchasingPowerRank: 38,
+      internet: { downloadMbps: 125, uploadMbps: 48, latencyMs: 19 },
+      ...climate.leonMexicoClimate
+    },
+    details: {
+      tagline: "Mexico's leather capital — industrial heritage, good highland climate, and a fraction of CDMX costs.",
+      overview: 'León sits in the Bajío industrial heartland but has a pleasant highland climate, a compact modernizing center, and extremely easy access to colonial gems like Guanajuato and San Miguel de Allende. It works well as a quieter base for people who want central Mexico without the scale of Guadalajara or Mexico City.',
+      bestFor: ['Low-cost highland base', 'Day trips to Guanajuato and San Miguel', 'Mild climate year-round'],
+      watchouts: ['Less polished nomad scene than larger cities', 'Industrial character dominates some areas', 'English is limited outside business contexts'],
+      neighborhoods: ['Centro', 'Campestre', 'Jardines del Moral', 'Panorama'],
+      mobility: 'Rideshare works well; the city center is partially walkable.',
+      climateNote: 'Dry and warm spring, rainy summers, very pleasant October through February.',
+      workstyle: 'Apartment-first with selective café use; coworking is limited but growing.',
+      pace: 'Industrial, practical, and quieter than the big three Mexican cities.',
+      airport: 'BJX (Del Bajío) serving León and Guanajuato with strong US and domestic links.',
+      timeToNature: 'Guanajuato city and Sierra de Lobos park are both under an hour away.'
+    }
+  },
+  Tegucigalpa: {
+    id: 'tegucigalpa',
+    name: 'Tegucigalpa',
+    country: 'Honduras',
+    coordinates: [-87.2068, 14.0818],
+    snapshot: {
+      populationMetro: '1.5M',
+      altitudeM: 994,
+      landscape: 'Hilly highland basin',
+      purchasingPowerRank: 39,
+      internet: { downloadMbps: 72, uploadMbps: 28, latencyMs: 34 },
+      ...climate.tegucigalpaClimate
+    },
+    details: {
+      tagline: 'Central American capital with highland relief, low costs, and a genuine local texture.',
+      overview: 'Tegucigalpa is not a polished nomad destination, but its highland setting keeps temperatures comfortable and costs are among the lowest in Central America. Colonia Palmira and Boulevard Morazán are the most practical zones for visitors, and the city has a real, unfiltered character that suits travelers who want a local rather than expat experience.',
+      bestFor: ['Budget-conscious Central American base', 'Authentic local city experience', 'Cooler highland temperatures'],
+      watchouts: ['Security requires consistent awareness and planning', 'Infrastructure is less reliable than Costa Rica or Panama', 'Nomad amenities are limited'],
+      neighborhoods: ['Colonia Palmira', 'Boulevard Morazán', 'Los Castaños', 'Lomas del Guijarro'],
+      mobility: 'Taxis and rideshare are the standard; walking is limited by hilly terrain and safety factors.',
+      climateNote: 'Mild and pleasant October through May; rainy season brings heavy afternoon downpours.',
+      workstyle: 'Best from apartments with reliable home internet; coworking is sparse.',
+      pace: 'Local, unhurried, and distinctly Central American.',
+      airport: 'TGU with regional Central American links.',
+      timeToNature: 'Cloud forests and La Tigra national park are close to the city.'
+    }
+  },
+  'Guatemala City': {
+    id: 'guatemala-city',
+    name: 'Guatemala City',
+    country: 'Guatemala',
+    coordinates: [-90.5133, 14.6349],
+    snapshot: {
+      populationMetro: '3.0M',
+      altitudeM: 1502,
+      landscape: 'Highland plateau with volcanic horizon',
+      purchasingPowerRank: 40,
+      internet: { downloadMbps: 92, uploadMbps: 35, latencyMs: 30 },
+      ...climate.guatemalaCityClimate
+    },
+    details: {
+      tagline: 'Central America largest city — highland climate, volcanic views, and a growing modern quarter.',
+      overview: "Guatemala City divides opinion but Zone 10 (Zona Viva) and Zone 14 offer a functional, modern base with good restaurants, reliable services, and easy access to Antigua just 45 minutes away. The highland altitude keeps temperatures far more comfortable than the Caribbean coast, and costs are lower than Costa Rica.",
+      bestFor: ['Antigua as a day trip base', 'Lower costs than San José', 'Highland climate in Central America'],
+      watchouts: ['Security varies sharply by zone', 'Traffic congestion is significant', 'The city lacks the charm of nearby Antigua'],
+      neighborhoods: ['Zona 10', 'Zona 14', 'Zona 15', 'Cayalá'],
+      mobility: 'Rideshare and private taxis are strongly preferred for safety and convenience.',
+      climateNote: 'Spring-like temperatures year-round with heavy rains from May through October.',
+      workstyle: 'Solid coworking options in Zona 10; good café density in the modern zones.',
+      pace: 'Busy, commercial, and fast-moving in the modern quarter.',
+      airport: 'GUA is the main Central American hub with strong US and regional connections.',
+      timeToNature: 'Antigua, Lake Atitlán, and volcanoes are all within two hours.'
+    }
+  },
+  Managua: {
+    id: 'managua',
+    name: 'Managua',
+    country: 'Nicaragua',
+    coordinates: [-86.2906, 12.1364],
+    snapshot: {
+      populationMetro: '1.5M',
+      altitudeM: 50,
+      landscape: 'Lakeside lowland capital',
+      purchasingPowerRank: 41,
+      internet: { downloadMbps: 65, uploadMbps: 24, latencyMs: 38 },
+      ...climate.managuaClimate
+    },
+    details: {
+      tagline: "Central America's lowest-cost capital — functional, hot, and genuinely off the tourist trail.",
+      overview: 'Managua is not a conventional nomad destination, but it is the cheapest capital in Central America and gives access to a country with extraordinary natural diversity. Planes de Altamira and Carretera Masaya are the most livable zones. Many people use it as a base to explore Granada, León, and the Pacific coast rather than staying city-bound.',
+      bestFor: ['Extreme budget travel', 'Nicaragua exploration base', 'Travelers with local contacts'],
+      watchouts: ['Political context requires monitoring', 'Heat is extreme at low altitude', 'Nomad infrastructure is very limited'],
+      neighborhoods: ['Planes de Altamira', 'Carretera Masaya', 'Bolonia', 'Las Colinas'],
+      mobility: 'Taxis and rideshare are essential; walking is impractical in the heat and layout.',
+      climateNote: 'Very hot year-round; rainy season from May through October brings some relief.',
+      workstyle: 'Apartment-first; internet is usable but not elite.',
+      pace: 'Local, low-key, and uncrowded by tourists.',
+      airport: 'MGA with regional Central American connections.',
+      timeToNature: 'Granada, Ometepe Island, and Pacific surf are all under two hours.'
+    }
+  },
+  'San Pedro Sula': {
+    id: 'san-pedro-sula',
+    name: 'San Pedro Sula',
+    country: 'Honduras',
+    coordinates: [-88.0251, 15.504],
+    snapshot: {
+      populationMetro: '1.4M',
+      altitudeM: 60,
+      landscape: 'Lowland valley near the Caribbean coast',
+      purchasingPowerRank: 42,
+      internet: { downloadMbps: 78, uploadMbps: 30, latencyMs: 33 },
+      ...climate.sanPedroSulaClimate
+    },
+    details: {
+      tagline: "Honduras's commercial engine — hot, industrial, and the gateway to the Bay Islands.",
+      overview: "San Pedro Sula is Honduras's business capital and transport hub, not a tourism showcase. It is warm, flat, and functional, with Zona Viva providing the most comfortable daily living environment. Most travelers use it as a transit point to the Bay Islands or Copán ruins rather than a standalone destination.",
+      bestFor: ['Bay Islands and Copán access', 'Business travel in Honduras', 'Budget Central American stopover'],
+      watchouts: ['Security requires careful planning and zone awareness', 'Heat and humidity are constant', 'Very limited digital nomad infrastructure'],
+      neighborhoods: ['Zona Viva', 'Los Andes', 'Colonia Trejo', 'Jardines del Valle'],
+      mobility: 'Taxis and rideshare are the only practical options for safe movement.',
+      climateNote: 'Warm and humid year-round with a wetter season from May through November.',
+      workstyle: 'Best from hotels or apartments with reliable internet; coworking is minimal.',
+      pace: 'Commercial, fast-moving, and purely functional in feel.',
+      airport: 'SAP is the busiest airport in Honduras with US and regional connections.',
+      timeToNature: 'Copán ruins and Bay Islands are within two to three hours in either direction.'
+    }
+  },
+  Valparaíso: {
+    id: 'valparaiso',
+    name: 'Valparaíso',
+    country: 'Chile',
+    coordinates: [-71.6273, -33.0472],
+    snapshot: {
+      populationMetro: '1.0M',
+      altitudeM: 41,
+      landscape: 'Pacific port city of stacked hillside neighborhoods',
+      purchasingPowerRank: 43,
+      internet: { downloadMbps: 195, uploadMbps: 105, latencyMs: 13 },
+      ...climate.valparaisoClimate
+    },
+    details: {
+      tagline: 'Chile\'s most bohemian city — painted hills, Pacific fog, and a strong arts identity.',
+      overview: 'Valparaíso is the most visually distinctive city in Chile, built across 42 cerros (hills) connected by historic funiculars. It has a strong creative and student energy, lower costs than Santiago, and a genuine gritty-beautiful character. The connection to Santiago is fast, making it a viable base for people who want a coastal city with less corporate polish.',
+      bestFor: ['Artists and writers', 'Bohemian city atmosphere', 'Budget-conscious Chile base'],
+      watchouts: ['Fog and grey skies dominate winter and spring', 'Petty theft requires awareness on the hills', 'Infrastructure is rougher than Santiago'],
+      neighborhoods: ['Cerro Alegre', 'Cerro Concepción', 'Cerro Bella Vista', 'Plan (city center)'],
+      mobility: 'Funiculars, minibuses, and walking up steep stairs are the daily reality.',
+      climateNote: 'Mediterranean — dry warm summers and wet cool winters; fog is common year-round.',
+      workstyle: 'Good café density on the tourist cerros; home internet is reliable.',
+      pace: 'Creative, relaxed, and slightly chaotic.',
+      airport: 'No commercial airport; SCL (Santiago) is 90 minutes away.',
+      timeToNature: 'Pacific beaches and coastal trails are immediate; wine country is under an hour east.'
+    }
+  },
+  Concepción: {
+    id: 'concepcion',
+    name: 'Concepción',
+    country: 'Chile',
+    coordinates: [-73.0498, -36.827],
+    snapshot: {
+      populationMetro: '1.0M',
+      altitudeM: 12,
+      landscape: 'River delta city between the Andes and Pacific',
+      purchasingPowerRank: 44,
+      internet: { downloadMbps: 185, uploadMbps: 95, latencyMs: 14 },
+      ...climate.concepcionClimate
+    },
+    details: {
+      tagline: "Chile's university capital — rainy, youthful, and very affordable south of Santiago.",
+      overview: "Concepción is Chile's second-largest metro area and home to several major universities giving it a young, energetic base. It sits near the Bio Bio river and is the gateway to Chile's lake district south. Costs are well below Santiago, the broadband is strong, and the city has enough cafes and coworking to support a comfortable remote stay.",
+      bestFor: ['Budget Chile living', 'University-town energy', 'Base for Chile lake district trips'],
+      watchouts: ['Rain is frequent and heavy May through August', 'Colder than Santiago', 'Less international flight access'],
+      neighborhoods: ['Barrio Universitario', 'Pedro de Valdivia', 'San Pedro de la Paz', 'Chiguayante'],
+      mobility: 'Bus and rideshare cover daily movement well across the metro area.',
+      climateNote: 'Rainy oceanic climate with a brief warm dry period from December to March.',
+      workstyle: 'Solid broadband and a genuine café culture driven by the student population.',
+      pace: 'Energetic, youthful, and more relaxed than Santiago.',
+      airport: 'CCP with domestic links to Santiago and some southern destinations.',
+      timeToNature: 'Lake Laja, the Bio Bio river, and the beginning of the lake district are all close.'
+    }
+  },
+  Mendoza: {
+    id: 'mendoza',
+    name: 'Mendoza',
+    country: 'Argentina',
+    coordinates: [-68.8458, -32.8895],
+    snapshot: {
+      populationMetro: '1.2M',
+      altitudeM: 827,
+      landscape: 'Andean foothills at the base of Aconcagua',
+      purchasingPowerRank: 45,
+      internet: { downloadMbps: 148, uploadMbps: 62, latencyMs: 17 },
+      ...climate.mendozaClimate
+    },
+    details: {
+      tagline: 'Argentina\'s wine capital — sun-drenched, Andean, and outstanding for outdoor enthusiasts.',
+      overview: 'Mendoza is one of the world\'s great wine regions and a superb base for anyone who wants a relaxed Argentine city with Andean mountains on the doorstep. The city is flat, tree-lined, and walkable in the central zones. Costs use the same peso dynamics as Buenos Aires, making it exceptional value for dollar earners. The same economic considerations apply.',
+      bestFor: ['Wine and outdoor lifestyle', 'Andes access without Santiago prices', 'Relaxed Argentine city pace'],
+      watchouts: ['Summer heat is extreme in January and February', 'Same currency complexity as Buenos Aires', 'Fewer direct international flights than BA'],
+      neighborhoods: ['Ciudad', 'Quinta Sección', 'Chacras de Coria', 'Luján de Cuyo'],
+      mobility: 'Rideshare and taxis are practical; the central area is partly walkable.',
+      climateNote: 'Very dry and sunny most of the year; hot summers and cool winters with light snow on the peaks.',
+      workstyle: 'Good broadband and a relaxed café scene; wineries double as productive work retreats.',
+      pace: 'Laid-back, outdoorsy, and wine-forward.',
+      airport: 'MDZ with domestic links and some direct international routes.',
+      timeToNature: 'Aconcagua base camps, ski resorts, and white-water rafting are all within 90 minutes.'
     }
   }
 }
