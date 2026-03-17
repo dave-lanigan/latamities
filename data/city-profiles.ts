@@ -206,6 +206,86 @@ const climate = {
   mendozaClimate: {
     temperatureByMonth: series([29, 28, 25, 20, 15, 11, 10, 13, 17, 21, 25, 28]),
     rainfallByMonth: series([28, 24, 18, 10, 8, 6, 5, 5, 8, 12, 18, 24])
+  },
+  portoAlegreClimate: {
+    temperatureByMonth: series([26, 26, 24, 21, 18, 15, 14, 15, 17, 20, 22, 25]),
+    rainfallByMonth: series([105, 100, 110, 115, 105, 115, 115, 130, 130, 130, 110, 100])
+  },
+  panamaCityClimate: {
+    temperatureByMonth: series([32, 32, 33, 33, 32, 32, 32, 32, 32, 32, 31, 31]),
+    rainfallByMonth: series([30, 20, 8, 15, 195, 225, 195, 215, 220, 285, 280, 90])
+  },
+  sucreClimateBo: {
+    temperatureByMonth: series([16, 16, 15, 14, 13, 11, 11, 13, 14, 15, 16, 16]),
+    rainfallByMonth: series([100, 88, 60, 14, 4, 2, 2, 3, 12, 32, 62, 88])
+  },
+  ibagueColombia: {
+    temperatureByMonth: series([28, 28, 27, 27, 27, 28, 28, 28, 27, 26, 26, 27]),
+    rainfallByMonth: series([55, 80, 120, 185, 165, 90, 60, 65, 120, 195, 160, 80])
+  },
+  santaMartaCaribbean: {
+    temperatureByMonth: series([30, 30, 31, 32, 32, 31, 31, 31, 31, 31, 30, 30]),
+    rainfallByMonth: series([2, 2, 2, 8, 35, 40, 28, 45, 65, 90, 60, 10])
+  },
+  chiclayoCoastal: {
+    temperatureByMonth: series([30, 31, 30, 28, 25, 22, 21, 21, 22, 24, 27, 29]),
+    rainfallByMonth: series([0, 0, 0, 0, 1, 3, 5, 3, 1, 0, 0, 0])
+  },
+  piuraDesert: {
+    temperatureByMonth: series([31, 32, 32, 30, 27, 24, 23, 23, 24, 26, 28, 30]),
+    rainfallByMonth: series([25, 20, 5, 0, 0, 0, 0, 0, 0, 3, 10, 15])
+  },
+  iquitosAmazon: {
+    temperatureByMonth: series([28, 28, 28, 28, 28, 28, 28, 29, 29, 29, 29, 29]),
+    rainfallByMonth: series([350, 320, 330, 280, 210, 140, 120, 130, 180, 240, 310, 360])
+  },
+  chimboteCoastal: {
+    temperatureByMonth: series([26, 27, 26, 24, 21, 19, 18, 18, 19, 21, 23, 25]),
+    rainfallByMonth: series([0, 0, 0, 1, 2, 5, 8, 6, 2, 0, 0, 0])
+  },
+  guayaquilTropical: {
+    temperatureByMonth: series([29, 30, 30, 29, 28, 26, 25, 25, 26, 27, 28, 29]),
+    rainfallByMonth: series([250, 285, 280, 185, 65, 15, 5, 10, 25, 45, 120, 200])
+  },
+  santoDomingoClimate: {
+    temperatureByMonth: series([25, 25, 26, 25, 25, 24, 24, 24, 25, 25, 25, 25]),
+    rainfallByMonth: series([215, 235, 290, 300, 280, 165, 120, 125, 155, 235, 280, 250])
+  },
+  mantaCoastal: {
+    temperatureByMonth: series([28, 29, 29, 28, 27, 25, 24, 24, 25, 26, 27, 28]),
+    rainfallByMonth: series([150, 180, 190, 120, 30, 5, 2, 3, 10, 35, 85, 130])
+  },
+  cucutaBorder: {
+    temperatureByMonth: series([31, 32, 33, 32, 31, 30, 30, 31, 30, 30, 30, 31]),
+    rainfallByMonth: series([45, 40, 85, 125, 95, 40, 25, 30, 65, 140, 145, 80])
+  },
+  manizalesCloud: {
+    temperatureByMonth: series([20, 20, 20, 19, 19, 19, 19, 19, 19, 19, 19, 20]),
+    rainfallByMonth: series([270, 280, 320, 340, 300, 230, 180, 190, 250, 340, 360, 310])
+  },
+  villavicencioLlano: {
+    temperatureByMonth: series([27, 27, 28, 28, 27, 26, 26, 27, 27, 27, 27, 27]),
+    rainfallByMonth: series([85, 120, 165, 215, 185, 95, 55, 65, 135, 225, 215, 125])
+  },
+  pastoPotential: {
+    temperatureByMonth: series([17, 17, 17, 17, 16, 16, 16, 16, 17, 17, 17, 17]),
+    rainfallByMonth: series([105, 120, 140, 160, 140, 95, 75, 85, 110, 155, 145, 120])
+  },
+  monteriaCaribb: {
+    temperatureByMonth: series([31, 32, 32, 32, 31, 30, 30, 30, 31, 31, 31, 31]),
+    rainfallByMonth: series([35, 20, 15, 25, 60, 85, 95, 90, 110, 145, 130, 60])
+  },
+  valleduparCaribbean: {
+    temperatureByMonth: series([31, 32, 33, 32, 31, 30, 30, 31, 31, 31, 31, 31]),
+    rainfallByMonth: series([20, 10, 5, 10, 30, 50, 55, 60, 80, 120, 100, 40])
+  },
+  armeniaClimate: {
+    temperatureByMonth: series([22, 22, 23, 22, 22, 22, 22, 22, 22, 22, 22, 22]),
+    rainfallByMonth: series([145, 165, 210, 245, 210, 140, 100, 110, 165, 245, 255, 180])
+  },
+  oruLoClimate: {
+    temperatureByMonth: series([11, 11, 10, 9, 8, 6, 6, 7, 9, 10, 11, 11]),
+    rainfallByMonth: series([60, 45, 30, 8, 2, 1, 2, 5, 15, 25, 40, 55])
   }
 }
 
@@ -1411,8 +1491,8 @@ const cityProfilesByName: Record<string, CityProfile> = {
       ...climate.mendozaClimate
     },
     details: {
-      tagline: 'Argentina\'s wine capital — sun-drenched, Andean, and outstanding for outdoor enthusiasts.',
-      overview: 'Mendoza is one of the world\'s great wine regions and a superb base for anyone who wants a relaxed Argentine city with Andean mountains on the doorstep. The city is flat, tree-lined, and walkable in the central zones. Costs use the same peso dynamics as Buenos Aires, making it exceptional value for dollar earners. The same economic considerations apply.',
+      tagline: "Argentina's wine capital — sun-drenched, Andean, and outstanding for outdoor enthusiasts.",
+      overview: "Mendoza is one of the world's great wine regions and a superb base for anyone who wants a relaxed Argentine city with Andean mountains on the doorstep. The city is flat, tree-lined, and walkable in the central zones. Costs use the same peso dynamics as Buenos Aires, making it exceptional value for dollar earners. The same economic considerations apply.",
       bestFor: ['Wine and outdoor lifestyle', 'Andes access without Santiago prices', 'Relaxed Argentine city pace'],
       watchouts: ['Summer heat is extreme in January and February', 'Same currency complexity as Buenos Aires', 'Fewer direct international flights than BA'],
       neighborhoods: ['Ciudad', 'Quinta Sección', 'Chacras de Coria', 'Luján de Cuyo'],
@@ -1422,6 +1502,519 @@ const cityProfilesByName: Record<string, CityProfile> = {
       pace: 'Laid-back, outdoorsy, and wine-forward.',
       airport: 'MDZ with domestic links and some direct international routes.',
       timeToNature: 'Aconcagua base camps, ski resorts, and white-water rafting are all within 90 minutes.'
+    }
+  },
+  "Porto Alegre": {
+    id: 'porto-alegre',
+    name: 'Porto Alegre',
+    country: 'Brazil',
+    coordinates: [-51.2177, -30.0346],
+    snapshot: {
+      populationMetro: '4.3M',
+      altitudeM: 10,
+      landscape: 'Lakeside subtropical city at the tip of Guaíba lake',
+      purchasingPowerRank: 46,
+      internet: { downloadMbps: 215, uploadMbps: 105, latencyMs: 13 },
+      ...climate.portoAlegreClimate
+    },
+    details: {
+      tagline: "Southern Brazil's cosmopolitan capital — European roots, strong tech scene, and four distinct seasons.",
+      overview: "Porto Alegre is Brazil's southernmost major city and carries a noticeably different energy to tropical Brazil. Its European immigrant heritage (German, Italian) shapes its food, architecture, and culture. It's a mature metro with a strong university and tech sector, excellent restaurants and nightlife, and real winters that cool things down. BRL costs make it exceptional value for dollar or euro earners.",
+      bestFor: ['Tech and startup ecosystem', 'European-influenced culture', 'Year-round outdoor activities'],
+      watchouts: ['Winters are genuinely cold by Brazilian standards', 'Flooding in low-lying areas can occur', 'Less international name recognition than São Paulo or Rio'],
+      neighborhoods: ['Moinhos de Vento', 'Bela Vista', 'Cidade Baixa', 'Petrópolis', 'Auxiliadora'],
+      mobility: 'Metro line plus buses; rideshare is widely available.',
+      climateNote: 'Subtropical humid climate with warm summers around 26°C and cool winters dipping to 14°C. Rain is well distributed year-round.',
+      workstyle: 'Strong broadband, growing coworking scene, and productive café culture in upscale neighborhoods.',
+      pace: 'Cosmopolitan, cultured, and more reserved than tropical Brazil.',
+      airport: 'POA with wide domestic coverage and some direct international routes to Buenos Aires, Santiago, and Miami.',
+      timeToNature: 'Serra Gaúcha wine country, Gramado, and the Pampas are all within 2 hours.'
+    }
+  },
+  "Panama City": {
+    id: 'panama-city',
+    name: 'Panama City',
+    country: 'Panama',
+    coordinates: [-79.5197, 8.9936],
+    snapshot: {
+      populationMetro: '1.9M',
+      altitudeM: 5,
+      landscape: 'Tropical skyscraper city between two oceans at the Canal',
+      purchasingPowerRank: 47,
+      internet: { downloadMbps: 195, uploadMbps: 90, latencyMs: 16 },
+      ...climate.panamaCityClimate
+    },
+    details: {
+      tagline: "The crossroads of the Americas — first-world infrastructure, US dollar economy, and year-round heat.",
+      overview: "Panama City is the most internationally connected city in Central America and functions more like a global financial hub than a typical Latin city. The USD economy eliminates currency risk, the banking sector is world-class, and the Canal Zone brings a constant flow of international business. Casco Viejo offers a charming colonial counterpoint to the gleaming Punta Pacífica skyscrapers. The wet season is intense but life continues normally.",
+      bestFor: ['USD economy with no exchange risk', 'First-world infrastructure in LatAm', 'Finance and international business connections'],
+      watchouts: ['Wet season rain is heavy from May through November', 'Heat and humidity are relentless year-round', 'Cost of living is higher than most of LatAm'],
+      neighborhoods: ['Casco Viejo', 'Miraflores', 'Punta Pacífica', 'El Cangrejo', 'San Francisco'],
+      mobility: 'Metro, buses, and rideshare all operate; traffic can be severe at rush hour.',
+      climateNote: 'Tropical with a dry season from December to April and a heavy wet season the rest of the year. Temperatures are consistently around 32°C.',
+      workstyle: 'Excellent broadband, many coworking spaces, and a business-oriented café culture.',
+      pace: 'Fast-paced, international, and commercially focused.',
+      airport: 'PTY (Tocumen) is the major hub of Central America with extensive direct connections across the Americas.',
+      timeToNature: 'San Blas Islands, Bocas del Toro, and the Cloud Forest at El Valle are all accessible as day or weekend trips.'
+    }
+  },
+  Sucre: {
+    id: 'sucre',
+    name: 'Sucre',
+    country: 'Bolivia',
+    coordinates: [-65.2627, -19.0196],
+    snapshot: {
+      populationMetro: '0.4M',
+      altitudeM: 2750,
+      landscape: 'Whitewashed colonial capital in a highland valley',
+      purchasingPowerRank: 48,
+      internet: { downloadMbps: 55, uploadMbps: 28, latencyMs: 28 },
+      ...climate.sucreClimateBo
+    },
+    details: {
+      tagline: "Bolivia's constitutional capital — one of the most beautiful colonial cities in South America.",
+      overview: "Sucre is UNESCO-listed for its immaculate whitewashed colonial architecture and is considered one of the most visually stunning capitals on the continent. At 2750m it's significantly milder than La Paz, with a pleasant spring-like climate much of the year. The city has a strong student population from the local university, a charming pedestrian centre, and very low costs. Internet is adequate but not fast by regional standards.",
+      bestFor: ['Colonial architecture and history', 'Mild highland climate without La Paz altitude stress', 'Ultra-low cost of living'],
+      watchouts: ['Internet speeds are slower than larger cities', 'Limited international flight connections', 'Small city — feel it quickly after a few weeks'],
+      neighborhoods: ['Centro Histórico', 'Recoleta', 'San Roque', 'Las Delicias'],
+      mobility: 'Walking covers the colonial centre; minibuses and taxis for wider areas.',
+      climateNote: 'Warm and sunny days year-round with cooler evenings. Brief rainy season November to March, very dry May to September.',
+      workstyle: 'Quiet and focused; a handful of cafés and small coworking spots with decent fibre lines in the centre.',
+      pace: 'Slow, colonial, and serenely calm.',
+      airport: 'SRE with connections to La Paz, Cochabamba, and Santa Cruz.',
+      timeToNature: 'Dinosaur footprints at Cal Orcko, the Uyuni salt flats 6 hours south, and Potosí a short drive away.'
+    }
+  },
+  "Ibagué": {
+    id: 'ibague',
+    name: 'Ibagué',
+    country: 'Colombia',
+    coordinates: [-75.2321, 4.4389],
+    snapshot: {
+      populationMetro: '0.7M',
+      altitudeM: 1285,
+      landscape: 'Andean valley city at the foot of the Central Cordillera',
+      purchasingPowerRank: 49,
+      internet: { downloadMbps: 165, uploadMbps: 80, latencyMs: 18 },
+      ...climate.ibagueColombia
+    },
+    details: {
+      tagline: "Colombia's musical capital — warm, affordable, and underrated mid-sized Andean city.",
+      overview: "Ibagué is nicknamed the Musical Capital of Colombia for its long folkloric tradition and annual folk music festival. Sitting at 1285m in the Tolima department, it has a warm year-round climate without the altitude chill of Bogotá or Medellín. It's a genuine mid-sized Colombian city: prices are very low, the pace is relaxed, and the infrastructure is solid. It receives very few foreign visitors, making it an authentic off-the-tourist-trail base.",
+      bestFor: ['Authentic Colombian mid-city experience', 'Warm comfortable temperature at moderate altitude', 'Very affordable cost of living'],
+      watchouts: ['Limited coworking infrastructure compared to Medellín or Bogotá', 'Fewer international flight options', 'Bimodal heavy rain seasons in April-May and October-November'],
+      neighborhoods: ['Ambala', 'El Jordán', 'Picaleña', 'La Pola', 'Calambeo'],
+      mobility: 'Buses and rideshare cover the city; walking is practical in central areas.',
+      climateNote: 'Warm subtropical highland climate around 27°C with bimodal rainfall. April-May and October-November are the wettest periods.',
+      workstyle: 'Good fibre broadband in built-up areas; café culture is developing but less dense than Medellín.',
+      pace: 'Easy-going, warm, and community-oriented.',
+      airport: 'IBE (Perales) with connections to Bogotá; plans for a new airport are ongoing.',
+      timeToNature: 'Nevado del Tolima, the coffee region, and the Magdalena river valley are all close by.'
+    }
+  },
+  Chiclayo: {
+    id: 'chiclayo',
+    name: 'Chiclayo',
+    country: 'Peru',
+    coordinates: [-79.1947, -6.7735],
+    snapshot: {
+      populationMetro: '0.8M',
+      altitudeM: 29,
+      landscape: 'Coastal city in Lambayeque region, gateway to Moche archaeology',
+      purchasingPowerRank: 51,
+      internet: { downloadMbps: 120, uploadMbps: 55, latencyMs: 22 },
+      ...climate.chiclayoCoastal
+    },
+    details: {
+      tagline: 'Peru\'s second-largest metro on the north coast — warm, affordable, and archaeologically rich.',
+      overview: 'Chiclayo is the commercial hub of northern Peru and a major gateway to extraordinary Moche and Sicán archaeology (Huacas de Moche, Túmulo Huaca Rajada). The city sits on a pleasant desert plain with a warm climate year-round. Costs are very low, broadband is solid, and there\'s a lively local culture with strong traditional crafts markets. It\'s underrated and undervisited.',
+      bestFor: ['Archaeology access (Moche/Sicán sites)', 'Very low cost of living', 'North Peru base for regional travel'],
+      watchouts: ['Very dry — don\'t expect beaches or green', 'Smaller city — fewer luxury services', 'Limited direct international flights'],
+      neighborhoods: ['Centro', 'La Victoria', 'Monsefu', 'Monsefú (traditional crafts)'],
+      mobility: 'Taxis and rideshare cover the city; walking in the central core.',
+      climateNote: 'Hot desert climate with minimal rain. Warm year-round around 30°C, coolest in June-July.',
+      workstyle: 'Good broadband in central areas; growing nomad presence with a few coworking options.',
+      pace: 'Easygoing, traditional, and commercially vibrant.',
+      airport: 'CIX (José María Corpancho) with connections to Lima and some coastal cities.',
+      timeToNature: 'Huacas de Moche, Túmulo Huaca Rajada, and the Sechura Desert are all immediately nearby.'
+    }
+  },
+  Piura: {
+    id: 'piura',
+    name: 'Piura',
+    country: 'Peru',
+    coordinates: [-80.4132, -5.1944],
+    snapshot: {
+      populationMetro: '1.2M',
+      altitudeM: 50,
+      landscape: 'Desert city in Peru\'s northernmost region',
+      purchasingPowerRank: 52,
+      internet: { downloadMbps: 130, uploadMbps: 60, latencyMs: 21 },
+      ...climate.piuraDesert
+    },
+    details: {
+      tagline: 'Peru\'s far north — hottest, driest, and most underrated coastal city.',
+      overview: 'Piura is Peru\'s second-largest northern metro and one of the oldest Spanish cities in South America (founded 1532). It\'s desert-hot year-round with virtually no rain. The city has a strong commercial character, reasonable infrastructure, and costs are very low. It\'s a base for exploring the Sechura Desert and accessing Ecuador quickly, but it receives few international visitors.',
+      bestFor: ['Ultra-dry desert climate', 'Northernmost Peru access', 'Very low cost living'],
+      watchouts: ['Extreme heat (32°C+) January-March', 'Almost no green space or natural water', 'Remote from other major cities'],
+      neighborhoods: ['Castilla', 'Centro', 'San Roque', 'Tacala'],
+      mobility: 'Taxis and rideshare; walking in a tight central grid.',
+      climateNote: 'Hyper-arid desert climate. Extremely hot and dry except January-March when brief rains can occur.',
+      workstyle: 'Adequate broadband; minimal coworking but steady internet.',
+      pace: 'Hot, fast-paced commercial city without tourism polish.',
+      airport: 'PIU (Cap. Guillermo Concha Ibáñez) with links to Lima and Ecuador.',
+      timeToNature: 'Sechura Desert, Ecuador border, and Máncora beach town (2 hours north).'
+    }
+  },
+  Iquitos: {
+    id: 'iquitos',
+    name: 'Iquitos',
+    country: 'Peru',
+    coordinates: [-73.2245, -3.7469],
+    snapshot: {
+      populationMetro: '0.6M',
+      altitudeM: 105,
+      landscape: 'Jungle river city at the heart of the Amazon',
+      purchasingPowerRank: 53,
+      internet: { downloadMbps: 85, uploadMbps: 35, latencyMs: 45 },
+      ...climate.iquitosAmazon
+    },
+    details: {
+      tagline: 'Gateway to the Amazon rainforest — remote, wild, and utterly different from the Andes.',
+      overview: 'Iquitos is the largest city in the world without road access — you fly in or arrive by river. It\'s the hub for Peru\'s Amazon region and offers an authentic jungle experience. The city is hot, humid, and always wet, but offers jungle lodges, river tours, and unique tourism infrastructure. For remote workers, it\'s a challenging but extraordinary base. Internet is slower and less reliable than coastal cities.',
+      bestFor: ['Amazon immersion', 'Jungle lodge access', 'Ayahuasca retreat destination'],
+      watchouts: ['Very high humidity and constant mosquitoes', 'Slower, less reliable internet', 'Remote supply chain issues', 'Health risks (dengue, malaria)'],
+      neighborhoods: ['Belen', 'Punchana', 'Iquitos Proper', 'Puerto de Belén'],
+      mobility: 'Motocars (auto-rickshaws), boats, and colectivos; waterways during high water.',
+      climateNote: 'Tropical rainforest climate — hot, humid, and wet year-round around 28-29°C with heavy rainfall.',
+      workstyle: 'Internet is the major constraint; hotels and lodges offer adequate but sometimes unstable connectivity.',
+      pace: 'Slow, chaotic, and utterly immersive in jungle life.',
+      airport: 'IQT (Coronel FAP Francisco Secada Vignetta) with flights to Lima and some other jungle cities.',
+      timeToNature: 'Amazon River is the city; jungle lodges, river tours, and rainforest day trips everywhere.'
+    }
+  },
+  Chimbote: {
+    id: 'chimbote',
+    name: 'Chimbote',
+    country: 'Peru',
+    coordinates: [-78.5721, -9.0783],
+    snapshot: {
+      populationMetro: '0.4M',
+      altitudeM: 15,
+      landscape: 'Industrial fishing port city on the Peruvian coast',
+      purchasingPowerRank: 54,
+      internet: { downloadMbps: 110, uploadMbps: 50, latencyMs: 23 },
+      ...climate.chimboteCoastal
+    },
+    details: {
+      tagline: 'Peru\'s fishing capital — industrial, gritty, and surprisingly functional.',
+      overview: 'Chimbote is Peru\'s largest fishing port and industrial manufacturing hub. It\'s not a tourist destination, but for remote workers seeking an ultra-affordable, authentic Peruvian city on a true working dock, it offers that experience. The climate is cool and dry (Humboldt Current), the costs are minimal, and there\'s genuine local life without noise.',
+      bestFor: ['Industrial/working-class Peru experience', 'Lowest cost of living', 'Coastal cooling effect'],
+      watchouts: ['Industrial grit and fish-processing smell', 'Minimal tourism infrastructure', 'Not designed for visitors'],
+      neighborhoods: ['Centro', 'Nuevo Chimbote', 'Puerto', 'La Ensenada'],
+      mobility: 'Local buses and taxis; a compact city centre.',
+      climateNote: 'Cold desert coastal climate driven by the Humboldt Current. Cool (18°C), dry, and often overcast.',
+      workstyle: 'Solid broadband; authentic local cafés; minimal distractions.',
+      pace: 'Industrial, purposeful, and unpretentious.',
+      airport: 'CIX or flying into Lima; Chimbote is accessed via coast road or flights to nearby Trujillo.',
+      timeToNature: 'Coastal cliffs, fish-rich waters, and desert landscape; Huaraz and the Cordillera Blanca are inland.'
+    }
+  },
+  Guayaquil: {
+    id: 'guayaquil',
+    name: 'Guayaquil',
+    country: 'Ecuador',
+    coordinates: [-79.8711, -2.1894],
+    snapshot: {
+      populationMetro: '3.3M',
+      altitudeM: 7,
+      landscape: 'Tropical riverside mega-city and Ecuador\'s economic powerhouse',
+      purchasingPowerRank: 55,
+      internet: { downloadMbps: 200, uploadMbps: 95, latencyMs: 15 },
+      ...climate.guayaquilTropical
+    },
+    details: {
+      tagline: 'Ecuador\'s largest city and main economic engine — tropical, vibrant, and surprisingly cosmopolitan.',
+      overview: 'Guayaquil is Ecuador\'s largest city and the heart of the country\'s commerce and industry. Unlike quiet Quito, Guayaquil is fast-paced, warm (tropical), and very busy. It\'s a commercial hub with good infrastructure, strong broadband, and an expanding expat/digital nomad scene. The Malecón 2000 riverfront is beautiful. It\'s hurricane-adjacent but Ecuador hasn\'t directly hit in decades.',
+      bestFor: ['Ecuador\'s main business hub', 'Tropical beach proximity', 'Best broadband in Ecuador'],
+      watchouts: ['Hot and humid year-round', 'Rainy season June-September can be intense', 'Traffic congestion is significant'],
+      neighborhoods: ['Malecón', 'Urdesa', 'Samborondón', 'La Raíz', 'Centro'],
+      mobility: 'Metro bus system, taxis, and rideshare; the city is large but mobile.',
+      climateNote: 'Tropical humid climate with a brief cool dry season December-April, then warm wet June-September.',
+      workstyle: 'Excellent broadband, many coworking spaces, and a vibrant café culture.',
+      pace: 'Fast, commercial, and energetic.',
+      airport: 'GYE (José Joaquín de Olmedo) is Ecuador\'s main international hub with direct flights across the Americas and to Miami/Europe.',
+      timeToNature: 'Galápagos islands (flights depart from here), Otavalo markets 3 hours away, cloud forests nearby.'
+    }
+  },
+  "Santo Domingo": {
+    id: 'santo-domingo',
+    name: 'Santo Domingo',
+    country: 'Ecuador',
+    coordinates: [-79.1721, -0.2482],
+    snapshot: {
+      populationMetro: '0.4M',
+      altitudeM: 280,
+      landscape: 'Humid subtropical valley city connecting coast and highlands',
+      purchasingPowerRank: 56,
+      internet: { downloadMbps: 95, uploadMbps: 45, latencyMs: 26 },
+      ...climate.santoDomingoClimate
+    },
+    details: {
+      tagline: 'Ecuador\'s crossroads — between Guayaquil coast and Quito highlands.',
+      overview: 'Santo Domingo de los Tsáchilas is a mid-sized city in the humid tropics that connects the coast to the highlands. It\'s not a major tourist destination but offers an authentic Ecuador experience with reasonable infrastructure, very affordable costs, and access to both ecosystems. The climate is warm and wet.',
+      bestFor: ['Transitional coast-highland location', 'Authentic local Ecuador experience', 'Very affordable'],
+      watchouts: ['High humidity and frequent rain', 'Less cosmopolitan than Guayaquil or Quito', 'Smaller airport with limited flights'],
+      neighborhoods: ['Centro', 'Las Bahías', 'La Magdalena', 'Zaracay'],
+      mobility: 'Local taxis, colectivos, and buses.',
+      climateNote: 'Humid subtropical with high rainfall year-round, especially in rainy season.',
+      workstyle: 'Adequate broadband in central areas; quieter than coastal cities.',
+      pace: 'Relaxed, humid, and localized.',
+      airport: 'Small regional airport; routing through Guayaquil or Quito is typical.',
+      timeToNature: 'Cloud forests and indigenous reserves are close; rivers and waterfalls nearby.'
+    }
+  },
+  Manta: {
+    id: 'manta',
+    name: 'Manta',
+    country: 'Ecuador',
+    coordinates: [-80.7321, -0.9535],
+    snapshot: {
+      populationMetro: '0.4M',
+      altitudeM: 4,
+      landscape: 'Pacific beach city and Ecuador\'s second-largest port',
+      purchasingPowerRank: 57,
+      internet: { downloadMbps: 130, uploadMbps: 60, latencyMs: 19 },
+      ...climate.mantaCoastal
+    },
+    details: {
+      tagline: 'Ecuador\'s Pacific beach escape — cool, coastal, and reliably pleasant.',
+      overview: 'Manta is Ecuador\'s primary Pacific port and a seaside city with a cool desert-like climate thanks to the cold Humboldt Current. It\'s less developed than Salinas or major tourist beaches but offers an authentic beach-city vibe with good seafood, reasonable costs, and a growing expat community.',
+      bestFor: ['Pacific beach living', 'Cool coastal climate', 'Authentic beach-city culture'],
+      watchouts: ['Sparse tourism infrastructure', 'Can be windy', 'Limited nightlife'],
+      neighborhoods: ['Centro', 'Tarqui', 'San Mateo', 'Bungabay'],
+      mobility: 'Local taxis and buses; walking along the waterfront.',
+      climateNote: 'Cool coastal climate with minimal rain except in warm season January-March.',
+      workstyle: 'Good broadband on the coast; relaxed beach town pace.',
+      pace: 'Beach-town laid-back.',
+      airport: 'Small regional airport; routing through Guayaquil typical.',
+      timeToNature: 'Pacific Ocean, whale watching in season, nearby beaches.'
+    }
+  },
+  Cúcuta: {
+    id: 'cucuta',
+    name: 'Cúcuta',
+    country: 'Colombia',
+    coordinates: [-72.5089, 7.8836],
+    snapshot: {
+      populationMetro: '1.0M',
+      altitudeM: 421,
+      landscape: 'Border city in a warm valley on the Venezuela-Colombia line',
+      purchasingPowerRank: 58,
+      internet: { downloadMbps: 155, uploadMbps: 70, latencyMs: 17 },
+      ...climate.cucutaBorder
+    },
+    details: {
+      tagline: 'Colombia\'s hottest city — intense heat, border commerce, and direct Venezuela access.',
+      overview: 'Cúcuta is Colombia\'s northernmost major city and sits directly across the border from Venezuela. It\'s extremely hot, with intense border-town energy. It\'s not typically a destination for remote workers, but for anyone requiring direct Venezuela access or studying border dynamics, it offers that experience. Costs are very low.',
+      bestFor: ['Venezuela-Colombia border experience', 'Extremely low cost of living', 'Hot-climate base'],
+      watchouts: ['Extremely hot and intense heat stress', 'Border instability', 'Not a tourist destination'],
+      neighborhoods: ['Centro', 'Barrio Libertador', 'Antonia Santos'],
+      mobility: 'Local taxis and colectivos.',
+      climateNote: 'Hot valley climate around 31-33°C year-round with bimodal rainfall.',
+      workstyle: 'Adequate broadband; commercial city focus.',
+      pace: 'Hot, fast, and commercially intense.',
+      airport: 'CUC (Camilo Daza) with connections to major Colombian cities.',
+      timeToNature: 'Serranía del Perijá mountains; border river; Venezuela across the way.'
+    }
+  },
+  Manizales: {
+    id: 'manizales',
+    name: 'Manizales',
+    country: 'Colombia',
+    coordinates: [-75.4973, 5.0688],
+    snapshot: {
+      populationMetro: '0.5M',
+      altitudeM: 2127,
+      landscape: 'Cool cloud-forest highland city at the edge of the Coffee Triangle',
+      purchasingPowerRank: 59,
+      internet: { downloadMbps: 175, uploadMbps: 80, latencyMs: 16 },
+      ...climate.manizalesCloud
+    },
+    details: {
+      tagline: 'Colombia\'s coffee-region capital — cool, misty, and exceptionally walkable.',
+      overview: 'Manizales sits at 2127m at the edge of the Coffee Triangle with a perpetually cool, cloudy climate (bring layers). The city is modern, clean, walkable, and has a strong university presence giving it a youthful vibe. It\'s a base for coffee plantation visits and hiking. Good broadband and coworking infrastructure.',
+      bestFor: ['Coffee region access', 'Cool highland climate', 'University-town energy'],
+      watchouts: ['Constant cloud cover and mist', 'Can feel cold coming from warmer cities', 'Budget coffee tourism'],
+      neighborhoods: ['Centro', 'Asomadero', 'Tebaida', 'La Enea'],
+      mobility: 'Steep hillside city; cable car system and buses; mostly walkable centre.',
+      climateNote: 'Cool cloud-forest climate around 18-20°C with constant cloud cover and high annual rainfall.',
+      workstyle: 'Excellent broadband, many coworking spaces, strong café culture.',
+      pace: 'Cool, misty, energetic with university vibe.',
+      airport: 'MZL (La Nubia) with connections to major cities; often access via Medellín.',
+      timeToNature: 'Coffee plantations, cloud forests, Nevado del Ruiz volcano, and hiking everywhere.'
+    }
+  },
+  Villavicencio: {
+    id: 'villavicencio',
+    name: 'Villavicencio',
+    country: 'Colombia',
+    coordinates: [-73.6347, 4.1431],
+    snapshot: {
+      populationMetro: '0.5M',
+      altitudeM: 467,
+      landscape: 'Gateway to the Llanos plains, warm valley city',
+      purchasingPowerRank: 60,
+      internet: { downloadMbps: 160, uploadMbps: 75, latencyMs: 18 },
+      ...climate.villavicencioLlano
+    },
+    details: {
+      tagline: 'Gateway to Colombia\'s eastern plains — warm, commercial, and authentic local life.',
+      overview: 'Villavicencio is the main city on the eastern side of the Andes, sitting at the edge of the vast Llanos plains. It\'s a warm (27°C), busy commercial hub with strong cattle ranching heritage. It\'s not a major tourist destination but offers authentic Colombian city life, very affordable costs, and access to unique eastern plains landscapes.',
+      bestFor: ['Llanos plains access', 'Authentic commercial city', 'Very low costs'],
+      watchouts: ['Warm year-round', 'Bimodal heavy rain seasons', 'Less polished than Medellín or Bogotá'],
+      neighborhoods: ['Centro Commercial', 'Los Libertadores', 'Lourdes'],
+      mobility: 'Taxis, colectivos, and local buses.',
+      climateNote: 'Warm lowland climate around 27°C with bimodal heavy rainfall.',
+      workstyle: 'Good broadband; growing local economy.',
+      pace: 'Warm, commercial, and wide-open.',
+      airport: 'VVC (Apiay) with connections to Bogotá and other cities.',
+      timeToNature: 'Llanos landscape, Los Llanos wetlands, and eastern mountains.'
+    }
+  },
+  Pasto: {
+    id: 'pasto',
+    name: 'Pasto',
+    country: 'Colombia',
+    coordinates: [-77.2767, 1.2136],
+    snapshot: {
+      populationMetro: '0.5M',
+      altitudeM: 2527,
+      landscape: 'High Andean valley close to the Ecuador border',
+      purchasingPowerRank: 61,
+      internet: { downloadMbps: 130, uploadMbps: 60, latencyMs: 20 },
+      ...climate.pastoPotential
+    },
+    details: {
+      tagline: 'Colombia\'s southernmost city — high mountain, cool, and a base for Ecuador access.',
+      overview: 'Pasto sits at 2527m in a high Andean valley very close to Ecuador. It\'s known for its Carnival celebrations and has a genuine local indigenous presence. The city is cool year-round, modest by Colombian standards, and offers authentic highland life. Good broadband and affordable costs.',
+      bestFor: ['High-altitude cool climate', 'Ecuador border location', 'Authentic Andean culture'],
+      watchouts: ['Cool and cloudy year-round', 'Smaller city options', 'Altitude adjustment needed'],
+      neighborhoods: ['Centro', 'Chapinero', 'Botero', 'San Fernando'],
+      mobility: 'Local buses and taxis; hilly terrain.',
+      climateNote: 'Cool highland climate around 16-17°C year-round with steady rainfall.',
+      workstyle: 'Adequate broadband; local café culture.',
+      pace: 'Cool, cultural, and community-oriented.',
+      airport: 'PSO (Antonio Nariño Ripoll) with connections to Bogotá and Ecuador.',
+      timeToNature: 'Laguna de la Cocha, volcanic landscapes, and Ecuador cloud forests nearby.'
+    }
+  },
+  Montería: {
+    id: 'monteria',
+    name: 'Montería',
+    country: 'Colombia',
+    coordinates: [-75.8863, 8.7590],
+    snapshot: {
+      populationMetro: '0.5M',
+      altitudeM: 25,
+      landscape: 'Lush Caribbean river-valley city in Colombia\'s north',
+      purchasingPowerRank: 62,
+      internet: { downloadMbps: 140, uploadMbps: 65, latencyMs: 19 },
+      ...climate.monteriaCaribb
+    },
+    details: {
+      tagline: 'Colombia\'s Caribbean interior — hot, humid, and authentically regional.',
+      overview: 'Montería is located inland from the Caribbean coast in Colombia\'s Córdoba department. It\'s hot and humid with genuine Caribbean culture and agricultural prosperity. It\'s not a major tourist spot but offers authentic regional Colombian life, good food, and very low costs.',
+      bestFor: ['Caribbean interior culture', 'Very affordable', 'Authentic regional Colombia'],
+      watchouts: ['Hot and very humid year-round', 'Rainy season intensity', 'Limited tourist infrastructure'],
+      neighborhoods: ['Centro', 'Circunvalar', 'La Central'],
+      mobility: 'Local buses and colectivos.',
+      climateNote: 'Hot Caribbean climate around 31°C with high humidity and bimodal rainfall.',
+      workstyle: 'Adequate broadband; local pace.',
+      pace: 'Hot, informal, and community-spirited.',
+      airport: 'MTR (Los Córdobas) with connections to major cities.',
+      timeToNature: 'Caño Cristales (liquid rainbow river), Caribbean coast 1-2 hours away.'
+    }
+  },
+  Valledupar: {
+    id: 'valledupar',
+    name: 'Valledupar',
+    country: 'Colombia',
+    coordinates: [-73.2553, 10.4730],
+    snapshot: {
+      populationMetro: '0.5M',
+      altitudeM: 158,
+      landscape: 'Warm Caribbean valley city at the foot of the Sierra Nevada',
+      purchasingPowerRank: 63,
+      internet: { downloadMbps: 135, uploadMbps: 62, latencyMs: 21 },
+      ...climate.valleduparCaribbean
+    },
+    details: {
+      tagline: 'Home of vallenato music — warm, tropical, and steeped in Caribbean folk culture.',
+      overview: 'Valledupar is the capital of vallenato music and Colombian tropical folk tradition. It sits in a warm valley with Sierra Nevada backdrop. It\'s less developed than Barranquilla or Cartagena but offers genuine music-and-culture immersion. Costs are very low and the musical heritage is unmistakable.',
+      bestFor: ['Vallenato music culture', 'Caribbean valley warmth', 'Ultra-low cost'],
+      watchouts: ['Very hot and dry except rainy season', 'Limited other infrastructure', 'Music-focused tourism only'],
+      neighborhoods: ['Centro', 'La Sierrita', 'Lourdes'],
+      mobility: 'Local taxis and buses.',
+      climateNote: 'Caribbean valley climate — very hot and mostly dry except for May-October rains.',
+      workstyle: 'Adequate broadband; laid-back pace.',
+      pace: 'Hot, folkloric, and music-centric.',
+      airport: 'VLD (Alfonso López Pumarejo) with connections to Bogotá and Caribbean cities.',
+      timeToNature: 'Sierra Nevada base for trekking, river valleys, and Caribbean mountain ecosystems.'
+    }
+  },
+  Armenia: {
+    id: 'armenia',
+    name: 'Armenia',
+    country: 'Colombia',
+    coordinates: [-75.6867, 4.5345],
+    snapshot: {
+      populationMetro: '0.6M',
+      altitudeM: 1483,
+      landscape: 'Cloud-forest coffee-region city at the heart of the Eje Cafetero',
+      purchasingPowerRank: 64,
+      internet: { downloadMbps: 170, uploadMbps: 78, latencyMs: 17 },
+      ...climate.armeniaClimate
+    },
+    details: {
+      tagline: 'Heart of Colombia\'s Coffee Triangle — cool, vibrant, and coffee-perfect.',
+      overview: 'Armenia is the main city in the Eje Cafetero (Coffee Axis) and sits at 1483m in cloud forest. It\'s a clean, walkable city with excellent universities, strong café culture, abundant coworking, and a thriving digital nomad scene. Coffee plantation visits, hiking, and local markets are everywhere. It\'s one of Colombia\'s best remote work hubs.',
+      bestFor: ['Coffee region living', 'University-town energy', 'Best coffee-region infrastructure'],
+      watchouts: ['Constant cloud cover', 'Cool weather year-round', 'Can feel monotonous after weeks'],
+      neighborhoods: ['Centro', 'Bolívar', 'Circunvalar', 'Rosa Luxemburgo'],
+      mobility: 'Hilly city; buses and cable cars; walkable centre.',
+      climateNote: 'Cool cloud-forest climate around 21-22°C with high year-round rainfall.',
+      workstyle: 'Excellent broadband, many coworking spaces, best café culture in the coffee region.',
+      pace: 'Cool, vibrant, and coffee-lovers\' paradise.',
+      airport: 'ARM (Pereira) or nearby airports; Armenia is the heart of the Triangle.',
+      timeToNature: 'Coffee plantations, cloud forests, Nevados, and Valle de Cocora nearby.'
+    }
+  },
+  Oruro: {
+    id: 'oruro',
+    name: 'Oruro',
+    country: 'Bolivia',
+    coordinates: [-67.1278, -17.9829],
+    snapshot: {
+      populationMetro: '0.3M',
+      altitudeM: 3706,
+      landscape: 'High-altitude mining city on the Altiplano',
+      purchasingPowerRank: 65,
+      internet: { downloadMbps: 60, uploadMbps: 30, latencyMs: 32 },
+      ...climate.oruLoClimate
+    },
+    details: {
+      tagline: 'Bolivia\'s high-altitude mining capital — cold, cultural, and extreme altitude.',
+      overview: 'Oruro sits at 3706m on the Altiplano and is Bolivia\'s second-largest city. It\'s known for its Carnival celebrations (Diablada festival) and mining heritage. The altitude is extreme, the climate is cold and dry, and the infrastructure is modest. It\'s not for everyone, but for those seeking a true high-altitude Altiplano experience, Oruro is authentic and affordable.',
+      bestFor: ['Extreme altitude experience', 'Carnival festivals', 'Authentic working-class mining city'],
+      watchouts: ['Extreme altitude (3706m) — acclimatization essential', 'Very cold climate', 'Slower internet', 'Limited infrastructure'],
+      neighborhoods: ['Centro', 'San Francisco', 'Barrio Minero'],
+      mobility: 'Local buses and taxis; compact city centre.',
+      climateNote: 'High-altitude Altiplano climate — cold around 11°C year-round, very dry.',
+      workstyle: 'Slower internet; minimal coworking; local pace is slow.',
+      pace: 'Slow, cold, traditional, and culturally rich.',
+      airport: 'ORU (Capitán Eduardo Avaroa) with connections to La Paz and other Bolivian cities.',
+      timeToNature: 'Altiplano landscape, mining areas, Salar de Uyuni 4 hours south.'
     }
   }
 }
