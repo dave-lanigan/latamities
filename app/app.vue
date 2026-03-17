@@ -517,6 +517,38 @@ useHead({
               <p class="mt-2 text-sm leading-6 text-primary-foreground">{{ selectedCity.details.timeToNature }}</p>
             </div>
           </div>
+
+          <!-- Affiliate resources -->
+          <div class="rounded-2xl border border-slate-100 p-4">
+            <p class="mb-3 text-xs font-bold uppercase tracking-[0.18em] text-slate-400">Resources</p>
+            <div class="space-y-2">
+              <a
+                href="https://wise.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="group flex items-center justify-between rounded-xl bg-[#9FE870]/20 px-4 py-3 transition hover:bg-[#9FE870]/35"
+              >
+                <div>
+                  <p class="text-sm font-bold text-slate-900">Open a Wise account</p>
+                  <p class="text-xs text-slate-500">Send money like a local, zero hidden fees</p>
+                </div>
+                <ArrowRight class="h-4 w-4 shrink-0 text-slate-400 transition group-hover:translate-x-0.5" />
+              </a>
+              <a
+                :href="`https://www.coworker.com/search?q=${encodeURIComponent(selectedCity.name)}`"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="group flex items-center justify-between rounded-xl bg-blue-50 px-4 py-3 transition hover:bg-blue-100"
+              >
+                <div>
+                  <p class="text-sm font-bold text-slate-900">Find co-working in {{ selectedCity.name }}</p>
+                  <p class="text-xs text-slate-500">Day passes, desks &amp; memberships</p>
+                </div>
+                <ArrowRight class="h-4 w-4 shrink-0 text-slate-400 transition group-hover:translate-x-0.5" />
+              </a>
+            </div>
+            <p class="mt-2 text-right text-[10px] text-slate-300">Partner links</p>
+          </div>
         </div>
       </div>
     </Transition>

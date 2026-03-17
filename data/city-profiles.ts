@@ -1612,6 +1612,33 @@ const cityProfilesByName: Record<string, CityProfile> = {
       timeToNature: 'Nevado del Tolima, the coffee region, and the Magdalena river valley are all close by.'
     }
   },
+  "Santa Marta": {
+    id: 'santa-marta',
+    name: 'Santa Marta',
+    country: 'Colombia',
+    coordinates: [-74.1994, 11.2408],
+    snapshot: {
+      populationMetro: '0.6M',
+      altitudeM: 4,
+      landscape: 'Caribbean beach city beneath the Sierra Nevada',
+      purchasingPowerRank: 50,
+      internet: { downloadMbps: 145, uploadMbps: 70, latencyMs: 20 },
+      ...climate.santaMartaCaribbean
+    },
+    details: {
+      tagline: "Colombia's oldest city — Caribbean beach life with the world's highest coastal mountain backdrop.",
+      overview: "Santa Marta is Colombia's oldest Spanish city (founded 1525) and one of the most scenically dramatic: the snow-capped Sierra Nevada de Santa Marta rises from sea level to 5700m just kilometres inland, the most extreme coastal mountain range on Earth. The city has a growing expat and digital nomad scene centred around the Rodadero and El Rodadero beach areas, affordable Caribbean seafood, and direct access to Tayrona National Park.",
+      bestFor: ['Caribbean beach lifestyle in Colombia', 'Tayrona and Sierra Nevada access', 'More relaxed and affordable than Cartagena'],
+      watchouts: ['Hot and humid virtually year-round', 'Infrastructure and coworking options less developed than larger cities', 'Power outages can occur in surrounding areas'],
+      neighborhoods: ['El Rodadero', 'Centro Histórico', 'Bello Horizonte', 'Taganga', 'Minca (mountain village)'],
+      mobility: 'Taxis and rideshare are the main options; a short bus hop connects to Rodadero beach.',
+      climateNote: 'Hot Caribbean climate around 31°C year-round. Very dry from December to April, with a moderate wet season peaking in October.',
+      workstyle: 'Adequate broadband in main residential zones; coworking is limited but growing with the nomad scene.',
+      pace: 'Relaxed Caribbean pace — unhurried, warm, and beach-oriented.',
+      airport: 'SMR (Simón Bolívar) with flights to Bogotá, Medellín, and some Caribbean destinations.',
+      timeToNature: 'Tayrona National Park is 45 minutes away; Ciudad Perdida trek departs from here; Minca cloud forest in the hills above.'
+    }
+  },
   Chiclayo: {
     id: 'chiclayo',
     name: 'Chiclayo',
