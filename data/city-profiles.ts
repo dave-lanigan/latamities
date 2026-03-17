@@ -5,6 +5,11 @@ export interface MonthlyDatum {
   value: number
 }
 
+export interface PlaceHighlight {
+  name: string
+  note?: string
+}
+
 export interface CityProfile {
   id: string
   name: string
@@ -33,8 +38,18 @@ export interface CityProfile {
     climateNote: string
     workstyle: string
     pace: string
-    airport: string
+    airport: {
+      description: string
+      rideshareFromAirport: boolean
+      rideshareNote?: string
+    }
     timeToNature: string
+    knownFor?: string[]
+    airbnb?: { avgNightlyUSD: number | null }
+    restaurants?: PlaceHighlight[]
+    cafes?: PlaceHighlight[]
+    bars?: PlaceHighlight[]
+    attractions?: PlaceHighlight[]
   }
 }
 
@@ -313,7 +328,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
       climateNote: 'Dry and bright from November to May, stormy but still warm in summer.',
       workstyle: 'Coworking supply is solid and coffee shops are laptop-friendly without being overly polished.',
       pace: 'Social and youthful with a strong design and maker streak.',
-      airport: 'GDL with strong domestic links and good US connections.',
+      airport: {
+        description: 'GDL with strong domestic links and good US connections.',
+        rideshareFromAirport: true,
+      },
       timeToNature: 'Roughly 45 to 90 minutes to forest trails and lakeside day trips.'
     }
   },
@@ -340,7 +358,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
       climateNote: 'Best working season is March to May or September to November.',
       workstyle: 'Rich café culture and reliable apartment internet make home-and-café work common.',
       pace: 'Dense, expressive, and extremely social after dark.',
-      airport: 'EZE for long-haul and AEP for regional hops.',
+      airport: {
+        description: 'EZE for long-haul and AEP for regional hops.',
+        rideshareFromAirport: true,
+      },
       timeToNature: 'Urban first; delta boat trips and estancias are more weekend than daily escapes.'
     }
   },
@@ -367,7 +388,11 @@ const cityProfilesByName: Record<string, CityProfile> = {
       climateNote: 'Sunny and dry most of the year with a cool wet winter.',
       workstyle: 'Strong broadband and orderly daily routines suit people who value predictability.',
       pace: 'Reserved by Latin American mega-city standards, but efficient.',
-      airport: 'SCL with strong South America coverage and many long-haul options.',
+      airport: {
+        description: 'SCL with strong South America coverage and many long-haul options.',
+        rideshareFromAirport: false,
+        rideshareNote: 'Rideshare apps are not permitted at SCL — use the official taxi rank in the arrivals hall.',
+      },
       timeToNature: 'Ski areas and mountain trails are day-trip close in season.'
     }
   },
@@ -394,7 +419,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
       climateNote: 'Warmest and brightest from December through April.',
       workstyle: 'A good apartment base city with enough cafés and some stronger hotel-lobby workspaces.',
       pace: 'Busy but not hyperactive, especially by the coast.',
-      airport: 'LIM is the region’s major connecting hub.',
+      airport: {
+        description: 'LIM is the region’s major connecting hub.',
+        rideshareFromAirport: true,
+      },
       timeToNature: 'Surf and cliff walks are immediate; mountain hikes are longer outings.'
     }
   },
@@ -421,7 +449,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
       climateNote: 'Mild year-round with pronounced wet periods in spring and autumn.',
       workstyle: 'Strong coworking market and many polished cafés in the north.',
       pace: 'Intense, professional, and varied.',
-      airport: 'BOG is one of the best-connected hubs in Latin America.',
+      airport: {
+        description: 'BOG is one of the best-connected hubs in Latin America.',
+        rideshareFromAirport: true,
+      },
       timeToNature: 'Cloud forest and mountain viewpoints are close if you start early.'
     }
   },
@@ -448,7 +479,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
       climateNote: 'Pleasant for most of the year, with strongest rains from June to September.',
       workstyle: 'Huge café and coworking selection with strong event density for networking.',
       pace: 'High stimulation and highly rewarding if that is what you want.',
-      airport: 'MEX with a vast domestic network plus AIFA overflow.',
+      airport: {
+        description: 'MEX with a vast domestic network plus AIFA overflow.',
+        rideshareFromAirport: true,
+      },
       timeToNature: 'Forest parks are inside the city and proper mountain escapes are weekend-ready.'
     }
   },
@@ -475,7 +509,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
       climateNote: 'Warm, mild, and wet enough that an umbrella stays relevant.',
       workstyle: 'Good coworking density and abundant furnished rentals.',
       pace: 'Easygoing on the surface, very active socially.',
-      airport: 'MDE with strong domestic connectivity.',
+      airport: {
+        description: 'MDE with strong domestic connectivity.',
+        rideshareFromAirport: true,
+      },
       timeToNature: 'Green hills and reservoir trips are straightforward day outings.'
     }
   },
@@ -502,7 +539,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
       climateNote: 'Hot and fairly steady, with wetter months mid-year and in autumn.',
       workstyle: 'Better for apartment-first routines than all-day café hopping.',
       pace: 'Expressive, musical, and fast-moving.',
-      airport: 'CLO with solid domestic links.',
+      airport: {
+        description: 'CLO with solid domestic links.',
+        rideshareFromAirport: true,
+      },
       timeToNature: 'Cloud forest escapes and mountain roads are close.'
     }
   },
@@ -529,7 +569,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
       climateNote: 'Warm all year with wetter, stickier summer months.',
       workstyle: 'Best if you work from home or from a few known cafés rather than constant roaming.',
       pace: 'Relaxed in posture, high-energy in feeling.',
-      airport: 'GIG for international and SDU for domestic convenience.',
+      airport: {
+        description: 'GIG for international and SDU for domestic convenience.',
+        rideshareFromAirport: true,
+      },
       timeToNature: 'Nature is baked into the city through trails, peaks, lagoons, and beaches.'
     }
   },
@@ -556,7 +599,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
       climateNote: 'Very hot year-round with a wetter late summer and autumn.',
       workstyle: 'Better from apartments or hotels than from café circuits.',
       pace: 'Commercial, festive, and loud when carnival season approaches.',
-      airport: 'BAQ with easy domestic access.',
+      airport: {
+        description: 'BAQ with easy domestic access.',
+        rideshareFromAirport: true,
+      },
       timeToNature: 'Beaches and mangrove areas are easy day trips.'
     }
   },
@@ -583,7 +629,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
       climateNote: 'Warm and humid in summer, pleasantly mild in winter.',
       workstyle: 'Excellent coworking, specialty coffee, and meeting-friendly venues.',
       pace: 'Serious, fast, and inexhaustible.',
-      airport: 'GRU for global links and CGH for domestic speed.',
+      airport: {
+        description: 'GRU for global links and CGH for domestic speed.',
+        rideshareFromAirport: true,
+      },
       timeToNature: 'Atlantic forest and beach escapes are weekend-easy but not instant.'
     }
   },
@@ -610,7 +659,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
       climateNote: 'Cooler and wetter than many expect from Brazil.',
       workstyle: 'Strong apartment city with a steady café layer rather than a flashy scene.',
       pace: 'Measured, efficient, and low-drama.',
-      airport: 'CWB with good domestic service.',
+      airport: {
+        description: 'CWB with good domestic service.',
+        rideshareFromAirport: true,
+      },
       timeToNature: 'Parks are everywhere and the coast is reachable for weekends.'
     }
   },
@@ -637,7 +689,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
       climateNote: 'Warm year-round with a wetter middle of the year.',
       workstyle: 'Best approached with strong local hosting rather than independent setup.',
       pace: 'Fast, improvised, and highly context-dependent.',
-      airport: 'CCS for regional access, subject to operational variability.',
+      airport: {
+        description: 'CCS for regional access, subject to operational variability.',
+        rideshareFromAirport: true,
+      },
       timeToNature: 'Mountain viewpoints and the coast are geographically close.'
     }
   },
@@ -664,7 +719,11 @@ const cityProfilesByName: Record<string, CityProfile> = {
       climateNote: 'Spring-like temperatures all year with distinct wetter stretches.',
       workstyle: 'Good fit for apartment routines and a smaller café rotation.',
       pace: 'Measured and more compact than most capitals on this list.',
-      airport: 'UIO with decent regional access.',
+      airport: {
+        description: 'UIO with decent regional access.',
+        rideshareFromAirport: false,
+        rideshareNote: 'Rideshare apps cannot pick up at UIO — book an official airport transfer or use the taxi desk in arrivals.',
+      },
       timeToNature: 'Volcanic viewpoints and cloud forest escapes are close.'
     }
   },
@@ -691,7 +750,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
       climateNote: 'Four seasons, with pleasant shoulder months and humid summers.',
       workstyle: 'Excellent home-office city with steady services.',
       pace: 'Slow, civilized, and understated.',
-      airport: 'MVD with regional service and easy Buenos Aires links.',
+      airport: {
+        description: 'MVD with regional service and easy Buenos Aires links.',
+        rideshareFromAirport: true,
+      },
       timeToNature: 'The coast is immediate, while more varied nature is mostly a weekend trip.'
     }
   },
@@ -718,7 +780,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
       climateNote: 'Very hot summers and stormy shoulder seasons.',
       workstyle: 'Fine for apartment work with selective café use.',
       pace: 'Slower, practical, and business-oriented.',
-      airport: 'ASU handles regional connectivity well enough.',
+      airport: {
+        description: 'ASU handles regional connectivity well enough.',
+        rideshareFromAirport: true,
+      },
       timeToNature: 'River edges and countryside escapes are easy day trips.'
     }
   },
@@ -745,7 +810,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
       climateNote: 'Cool and dry for much of the year, with a wetter summer season.',
       workstyle: 'Best for shorter focused stays or travelers with flexible meeting loads.',
       pace: 'Energetic, vertical, and unusual.',
-      airport: 'LPB and nearby El Alto connections provide domestic reach.',
+      airport: {
+        description: 'LPB and nearby El Alto connections provide domestic reach.',
+        rideshareFromAirport: true,
+      },
       timeToNature: 'Mountain access is immediate and dramatic.'
     }
   },
@@ -772,7 +840,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
       climateNote: 'Hot year-round with a pronounced rainy season.',
       workstyle: 'Comfortable from apartments, hotels, and modern commercial zones.',
       pace: 'Commercial, sprawling, and warm in every sense.',
-      airport: 'VVI is an important Bolivian aviation hub.',
+      airport: {
+        description: 'VVI is an important Bolivian aviation hub.',
+        rideshareFromAirport: true,
+      },
       timeToNature: 'Wetlands, parks, and eastern reserves are within reach.'
     }
   },
@@ -799,7 +870,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
       climateNote: 'Dry and sunny for much of the year with a wetter summer.',
       workstyle: 'Best as an apartment city with a calm routine.',
       pace: 'Soft-spoken, relaxed, and comfortable.',
-      airport: 'CBB provides domestic links with some limits.',
+      airport: {
+        description: 'CBB provides domestic links with some limits.',
+        rideshareFromAirport: true,
+      },
       timeToNature: 'Valley viewpoints and nearby mountains are close.'
     }
   },
@@ -826,7 +900,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
       climateNote: 'Hot most of the year with a very wet green season from May onward.',
       workstyle: 'Strong apartment internet and a growing premium café scene.',
       pace: 'Efficient, pragmatic, and increasingly polished.',
-      airport: 'SAL is one of Central America’s more useful regional hubs.',
+      airport: {
+        description: 'SAL is one of Central America’s more useful regional hubs.',
+        rideshareFromAirport: true,
+      },
       timeToNature: 'Volcano viewpoints and surf breaks are reachable within an hour or so.'
     }  },
   Cuenca: {
@@ -852,7 +929,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
       climateNote: 'Two mild rainy seasons with dry spells in summer and early winter.',
       workstyle: 'Great for focused apartment work with a good café rotation in the historic district.',
       pace: 'Slow, beautiful, and very easy to settle into.',
-      airport: 'CUE with regional connections to Quito and Guayaquil.',
+      airport: {
+        description: 'CUE with regional connections to Quito and Guayaquil.',
+        rideshareFromAirport: true,
+      },
       timeToNature: 'Mountain trails and nature reserves are easy day outings.'
     }
   },
@@ -879,7 +959,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
       climateNote: 'Very dry and sunny with a brief rainy season from December to March.',
       workstyle: 'Solid apartment-first city with a growing café scene in the historic center.',
       pace: 'Unhurried, proud, and deeply local.',
-      airport: 'AQP with connections to Lima and Cusco.',
+      airport: {
+        description: 'AQP with connections to Lima and Cusco.',
+        rideshareFromAirport: true,
+      },
       timeToNature: 'El Misti hikes and Colca Canyon are serious nature options within a short drive.'
     }
   },
@@ -906,7 +989,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
       climateNote: 'Dry and bright October to May, then afternoon rains through the summer.',
       workstyle: 'Strong home-office and café culture, especially near the university zones.',
       pace: 'Proud, culinary-forward, and slightly quieter than Guadalajara.',
-      airport: 'PBC is small; most travelers use MEX or the Puebla-CDMX express highway.',
+      airport: {
+        description: 'PBC is small; most travelers use MEX or the Puebla-CDMX express highway.',
+        rideshareFromAirport: true,
+      },
       timeToNature: 'Popocatépetl views are immediate and Malinche national park is close.'
     }
   },
@@ -933,7 +1019,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
       climateNote: 'Warm year-round with a pronounced wet season from April through August.',
       workstyle: 'Better as an apartment city than a café-hopping base; coworking is growing but limited.',
       pace: 'Vivid, musical, and deeply rhythmic.',
-      airport: 'SSA with good domestic coverage and some international routes.',
+      airport: {
+        description: 'SSA with good domestic coverage and some international routes.',
+        rideshareFromAirport: true,
+      },
       timeToNature: 'Beaches, reefs, and the Chapada Diamantina highlands are all accessible.'
     }
   },
@@ -960,7 +1049,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
       climateNote: 'Hot all year with a wetter second half; the dry season from December to April is the most comfortable.',
       workstyle: 'Best from apartments with strong AC; café culture is limited by the heat.',
       pace: 'Tourist-forward, festive, and intensely warm.',
-      airport: 'CTG with solid domestic links and growing Caribbean routes.',
+      airport: {
+        description: 'CTG with solid domestic links and growing Caribbean routes.',
+        rideshareFromAirport: true,
+      },
       timeToNature: 'The Rosario Islands and nearby beaches are easy boat trips.'
     }
   },
@@ -987,7 +1079,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
       climateNote: 'Dry and sunny May through October; rainy and mild November through April.',
       workstyle: 'Small café scene works for shorter stays; apartment internet is adequate.',
       pace: 'Tourist-paced in the center, deeply local just outside it.',
-      airport: 'CUZ with good Lima connections and some direct international routes.',
+      airport: {
+        description: 'CUZ with good Lima connections and some direct international routes.',
+        rideshareFromAirport: true,
+      },
       timeToNature: 'Sacred Valley and Machu Picchu are the immediate draws; trekking options are extensive.'
     }
   },
@@ -1014,7 +1109,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
       climateNote: 'Almost no rain year-round; foggy winters and sunny summers like Lima but a touch warmer.',
       workstyle: 'Apartment-first with selective café use; the scene is limited but functional.',
       pace: 'Relaxed, local, and less cosmopolitan than Lima.',
-      airport: 'TRU with domestic connections to Lima and occasionally Cusco.',
+      airport: {
+        description: 'TRU with domestic connections to Lima and occasionally Cusco.',
+        rideshareFromAirport: true,
+      },
       timeToNature: 'Chan Chan ruins, Huanchaco beach, and nearby wetlands are immediate options.'
     }
   },
@@ -1041,7 +1139,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
       climateNote: 'Warm and pleasant most of the year with two wetter periods in spring and autumn.',
       workstyle: 'Good apartment internet; growing café scene but thinner than bigger cities.',
       pace: 'Calm, local, and genuinely friendly.',
-      airport: 'BGA with domestic links but limited direct international services.',
+      airport: {
+        description: 'BGA with domestic links but limited direct international services.',
+        rideshareFromAirport: true,
+      },
       timeToNature: "Chicamocha Canyon is close and one of Colombia's most dramatic natural sites."
     }
   },
@@ -1068,7 +1169,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
       climateNote: 'Mild and green year-round with two rainy seasons; umbrellas are essential.',
       workstyle: 'Best from apartments or hotel bases with occasional café use.',
       pace: 'Relaxed, agricultural, and warm in character.',
-      airport: 'PEI with growing domestic and some international connections.',
+      airport: {
+        description: 'PEI with growing domestic and some international connections.',
+        rideshareFromAirport: true,
+      },
       timeToNature: 'Cocora Valley and coffee farm tours are within 30 to 90 minutes.'
     }
   },
@@ -1095,7 +1199,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
       climateNote: 'Dry and pleasant December through April; heavy rains from May with a short dry break in July.',
       workstyle: 'Good coworking and café options especially in the west side suburbs.',
       pace: 'Calm, organized, and less intense than South American capitals.',
-      airport: 'SJO is the major regional hub with strong US and European connections.',
+      airport: {
+        description: 'SJO is the major regional hub with strong US and European connections.',
+        rideshareFromAirport: true,
+      },
       timeToNature: 'Cloud forests, volcanoes, and both coasts are within two hours.'
     }
   },
@@ -1122,7 +1229,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
       climateNote: 'Hot dry summers and mild winters; spring and autumn are the sweet spots.',
       workstyle: 'Excellent café culture driven by the student population.',
       pace: 'Active, intellectual, and a bit rawer than Buenos Aires.',
-      airport: 'COR with domestic links and some direct international routes.',
+      airport: {
+        description: 'COR with domestic links and some direct international routes.',
+        rideshareFromAirport: true,
+      },
       timeToNature: 'Sierras de Córdoba hills are quick day-trip escapes with hiking and rivers.'
     }
   },
@@ -1149,7 +1259,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
       climateNote: 'Hot and very wet most of the year; slightly drier from June to September but never truly dry.',
       workstyle: 'Apartment-first with reliable broadband; the coworking scene is limited.',
       pace: 'Hot, river-paced, and viscerally different from any other city on this list.',
-      airport: 'MAO is one of the most important airports in the Amazon region.',
+      airport: {
+        description: 'MAO is one of the most important airports in the Amazon region.',
+        rideshareFromAirport: true,
+      },
       timeToNature: 'The Amazon is immediate — river tours, jungle lodges, and the Meeting of the Waters are minutes away.'
     }
   },
@@ -1176,7 +1289,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
       climateNote: 'Warm and wet in summer, dry and mild in winter — the most comfortable season runs from May to September.',
       workstyle: 'Strong broadband, growing coworking scene, and excellent café density in Savassi.',
       pace: 'Social, food-forward, and less frenetic than São Paulo.',
-      airport: 'CNF (Confins) for major routes; PLU (Pampulha) for select domestic hops.',
+      airport: {
+        description: 'CNF (Confins) for major routes; PLU (Pampulha) for select domestic hops.',
+        rideshareFromAirport: true,
+      },
       timeToNature: 'Serra do Cipó and Inhotim (world-class outdoor art museum) are easy day trips.'
     }
   },
@@ -1203,7 +1319,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
       climateNote: 'Warm summers and mild winters; rain is spread throughout the year.',
       workstyle: 'Strong coworking and café scene concentrated in Trindade and near UFSC.',
       pace: 'Tech-startup energy meets surf-town relaxation.',
-      airport: 'FLN with solid domestic connections.',
+      airport: {
+        description: 'FLN with solid domestic connections.',
+        rideshareFromAirport: true,
+      },
       timeToNature: 'Beaches and lagoons are immediate; Serra Gaúcha is a weekend trip.'
     }
   },
@@ -1230,7 +1349,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
       climateNote: 'Hot and sunny most of the year; heavy rains concentrated from February through May.',
       workstyle: 'Decent broadband and a growing coworking base, especially in Aldeota.',
       pace: 'Warm, sun-forward, and distinctly northeastern in energy.',
-      airport: 'FOR with domestic coverage and some international routes.',
+      airport: {
+        description: 'FOR with domestic coverage and some international routes.',
+        rideshareFromAirport: true,
+      },
       timeToNature: 'Jericoacoara and the Lençóis Maranhenses are within a day of travel.'
     }
   },
@@ -1257,7 +1379,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
       climateNote: 'Warm year-round with a very pronounced wet season from March through July.',
       workstyle: 'Strong broadband in Boa Viagem; coworking is growing but thinner than southern cities.',
       pace: 'Hot, festive, and deeply northeastern in character.',
-      airport: 'REC with solid domestic coverage and some international routes.',
+      airport: {
+        description: 'REC with solid domestic coverage and some international routes.',
+        rideshareFromAirport: true,
+      },
       timeToNature: 'Natural reef pools at Porto de Galinhas are among the best in Brazil, around an hour away.'
     }
   },
@@ -1284,7 +1409,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
       climateNote: 'Hot and dry in spring, rainy July through October, pleasant November through February.',
       workstyle: 'Growing digital nomad scene with coworking near Paseo de Montejo.',
       pace: 'Gracious, slow-burning, and deeply rooted in Yucatecan identity.',
-      airport: 'MID with good domestic links and some US connections.',
+      airport: {
+        description: 'MID with good domestic links and some US connections.',
+        rideshareFromAirport: true,
+      },
       timeToNature: 'Cenotes and Chichén Itzá are within an hour or two; the Gulf coast is close.'
     }
   },
@@ -1311,7 +1439,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
       climateNote: 'Dry and warm spring, rainy summers, very pleasant October through February.',
       workstyle: 'Apartment-first with selective café use; coworking is limited but growing.',
       pace: 'Industrial, practical, and quieter than the big three Mexican cities.',
-      airport: 'BJX (Del Bajío) serving León and Guanajuato with strong US and domestic links.',
+      airport: {
+        description: 'BJX (Del Bajío) serving León and Guanajuato with strong US and domestic links.',
+        rideshareFromAirport: true,
+      },
       timeToNature: 'Guanajuato city and Sierra de Lobos park are both under an hour away.'
     }
   },
@@ -1338,7 +1469,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
       climateNote: 'Mild and pleasant October through May; rainy season brings heavy afternoon downpours.',
       workstyle: 'Best from apartments with reliable home internet; coworking is sparse.',
       pace: 'Local, unhurried, and distinctly Central American.',
-      airport: 'TGU with regional Central American links.',
+      airport: {
+        description: 'TGU with regional Central American links.',
+        rideshareFromAirport: true,
+      },
       timeToNature: 'Cloud forests and La Tigra national park are close to the city.'
     }
   },
@@ -1365,7 +1499,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
       climateNote: 'Spring-like temperatures year-round with heavy rains from May through October.',
       workstyle: 'Solid coworking options in Zona 10; good café density in the modern zones.',
       pace: 'Busy, commercial, and fast-moving in the modern quarter.',
-      airport: 'GUA is the main Central American hub with strong US and regional connections.',
+      airport: {
+        description: 'GUA is the main Central American hub with strong US and regional connections.',
+        rideshareFromAirport: true,
+      },
       timeToNature: 'Antigua, Lake Atitlán, and volcanoes are all within two hours.'
     }
   },
@@ -1392,7 +1529,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
       climateNote: 'Very hot year-round; rainy season from May through October brings some relief.',
       workstyle: 'Apartment-first; internet is usable but not elite.',
       pace: 'Local, low-key, and uncrowded by tourists.',
-      airport: 'MGA with regional Central American connections.',
+      airport: {
+        description: 'MGA with regional Central American connections.',
+        rideshareFromAirport: true,
+      },
       timeToNature: 'Granada, Ometepe Island, and Pacific surf are all under two hours.'
     }
   },
@@ -1419,7 +1559,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
       climateNote: 'Warm and humid year-round with a wetter season from May through November.',
       workstyle: 'Best from hotels or apartments with reliable internet; coworking is minimal.',
       pace: 'Commercial, fast-moving, and purely functional in feel.',
-      airport: 'SAP is the busiest airport in Honduras with US and regional connections.',
+      airport: {
+        description: 'SAP is the busiest airport in Honduras with US and regional connections.',
+        rideshareFromAirport: true,
+      },
       timeToNature: 'Copán ruins and Bay Islands are within two to three hours in either direction.'
     }
   },
@@ -1446,7 +1589,11 @@ const cityProfilesByName: Record<string, CityProfile> = {
       climateNote: 'Mediterranean — dry warm summers and wet cool winters; fog is common year-round.',
       workstyle: 'Good café density on the tourist cerros; home internet is reliable.',
       pace: 'Creative, relaxed, and slightly chaotic.',
-      airport: 'No commercial airport; SCL (Santiago) is 90 minutes away.',
+      airport: {
+        description: 'No commercial airport; SCL (Santiago) is 90 minutes away.',
+        rideshareFromAirport: false,
+        rideshareNote: 'The nearest commercial airport is SCL in Santiago (90 min away) — rideshare is not legal from that terminal; use official taxis.',
+      },
       timeToNature: 'Pacific beaches and coastal trails are immediate; wine country is under an hour east.'
     }
   },
@@ -1473,7 +1620,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
       climateNote: 'Rainy oceanic climate with a brief warm dry period from December to March.',
       workstyle: 'Solid broadband and a genuine café culture driven by the student population.',
       pace: 'Energetic, youthful, and more relaxed than Santiago.',
-      airport: 'CCP with domestic links to Santiago and some southern destinations.',
+      airport: {
+        description: 'CCP with domestic links to Santiago and some southern destinations.',
+        rideshareFromAirport: true,
+      },
       timeToNature: 'Lake Laja, the Bio Bio river, and the beginning of the lake district are all close.'
     }
   },
@@ -1500,7 +1650,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
       climateNote: 'Very dry and sunny most of the year; hot summers and cool winters with light snow on the peaks.',
       workstyle: 'Good broadband and a relaxed café scene; wineries double as productive work retreats.',
       pace: 'Laid-back, outdoorsy, and wine-forward.',
-      airport: 'MDZ with domestic links and some direct international routes.',
+      airport: {
+        description: 'MDZ with domestic links and some direct international routes.',
+        rideshareFromAirport: true,
+      },
       timeToNature: 'Aconcagua base camps, ski resorts, and white-water rafting are all within 90 minutes.'
     }
   },
@@ -1527,7 +1680,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
       climateNote: 'Subtropical humid climate with warm summers around 26°C and cool winters dipping to 14°C. Rain is well distributed year-round.',
       workstyle: 'Strong broadband, growing coworking scene, and productive café culture in upscale neighborhoods.',
       pace: 'Cosmopolitan, cultured, and more reserved than tropical Brazil.',
-      airport: 'POA with wide domestic coverage and some direct international routes to Buenos Aires, Santiago, and Miami.',
+      airport: {
+        description: 'POA with wide domestic coverage and some direct international routes to Buenos Aires, Santiago, and Miami.',
+        rideshareFromAirport: true,
+      },
       timeToNature: 'Serra Gaúcha wine country, Gramado, and the Pampas are all within 2 hours.'
     }
   },
@@ -1554,7 +1710,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
       climateNote: 'Tropical with a dry season from December to April and a heavy wet season the rest of the year. Temperatures are consistently around 32°C.',
       workstyle: 'Excellent broadband, many coworking spaces, and a business-oriented café culture.',
       pace: 'Fast-paced, international, and commercially focused.',
-      airport: 'PTY (Tocumen) is the major hub of Central America with extensive direct connections across the Americas.',
+      airport: {
+        description: 'PTY (Tocumen) is the major hub of Central America with extensive direct connections across the Americas.',
+        rideshareFromAirport: true,
+      },
       timeToNature: 'San Blas Islands, Bocas del Toro, and the Cloud Forest at El Valle are all accessible as day or weekend trips.'
     }
   },
@@ -1581,7 +1740,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
       climateNote: 'Warm and sunny days year-round with cooler evenings. Brief rainy season November to March, very dry May to September.',
       workstyle: 'Quiet and focused; a handful of cafés and small coworking spots with decent fibre lines in the centre.',
       pace: 'Slow, colonial, and serenely calm.',
-      airport: 'SRE with connections to La Paz, Cochabamba, and Santa Cruz.',
+      airport: {
+        description: 'SRE with connections to La Paz, Cochabamba, and Santa Cruz.',
+        rideshareFromAirport: true,
+      },
       timeToNature: 'Dinosaur footprints at Cal Orcko, the Uyuni salt flats 6 hours south, and Potosí a short drive away.'
     }
   },
@@ -1608,7 +1770,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
       climateNote: 'Warm subtropical highland climate around 27°C with bimodal rainfall. April-May and October-November are the wettest periods.',
       workstyle: 'Good fibre broadband in built-up areas; café culture is developing but less dense than Medellín.',
       pace: 'Easy-going, warm, and community-oriented.',
-      airport: 'IBE (Perales) with connections to Bogotá; plans for a new airport are ongoing.',
+      airport: {
+        description: 'IBE (Perales) with connections to Bogotá; plans for a new airport are ongoing.',
+        rideshareFromAirport: true,
+      },
       timeToNature: 'Nevado del Tolima, the coffee region, and the Magdalena river valley are all close by.'
     }
   },
@@ -1635,7 +1800,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
       climateNote: 'Hot Caribbean climate around 31°C year-round. Very dry from December to April, with a moderate wet season peaking in October.',
       workstyle: 'Adequate broadband in main residential zones; coworking is limited but growing with the nomad scene.',
       pace: 'Relaxed Caribbean pace — unhurried, warm, and beach-oriented.',
-      airport: 'SMR (Simón Bolívar) with flights to Bogotá, Medellín, and some Caribbean destinations.',
+      airport: {
+        description: 'SMR (Simón Bolívar) with flights to Bogotá, Medellín, and some Caribbean destinations.',
+        rideshareFromAirport: true,
+      },
       timeToNature: 'Tayrona National Park is 45 minutes away; Ciudad Perdida trek departs from here; Minca cloud forest in the hills above.'
     }
   },
@@ -1662,7 +1830,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
       climateNote: 'Hot desert climate with minimal rain. Warm year-round around 30°C, coolest in June-July.',
       workstyle: 'Good broadband in central areas; growing nomad presence with a few coworking options.',
       pace: 'Easygoing, traditional, and commercially vibrant.',
-      airport: 'CIX (José María Corpancho) with connections to Lima and some coastal cities.',
+      airport: {
+        description: 'CIX (José María Corpancho) with connections to Lima and some coastal cities.',
+        rideshareFromAirport: true,
+      },
       timeToNature: 'Huacas de Moche, Túmulo Huaca Rajada, and the Sechura Desert are all immediately nearby.'
     }
   },
@@ -1689,7 +1860,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
       climateNote: 'Hyper-arid desert climate. Extremely hot and dry except January-March when brief rains can occur.',
       workstyle: 'Adequate broadband; minimal coworking but steady internet.',
       pace: 'Hot, fast-paced commercial city without tourism polish.',
-      airport: 'PIU (Cap. Guillermo Concha Ibáñez) with links to Lima and Ecuador.',
+      airport: {
+        description: 'PIU (Cap. Guillermo Concha Ibáñez) with links to Lima and Ecuador.',
+        rideshareFromAirport: true,
+      },
       timeToNature: 'Sechura Desert, Ecuador border, and Máncora beach town (2 hours north).'
     }
   },
@@ -1716,7 +1890,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
       climateNote: 'Tropical rainforest climate — hot, humid, and wet year-round around 28-29°C with heavy rainfall.',
       workstyle: 'Internet is the major constraint; hotels and lodges offer adequate but sometimes unstable connectivity.',
       pace: 'Slow, chaotic, and utterly immersive in jungle life.',
-      airport: 'IQT (Coronel FAP Francisco Secada Vignetta) with flights to Lima and some other jungle cities.',
+      airport: {
+        description: 'IQT (Coronel FAP Francisco Secada Vignetta) with flights to Lima and some other jungle cities.',
+        rideshareFromAirport: true,
+      },
       timeToNature: 'Amazon River is the city; jungle lodges, river tours, and rainforest day trips everywhere.'
     }
   },
@@ -1743,7 +1920,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
       climateNote: 'Cold desert coastal climate driven by the Humboldt Current. Cool (18°C), dry, and often overcast.',
       workstyle: 'Solid broadband; authentic local cafés; minimal distractions.',
       pace: 'Industrial, purposeful, and unpretentious.',
-      airport: 'CIX or flying into Lima; Chimbote is accessed via coast road or flights to nearby Trujillo.',
+      airport: {
+        description: 'CIX or flying into Lima; Chimbote is accessed via coast road or flights to nearby Trujillo.',
+        rideshareFromAirport: true,
+      },
       timeToNature: 'Coastal cliffs, fish-rich waters, and desert landscape; Huaraz and the Cordillera Blanca are inland.'
     }
   },
@@ -1770,7 +1950,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
       climateNote: 'Tropical humid climate with a brief cool dry season December-April, then warm wet June-September.',
       workstyle: 'Excellent broadband, many coworking spaces, and a vibrant café culture.',
       pace: 'Fast, commercial, and energetic.',
-      airport: 'GYE (José Joaquín de Olmedo) is Ecuador\'s main international hub with direct flights across the Americas and to Miami/Europe.',
+      airport: {
+        description: 'GYE (José Joaquín de Olmedo) is Ecuador\'s main international hub with direct flights across the Americas and to Miami/Europe.',
+        rideshareFromAirport: true,
+      },
       timeToNature: 'Galápagos islands (flights depart from here), Otavalo markets 3 hours away, cloud forests nearby.'
     }
   },
@@ -1797,7 +1980,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
       climateNote: 'Humid subtropical with high rainfall year-round, especially in rainy season.',
       workstyle: 'Adequate broadband in central areas; quieter than coastal cities.',
       pace: 'Relaxed, humid, and localized.',
-      airport: 'Small regional airport; routing through Guayaquil or Quito is typical.',
+      airport: {
+        description: 'Small regional airport; routing through Guayaquil or Quito is typical.',
+        rideshareFromAirport: true,
+      },
       timeToNature: 'Cloud forests and indigenous reserves are close; rivers and waterfalls nearby.'
     }
   },
@@ -1824,7 +2010,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
       climateNote: 'Cool coastal climate with minimal rain except in warm season January-March.',
       workstyle: 'Good broadband on the coast; relaxed beach town pace.',
       pace: 'Beach-town laid-back.',
-      airport: 'Small regional airport; routing through Guayaquil typical.',
+      airport: {
+        description: 'Small regional airport; routing through Guayaquil typical.',
+        rideshareFromAirport: true,
+      },
       timeToNature: 'Pacific Ocean, whale watching in season, nearby beaches.'
     }
   },
@@ -1851,7 +2040,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
       climateNote: 'Hot valley climate around 31-33°C year-round with bimodal rainfall.',
       workstyle: 'Adequate broadband; commercial city focus.',
       pace: 'Hot, fast, and commercially intense.',
-      airport: 'CUC (Camilo Daza) with connections to major Colombian cities.',
+      airport: {
+        description: 'CUC (Camilo Daza) with connections to major Colombian cities.',
+        rideshareFromAirport: true,
+      },
       timeToNature: 'Serranía del Perijá mountains; border river; Venezuela across the way.'
     }
   },
@@ -1878,7 +2070,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
       climateNote: 'Cool cloud-forest climate around 18-20°C with constant cloud cover and high annual rainfall.',
       workstyle: 'Excellent broadband, many coworking spaces, strong café culture.',
       pace: 'Cool, misty, energetic with university vibe.',
-      airport: 'MZL (La Nubia) with connections to major cities; often access via Medellín.',
+      airport: {
+        description: 'MZL (La Nubia) with connections to major cities; often access via Medellín.',
+        rideshareFromAirport: true,
+      },
       timeToNature: 'Coffee plantations, cloud forests, Nevado del Ruiz volcano, and hiking everywhere.'
     }
   },
@@ -1905,7 +2100,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
       climateNote: 'Warm lowland climate around 27°C with bimodal heavy rainfall.',
       workstyle: 'Good broadband; growing local economy.',
       pace: 'Warm, commercial, and wide-open.',
-      airport: 'VVC (Apiay) with connections to Bogotá and other cities.',
+      airport: {
+        description: 'VVC (Apiay) with connections to Bogotá and other cities.',
+        rideshareFromAirport: true,
+      },
       timeToNature: 'Llanos landscape, Los Llanos wetlands, and eastern mountains.'
     }
   },
@@ -1932,7 +2130,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
       climateNote: 'Cool highland climate around 16-17°C year-round with steady rainfall.',
       workstyle: 'Adequate broadband; local café culture.',
       pace: 'Cool, cultural, and community-oriented.',
-      airport: 'PSO (Antonio Nariño Ripoll) with connections to Bogotá and Ecuador.',
+      airport: {
+        description: 'PSO (Antonio Nariño Ripoll) with connections to Bogotá and Ecuador.',
+        rideshareFromAirport: true,
+      },
       timeToNature: 'Laguna de la Cocha, volcanic landscapes, and Ecuador cloud forests nearby.'
     }
   },
@@ -1959,7 +2160,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
       climateNote: 'Hot Caribbean climate around 31°C with high humidity and bimodal rainfall.',
       workstyle: 'Adequate broadband; local pace.',
       pace: 'Hot, informal, and community-spirited.',
-      airport: 'MTR (Los Córdobas) with connections to major cities.',
+      airport: {
+        description: 'MTR (Los Córdobas) with connections to major cities.',
+        rideshareFromAirport: true,
+      },
       timeToNature: 'Caño Cristales (liquid rainbow river), Caribbean coast 1-2 hours away.'
     }
   },
@@ -1986,7 +2190,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
       climateNote: 'Caribbean valley climate — very hot and mostly dry except for May-October rains.',
       workstyle: 'Adequate broadband; laid-back pace.',
       pace: 'Hot, folkloric, and music-centric.',
-      airport: 'VLD (Alfonso López Pumarejo) with connections to Bogotá and Caribbean cities.',
+      airport: {
+        description: 'VLD (Alfonso López Pumarejo) with connections to Bogotá and Caribbean cities.',
+        rideshareFromAirport: true,
+      },
       timeToNature: 'Sierra Nevada base for trekking, river valleys, and Caribbean mountain ecosystems.'
     }
   },
@@ -2013,7 +2220,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
       climateNote: 'Cool cloud-forest climate around 21-22°C with high year-round rainfall.',
       workstyle: 'Excellent broadband, many coworking spaces, best café culture in the coffee region.',
       pace: 'Cool, vibrant, and coffee-lovers\' paradise.',
-      airport: 'ARM (Pereira) or nearby airports; Armenia is the heart of the Triangle.',
+      airport: {
+        description: 'ARM (Pereira) or nearby airports; Armenia is the heart of the Triangle.',
+        rideshareFromAirport: true,
+      },
       timeToNature: 'Coffee plantations, cloud forests, Nevados, and Valle de Cocora nearby.'
     }
   },
@@ -2040,7 +2250,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
       climateNote: 'High-altitude Altiplano climate — cold around 11°C year-round, very dry.',
       workstyle: 'Slower internet; minimal coworking; local pace is slow.',
       pace: 'Slow, cold, traditional, and culturally rich.',
-      airport: 'ORU (Capitán Eduardo Avaroa) with connections to La Paz and other Bolivian cities.',
+      airport: {
+        description: 'ORU (Capitán Eduardo Avaroa) with connections to La Paz and other Bolivian cities.',
+        rideshareFromAirport: true,
+      },
       timeToNature: 'Altiplano landscape, mining areas, Salar de Uyuni 4 hours south.'
     }
   }

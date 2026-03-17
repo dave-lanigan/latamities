@@ -4,20 +4,26 @@ import {
   ChevronDown,
   ChevronLeft,
   ChevronUp,
+  CircleCheck,
+  CircleX,
   CloudRain,
   Filter,
-  Gauge,
   Globe2,
-  Mountain,
+  Home,
+  MapPin,
   Plane,
   ShieldAlert,
+  Star,
   Sun,
   Trees,
+  UtensilsCrossed,
   Users,
   Wifi,
+  Wine,
   X
 } from 'lucide-vue-next'
 
+import Accordion from '~/components/ui/Accordion.vue'
 import Badge from '~/components/ui/Badge.vue'
 import Button from '~/components/ui/Button.vue'
 import Card from '~/components/ui/Card.vue'
@@ -420,120 +426,128 @@ useHead({
           </button>
         </div>
 
-        <div class="space-y-4 p-6">
-          <p class="text-sm leading-7 text-slate-600">{{ selectedCity.details.overview }}</p>
+        <div class="space-y-2 p-4">
 
-          <div class="grid grid-cols-2 gap-3">
-            <div class="rounded-2xl bg-sand-50 p-4">
-              <div class="flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.18em] text-slate-500">
-                <Wifi class="h-3.5 w-3.5" /> Internet
-              </div>
-              <p class="mt-2 text-lg font-extrabold text-slate-900">
-                {{ selectedCity.snapshot.internet.downloadMbps }} / {{ selectedCity.snapshot.internet.uploadMbps }} Mbps
-              </p>
-              <p class="mt-1 text-xs text-slate-500">{{ selectedCity.snapshot.internet.latencyMs }} ms latency</p>
+          <!-- 1 · About -->
+          <Accordion title="About" :default-open="true">
+            <p class="text-sm leading-7 text-slate-600">{{ selectedCity.details.overview }}</p>
+            <div v-if="selectedCity.details.knownFor?.length" class="mt-3 flex flex-wrap gap-2">
+              <Badge v-for="tag in selectedCity.details.knownFor" :key="tag" variant="secondary">{{ tag }}</Badge>
             </div>
-
-            <div class="rounded-2xl bg-sand-50 p-4">
-              <div class="flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.18em] text-slate-500">
-                <Mountain class="h-3.5 w-3.5" /> Terrain
-              </div>
-              <p class="mt-2 text-lg font-extrabold text-slate-900">{{ Math.round(selectedCity.snapshot.altitudeM * 3.28084) }} ft</p>
-              <p class="mt-1 text-xs leading-5 text-slate-500">{{ selectedCity.snapshot.landscape }}</p>
-            </div>
-
-            <div class="rounded-2xl bg-sand-50 p-4">
-              <div class="flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.18em] text-slate-500">
-                <CloudRain class="h-3.5 w-3.5" /> Rain
-              </div>
-              <p class="mt-2 text-base font-extrabold text-slate-900">
-                {{ selectedClimate?.driestMonth.month }} {{ selectedClimate?.driestMonth.value }} mm
-              </p>
-              <p class="mt-1 text-xs leading-5 text-slate-500">
-                Peaks {{ selectedClimate?.wettestMonth.month }} {{ selectedClimate?.wettestMonth.value }} mm
-              </p>
-            </div>
-
-            <div class="rounded-2xl bg-sand-50 p-4">
-              <div class="flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.18em] text-slate-500">
-                <Gauge class="h-3.5 w-3.5" /> Pace
-              </div>
-              <p class="mt-2 text-sm font-bold leading-6 text-slate-900">{{ selectedCity.details.pace }}</p>
-              <p class="mt-1 text-xs text-slate-500">Pop. {{ selectedCity.snapshot.populationMetro }}</p>
-            </div>
-
-            <div class="col-span-2 rounded-2xl bg-sand-50 p-4">
-              <div class="flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.18em] text-slate-500">
-                <Sun class="h-3.5 w-3.5" /> Perfect weather days
-              </div>
-              <p class="mt-2 text-2xl font-extrabold text-slate-900">{{ selectedClimate?.perfectWeatherDays }} <span class="text-sm font-normal text-slate-500">days / year</span></p>
-              <p class="mt-1 text-xs text-slate-500">Days with avg temperature between 75°F and 85°F</p>
-            </div>
-          </div>
-
-          <div class="rounded-2xl border border-slate-100 bg-white p-4">
-            <p class="text-xs font-bold uppercase tracking-[0.18em] text-slate-500">Best for</p>
-            <div class="mt-3 flex flex-wrap gap-2">
-              <Badge v-for="tag in selectedCity.details.bestFor" :key="tag" variant="secondary">{{ tag }}</Badge>
-            </div>
-          </div>
-
-          <div class="rounded-2xl border border-slate-100 bg-white p-4">
-            <div class="flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.18em] text-slate-500">
-              <ShieldAlert class="h-3.5 w-3.5" /> Watchouts
-            </div>
-            <ul class="mt-3 space-y-2 text-sm leading-6 text-slate-700">
-              <li v-for="item in selectedCity.details.watchouts" :key="item">{{ item }}</li>
-            </ul>
-          </div>
-
-          <div class="rounded-2xl border border-slate-100 bg-white p-4">
-            <div class="flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.18em] text-slate-500">
-              <Globe2 class="h-3.5 w-3.5" /> Daily life
-            </div>
-            <p class="mt-3 text-sm leading-7 text-slate-700">
-              <span class="font-bold text-slate-900">Neighborhoods:</span>
-              {{ selectedCity.details.neighborhoods.join(', ') }}.
-            </p>
-            <p class="mt-2 text-sm leading-7 text-slate-700">
-              <span class="font-bold text-slate-900">Mobility:</span> {{ selectedCity.details.mobility }}
-            </p>
-            <p class="mt-2 text-sm leading-7 text-slate-700">
-              <span class="font-bold text-slate-900">Workstyle:</span> {{ selectedCity.details.workstyle }}
-            </p>
-          </div>
-
-          <div class="grid grid-cols-2 gap-3">
-            <div class="rounded-2xl bg-slate-950 p-4 text-white">
-              <div class="flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.18em] text-slate-300">
-                <Plane class="h-3.5 w-3.5" /> Airport
-              </div>
-              <p class="mt-2 text-sm leading-6 text-slate-200">{{ selectedCity.details.airport }}</p>
-            </div>
-            <div class="rounded-2xl bg-primary p-4 text-white">
-              <div class="flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.18em] text-primary-foreground/80">
-                <Trees class="h-3.5 w-3.5" /> Nature
-              </div>
-              <p class="mt-2 text-sm leading-6 text-primary-foreground">{{ selectedCity.details.timeToNature }}</p>
-            </div>
-          </div>
-
-          <!-- Affiliate resources -->
-          <div class="rounded-2xl border border-slate-100 p-4">
-            <p class="mb-3 text-xs font-bold uppercase tracking-[0.18em] text-slate-400">Resources</p>
-            <div class="space-y-2">
-              <a
-                href="https://wise.com/"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="group flex items-center justify-between rounded-xl bg-[#9FE870]/20 px-4 py-3 transition hover:bg-[#9FE870]/35"
-              >
-                <div>
-                  <p class="text-sm font-bold text-slate-900">Open a Wise account</p>
-                  <p class="text-xs text-slate-500">Send money like a local, zero hidden fees</p>
+            <div class="mt-4 space-y-3">
+              <div>
+                <p class="mb-2 text-[11px] font-bold uppercase tracking-[0.16em] text-slate-400">Best for</p>
+                <div class="flex flex-wrap gap-2">
+                  <Badge v-for="tag in selectedCity.details.bestFor" :key="tag" variant="outline">{{ tag }}</Badge>
                 </div>
-                <ArrowRight class="h-4 w-4 shrink-0 text-slate-400 transition group-hover:translate-x-0.5" />
-              </a>
+              </div>
+              <div>
+                <div class="flex items-center gap-1.5 mb-2 text-[11px] font-bold uppercase tracking-[0.16em] text-slate-400">
+                  <ShieldAlert class="h-3 w-3" /> Watchouts
+                </div>
+                <ul class="space-y-1.5 text-sm leading-6 text-slate-600">
+                  <li v-for="item in selectedCity.details.watchouts" :key="item" class="flex gap-2">
+                    <span class="mt-1 shrink-0 text-amber-400">·</span>{{ item }}
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </Accordion>
+
+          <!-- 2 · Neighborhoods -->
+          <Accordion title="Best Neighborhoods">
+            <div class="flex flex-wrap gap-2">
+              <span
+                v-for="n in selectedCity.details.neighborhoods"
+                :key="n"
+                class="rounded-xl bg-sand-50 px-3 py-1.5 text-sm font-semibold text-slate-800"
+              >
+                <MapPin class="mr-1 inline h-3 w-3 text-slate-400" />{{ n }}
+              </span>
+            </div>
+            <p class="mt-3 text-sm leading-7 text-slate-600">{{ selectedCity.details.mobility }}</p>
+          </Accordion>
+
+          <!-- 3 · Airport & Transport -->
+          <Accordion title="Airport & Transport">
+            <div class="space-y-3">
+              <div class="flex items-start gap-3 rounded-xl bg-slate-50 p-3">
+                <Plane class="mt-0.5 h-4 w-4 shrink-0 text-slate-400" />
+                <p class="text-sm leading-6 text-slate-700">{{ selectedCity.details.airport.description }}</p>
+              </div>
+              <div
+                class="flex items-start gap-3 rounded-xl p-3"
+                :class="selectedCity.details.airport.rideshareFromAirport ? 'bg-emerald-50' : 'bg-red-50'"
+              >
+                <component
+                  :is="selectedCity.details.airport.rideshareFromAirport ? CircleCheck : CircleX"
+                  class="mt-0.5 h-4 w-4 shrink-0"
+                  :class="selectedCity.details.airport.rideshareFromAirport ? 'text-emerald-500' : 'text-red-500'"
+                />
+                <div>
+                  <p
+                    class="text-sm font-semibold"
+                    :class="selectedCity.details.airport.rideshareFromAirport ? 'text-emerald-800' : 'text-red-800'"
+                  >
+                    {{ selectedCity.details.airport.rideshareFromAirport ? 'Rideshare legal from airport' : 'Rideshare not legal from airport' }}
+                  </p>
+                  <p v-if="selectedCity.details.airport.rideshareNote" class="mt-0.5 text-xs leading-5 text-slate-500">
+                    {{ selectedCity.details.airport.rideshareNote }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </Accordion>
+
+          <!-- 4 · Stay (Airbnb) -->
+          <Accordion title="Where to Stay">
+            <div class="space-y-2">
+              <div class="flex items-center justify-between rounded-xl bg-sand-50 px-4 py-3">
+                <div class="flex items-center gap-2">
+                  <Home class="h-4 w-4 text-slate-400" />
+                  <div>
+                    <p class="text-sm font-bold text-slate-900">
+                      <template v-if="selectedCity.details.airbnb?.avgNightlyUSD != null">
+                        ~${{ selectedCity.details.airbnb.avgNightlyUSD }} <span class="text-xs font-normal text-slate-500">/ night avg</span>
+                      </template>
+                      <template v-else>
+                        <span class="text-slate-400">Avg price coming soon</span>
+                      </template>
+                    </p>
+                    <p class="text-xs text-slate-400">Airbnb · entire place</p>
+                  </div>
+                </div>
+                <a
+                  :href="`https://www.airbnb.com/s/${encodeURIComponent(selectedCity.name + ', ' + selectedCity.country)}/homes`"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="flex items-center gap-1 rounded-lg bg-[#FF5A5F] px-3 py-1.5 text-xs font-bold text-white transition hover:bg-[#e55157]"
+                >
+                  Search <ArrowRight class="h-3 w-3" />
+                </a>
+              </div>
+            </div>
+          </Accordion>
+
+          <!-- 5 · Work -->
+          <Accordion title="Working Here">
+            <div class="space-y-3">
+              <div class="grid grid-cols-3 gap-2">
+                <div class="rounded-xl bg-sand-50 p-3 text-center">
+                  <Wifi class="mx-auto mb-1 h-3.5 w-3.5 text-slate-400" />
+                  <p class="text-base font-extrabold text-slate-900">{{ selectedCity.snapshot.internet.downloadMbps }}</p>
+                  <p class="text-[10px] text-slate-400">Mbps ↓</p>
+                </div>
+                <div class="rounded-xl bg-sand-50 p-3 text-center">
+                  <p class="mt-4 text-base font-extrabold text-slate-900">{{ selectedCity.snapshot.internet.uploadMbps }}</p>
+                  <p class="text-[10px] text-slate-400">Mbps ↑</p>
+                </div>
+                <div class="rounded-xl bg-sand-50 p-3 text-center">
+                  <p class="mt-4 text-base font-extrabold text-slate-900">{{ selectedCity.snapshot.internet.latencyMs }}</p>
+                  <p class="text-[10px] text-slate-400">ms latency</p>
+                </div>
+              </div>
+              <p class="text-sm leading-7 text-slate-600">{{ selectedCity.details.workstyle }}</p>
               <a
                 :href="`https://www.coworker.com/search?q=${encodeURIComponent(selectedCity.name)}`"
                 target="_blank"
@@ -547,8 +561,147 @@ useHead({
                 <ArrowRight class="h-4 w-4 shrink-0 text-slate-400 transition group-hover:translate-x-0.5" />
               </a>
             </div>
+          </Accordion>
+
+          <!-- 6 · Eat & Drink -->
+          <Accordion title="Eat & Drink">
+            <div class="space-y-4">
+              <template v-if="(selectedCity.details.restaurants?.length || 0) + (selectedCity.details.cafes?.length || 0) + (selectedCity.details.bars?.length || 0) > 0">
+                <div v-if="selectedCity.details.restaurants?.length">
+                  <p class="mb-2 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.16em] text-slate-400">
+                    <UtensilsCrossed class="h-3 w-3" /> Restaurants
+                  </p>
+                  <ul class="space-y-1.5">
+                    <li v-for="r in selectedCity.details.restaurants" :key="r.name" class="text-sm text-slate-700">
+                      <span class="font-semibold">{{ r.name }}</span>
+                      <span v-if="r.note" class="ml-1 text-slate-400">— {{ r.note }}</span>
+                    </li>
+                  </ul>
+                </div>
+                <div v-if="selectedCity.details.cafes?.length">
+                  <p class="mb-2 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.16em] text-slate-400">
+                    ☕ Cafes
+                  </p>
+                  <ul class="space-y-1.5">
+                    <li v-for="c in selectedCity.details.cafes" :key="c.name" class="text-sm text-slate-700">
+                      <span class="font-semibold">{{ c.name }}</span>
+                      <span v-if="c.note" class="ml-1 text-slate-400">— {{ c.note }}</span>
+                    </li>
+                  </ul>
+                </div>
+                <div v-if="selectedCity.details.bars?.length">
+                  <p class="mb-2 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.16em] text-slate-400">
+                    <Wine class="h-3 w-3" /> Bars
+                  </p>
+                  <ul class="space-y-1.5">
+                    <li v-for="b in selectedCity.details.bars" :key="b.name" class="text-sm text-slate-700">
+                      <span class="font-semibold">{{ b.name }}</span>
+                      <span v-if="b.note" class="ml-1 text-slate-400">— {{ b.note }}</span>
+                    </li>
+                  </ul>
+                </div>
+              </template>
+              <p v-else class="text-sm text-slate-400 italic">Curated picks coming soon.</p>
+              <a
+                :href="`https://www.tripadvisor.com/Search?q=${encodeURIComponent(selectedCity.name + ' restaurants')}`"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="group flex items-center gap-1.5 text-xs font-semibold text-lagoon-500 hover:underline"
+              >
+                See more on TripAdvisor <ArrowRight class="h-3 w-3 transition group-hover:translate-x-0.5" />
+              </a>
+            </div>
+          </Accordion>
+
+          <!-- 7 · See & Do -->
+          <Accordion title="Top Attractions">
+            <div class="space-y-3">
+              <template v-if="selectedCity.details.attractions?.length">
+                <ul class="space-y-1.5">
+                  <li v-for="a in selectedCity.details.attractions" :key="a.name" class="text-sm text-slate-700">
+                    <Star class="mr-1 inline h-3 w-3 text-amber-400" />
+                    <span class="font-semibold">{{ a.name }}</span>
+                    <span v-if="a.note" class="ml-1 text-slate-400">— {{ a.note }}</span>
+                  </li>
+                </ul>
+              </template>
+              <p v-else class="text-sm text-slate-400 italic">Curated picks coming soon.</p>
+              <a
+                :href="`https://www.tripadvisor.com/Search?q=${encodeURIComponent(selectedCity.name + ' attractions')}`"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="group flex items-center gap-1.5 text-xs font-semibold text-lagoon-500 hover:underline"
+              >
+                See more on TripAdvisor <ArrowRight class="h-3 w-3 transition group-hover:translate-x-0.5" />
+              </a>
+            </div>
+          </Accordion>
+
+          <!-- 8 · Climate & Nature -->
+          <Accordion title="Climate & Nature">
+            <div class="space-y-3">
+              <div class="grid grid-cols-2 gap-2">
+                <div class="rounded-xl bg-sand-50 p-3">
+                  <div class="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wide text-slate-400">
+                    <Sun class="h-3 w-3" /> Perfect days
+                  </div>
+                  <p class="mt-1.5 text-xl font-extrabold text-slate-900">{{ selectedClimate?.perfectWeatherDays }}</p>
+                  <p class="text-[10px] text-slate-400">75–85°F days / year</p>
+                </div>
+                <div class="rounded-xl bg-sand-50 p-3">
+                  <div class="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wide text-slate-400">
+                    <CloudRain class="h-3 w-3" /> Rainfall
+                  </div>
+                  <p class="mt-1.5 text-sm font-bold text-slate-900">
+                    {{ selectedClimate?.driestMonth.month }} {{ selectedClimate?.driestMonth.value }}mm
+                  </p>
+                  <p class="text-[10px] text-slate-400">Peak {{ selectedClimate?.wettestMonth.month }} {{ selectedClimate?.wettestMonth.value }}mm</p>
+                </div>
+              </div>
+
+              <!-- Temperature bar chart -->
+              <div>
+                <p class="mb-2 text-[10px] font-bold uppercase tracking-wide text-slate-400">Avg temperature</p>
+                <div class="flex items-end gap-0.5 h-12">
+                  <div
+                    v-for="d in selectedClimate?.temperatureByMonth"
+                    :key="d.month"
+                    class="flex-1 rounded-t-sm transition-opacity hover:opacity-80 cursor-default"
+                    :style="{ height: Math.max(4, (d.value / 35) * 48) + 'px', backgroundColor: tempColor(d.value) }"
+                    :title="`${d.month}: ${d.value}°C`"
+                  />
+                </div>
+                <div class="mt-1 flex justify-between text-[9px] text-slate-300">
+                  <span>Jan</span><span>Jun</span><span>Dec</span>
+                </div>
+              </div>
+
+              <p class="text-sm leading-6 text-slate-600">{{ selectedCity.details.climateNote }}</p>
+              <div class="flex items-start gap-2 rounded-xl bg-primary/10 p-3">
+                <Trees class="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                <p class="text-sm leading-6 text-slate-700">{{ selectedCity.details.timeToNature }}</p>
+              </div>
+            </div>
+          </Accordion>
+
+          <!-- Wise affiliate -->
+          <div class="rounded-2xl border border-slate-100 p-4">
+            <p class="mb-3 text-xs font-bold uppercase tracking-[0.18em] text-slate-400">Resources</p>
+            <a
+              href="https://wise.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="group flex items-center justify-between rounded-xl bg-[#9FE870]/20 px-4 py-3 transition hover:bg-[#9FE870]/35"
+            >
+              <div>
+                <p class="text-sm font-bold text-slate-900">Open a Wise account</p>
+                <p class="text-xs text-slate-500">Send money like a local, zero hidden fees</p>
+              </div>
+              <ArrowRight class="h-4 w-4 shrink-0 text-slate-400 transition group-hover:translate-x-0.5" />
+            </a>
             <p class="mt-2 text-right text-[10px] text-slate-300">Partner links</p>
           </div>
+
         </div>
       </div>
     </Transition>
