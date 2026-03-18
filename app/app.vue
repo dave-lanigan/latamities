@@ -31,8 +31,12 @@ import CardContent from '~/components/ui/CardContent.vue'
 import CardDescription from '~/components/ui/CardDescription.vue'
 import CardHeader from '~/components/ui/CardHeader.vue'
 import CardTitle from '~/components/ui/CardTitle.vue'
+import { cityAmenityProfiles } from '~~/data/city-amenities'
+import { cityFlightDestinations } from '~~/data/city-flight-destinations'
 import cityProfiles, { type CityProfile } from '~~/data/city-profiles'
+import { countryFinanceProfiles } from '~~/data/country-finance'
 import countryData, { type CountryProfile } from '~~/data/country-profiles'
+import { resolveResourceGroups, type ResourceGroup, type ResolvedResourceLink } from '~~/data/resource-directory'
 
 const MAP_ID = 'main'
 const mapOptions = {
@@ -50,8 +54,16 @@ const isCountriesOpen = ref(false)
 const selectedCountry = ref<CountryProfile | null>(null)
 const isMobile = ref(false)
 const minNiceWeatherDays = ref(150)
+const preferredTempMinF = ref(75)
+const preferredTempMaxF = ref(85)
 const minPopulationM = ref(1)
 const isFiltersOpen = ref(false)
+const flightOriginCode = ref('')
+const flightOriginLabel = ref('')
+const isResolvingFlightOrigin = ref(false)
+const isLoadingFlightPrice = ref(false)
+const flightPriceError = ref('')
+const flightPriceQuote = ref<{ formattedPrice: string | null; origin: string; destination: string } | null>(null)
 
 const checkMobile = () => { isMobile.value = window.innerWidth < 640 }
 onMounted(() => {
@@ -82,6 +94,21 @@ watch(selectedCity, () => nextTick(updateBubblePos))
 
 const DAYS_IN_MONTH = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
+const weatherBounds = computed(() => {
+  const min = Math.min(preferredTempMinF.value, preferredTempMaxF.value)
+  const max = Math.max(preferredTempMinF.value, preferredTempMaxF.value)
+
+  return { min, max }
+})
+
+const perfectWeatherRangeLabel = computed(() => `${weatherBounds.value.min}–${weatherBounds.value.max}°F`)
+
+const countWeatherDaysInBounds = (city: CityProfile, minF: number, maxF: number) =>
+  city.snapshot.temperatureByMonth.reduce((total, datum, index) => {
+    const f = datum.value * 9 / 5 + 32
+    return f >= minF && f <= maxF ? total + (DAYS_IN_MONTH[index] ?? 0) : total
+  }, 0)
+
 const selectedClimate = computed(() => {
   if (!selectedCity.value) return null
   const { rainfallByMonth, temperatureByMonth } = selectedCity.value.snapshot
@@ -89,10 +116,7 @@ const selectedClimate = computed(() => {
   const avgTemp = Math.round(avgTempC * 9 / 5 + 32)
   const driestMonth = rainfallByMonth.reduce((a, b) => b.value < a.value ? b : a)
   const wettestMonth = rainfallByMonth.reduce((a, b) => b.value > a.value ? b : a)
-  const perfectWeatherDays = temperatureByMonth.reduce((total, d, i) => {
-    const f = d.value * 9 / 5 + 32
-    return f >= 75 && f <= 85 ? total + DAYS_IN_MONTH[i] : total
-  }, 0)
+  const perfectWeatherDays = countWeatherDaysInBounds(selectedCity.value, weatherBounds.value.min, weatherBounds.value.max)
   return { avgTemp, driestMonth, wettestMonth, perfectWeatherDays, temperatureByMonth, rainfallByMonth }
 })
 
@@ -122,10 +146,7 @@ const openPanel = () => { isPanelOpen.value = true }
 const closePanel = () => { isPanelOpen.value = false }
 
 const cityPerfectWeatherDays = (city: CityProfile) =>
-  city.snapshot.temperatureByMonth.reduce((total, d, i) => {
-    const f = d.value * 9 / 5 + 32
-    return f >= 75 && f <= 85 ? total + DAYS_IN_MONTH[i] : total
-  }, 0)
+  countWeatherDaysInBounds(city, weatherBounds.value.min, weatherBounds.value.max)
 
 const cityPopulationM = (city: CityProfile) => {
   const parsed = parseFloat(city.snapshot.populationMetro.replace('M', ''))
@@ -139,6 +160,160 @@ const filteredCities = computed(() =>
   )
 )
 
+type PrimaryResourceGroup = ResourceGroup & { primaryItem: ResolvedResourceLink }
+type PrimaryResourceCard = {
+  id: ResourceGroup['id']
+  title: string
+  href: string
+  label: string
+  isAffiliateReady: boolean
+}
+
+const selectedCityResourceGroups = computed<ResourceGroup[]>(() => selectedCity.value ? resolveResourceGroups(selectedCity.value) : [])
+const selectedCityFlightResource = computed<ResolvedResourceLink | null>(() =>
+  selectedCityResourceGroups.value.find((group) => group.id === 'flights')?.items[0] ?? null
+)
+const selectedCityFlightHref = computed(() => selectedCityFlightResource.value?.href ?? '')
+const selectedCityFlightDestination = computed(() => selectedCity.value ? cityFlightDestinations[selectedCity.value.id] ?? null : null)
+const shouldShowFlightSnapshot = computed(() => Boolean(flightOriginCode.value && selectedCityFlightDestination.value))
+const selectedCityPrimaryResourceGroups = computed<PrimaryResourceGroup[]>(() =>
+  selectedCityResourceGroups.value.flatMap((group) => {
+    const primaryItem = group.items[0]
+    return primaryItem ? [{ ...group, primaryItem }] : []
+  })
+)
+const selectedCityPrimaryResourceCards = computed<PrimaryResourceCard[]>(() =>
+  selectedCityPrimaryResourceGroups.value.map((group) => ({
+    id: group.id,
+    title: group.title,
+    href: group.primaryItem.href,
+    label: group.primaryItem.label,
+    isAffiliateReady: group.primaryItem.isAffiliateReady
+  }))
+)
+const selectedCityAmenityProfile = computed(() => selectedCity.value ? cityAmenityProfiles[selectedCity.value.id] ?? null : null)
+const selectedCityFinanceProfile = computed(() => selectedCity.value ? countryFinanceProfiles[selectedCity.value.country] ?? null : null)
+const selectedTemperatureByMonth = computed(() => selectedClimate.value?.temperatureByMonth ?? [])
+const selectedRainfallByMonth = computed(() => selectedClimate.value?.rainfallByMonth ?? [])
+const selectedRestaurants = computed(() => selectedCity.value?.details.restaurants ?? [])
+const selectedCafes = computed(() => selectedCity.value?.details.cafes ?? [])
+const selectedBars = computed(() => selectedCity.value?.details.bars ?? [])
+const selectedAttractions = computed(() => selectedCity.value?.details.attractions ?? [])
+const selectedCityExchangeSummary = computed(() => {
+  const finance = selectedCityFinanceProfile.value
+  const unofficialRate = finance?.unofficialRate
+
+  if (!finance || !unofficialRate) {
+    return null
+  }
+
+  return {
+    currencyName: finance.currencyName,
+    label: unofficialRate.label,
+    status: unofficialRate.status,
+    note: unofficialRate.note,
+    updatePlan: unofficialRate.updatePlan
+  }
+})
+
+const resetWeatherBounds = () => {
+  preferredTempMinF.value = 75
+  preferredTempMaxF.value = 85
+}
+
+const resolveFlightOriginFromLocation = async () => {
+  if (!import.meta.client || !navigator.geolocation) {
+    flightPriceError.value = 'Geolocation is not available in this browser.'
+    return
+  }
+
+  isResolvingFlightOrigin.value = true
+  flightPriceError.value = ''
+
+  try {
+    const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+      navigator.geolocation.getCurrentPosition(resolve, reject, {
+        enableHighAccuracy: false,
+        timeout: 10000,
+        maximumAge: 1000 * 60 * 30
+      })
+    })
+
+    const response = await $fetch<{ iata: string; name: string }>('/api/flight-origin', {
+      query: {
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude
+      }
+    })
+
+    flightOriginCode.value = response.iata
+    flightOriginLabel.value = response.name
+  } catch (error) {
+    flightOriginCode.value = ''
+    flightOriginLabel.value = ''
+    flightPriceError.value = error instanceof Error
+      ? error.message
+      : 'Location permission was denied or the nearest airport could not be resolved.'
+  } finally {
+    isResolvingFlightOrigin.value = false
+  }
+}
+
+const lookupFlightPrice = async () => {
+  const origin = flightOriginCode.value.trim().toUpperCase()
+  const destination = selectedCityFlightDestination.value
+
+  flightPriceError.value = ''
+  flightPriceQuote.value = null
+
+  if (!destination) {
+    flightPriceError.value = 'No destination airport code is mapped for this city yet.'
+    return
+  }
+
+  if (!/^[A-Z]{3}$/.test(origin)) {
+    flightPriceError.value = 'Current location has not resolved to a nearby airport yet.'
+    return
+  }
+
+  isLoadingFlightPrice.value = true
+
+  try {
+    const response = await $fetch<{ formattedPrice: string | null; origin: string; destination: string }>('/api/flight-price', {
+      query: {
+        origin,
+        destination: destination.iata
+      }
+    })
+
+    if (!response.formattedPrice) {
+      flightPriceError.value = 'Skyscanner did not return a price for this route yet.'
+      return
+    }
+
+    flightPriceQuote.value = response
+  } catch (error) {
+    flightPriceError.value = error instanceof Error ? error.message : 'Unable to fetch a flight price right now.'
+  } finally {
+    isLoadingFlightPrice.value = false
+  }
+}
+
+watch(() => selectedCity.value?.id, () => {
+  flightPriceError.value = ''
+  flightPriceQuote.value = null
+
+  if (flightOriginCode.value && selectedCityFlightDestination.value) {
+    void lookupFlightPrice()
+  }
+})
+
+watch(flightOriginCode, (origin) => {
+  if (origin && selectedCityFlightDestination.value) {
+    void lookupFlightPrice()
+  }
+})
+
 watch(filteredCities, (cities) => {
   if (selectedCity.value && !cities.find(c => c.id === selectedCity.value!.id)) {
     selectedCity.value = null
@@ -148,7 +323,7 @@ watch(filteredCities, (cities) => {
 
 const availableCountries = computed(() => {
   const names = new Set(cityProfiles.map(c => c.country))
-  return [...names].sort().map(name => countryData[name]).filter(Boolean)
+  return [...names].sort().map(name => countryData[name]).filter((country): country is CountryProfile => Boolean(country))
 })
 
 const toggleCountries = () => {
@@ -162,6 +337,10 @@ const fmtPc = (n: number) => `$${n >= 1000 ? (n / 1000).toFixed(1) + 'k' : n}`
 useHead({
   title: 'Latamities',
   meta: [{ name: 'description', content: 'Map-first city profiles for remote workers in Latin America.' }]
+})
+
+onMounted(() => {
+  void resolveFlightOriginFromLocation()
 })
 </script>
 
@@ -213,6 +392,46 @@ useHead({
               />
               <span class="w-8 text-right text-sm font-extrabold text-slate-900">{{ minNiceWeatherDays }}</span>
             </div>
+          </div>
+
+          <div class="mt-3 space-y-1">
+            <div class="flex items-center justify-between text-[10px] font-bold uppercase tracking-wide text-slate-400">
+              <span>Perfect weather range</span>
+              <span>{{ perfectWeatherRangeLabel }}</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="w-8 text-[10px] font-bold uppercase tracking-wide text-slate-400">Low</span>
+              <input
+                id="temp-min-filter"
+                v-model.number="preferredTempMinF"
+                type="range"
+                min="50"
+                max="95"
+                step="1"
+                class="flex-1 accent-primary"
+              />
+              <span class="w-10 text-right text-sm font-extrabold text-slate-900">{{ preferredTempMinF }}°</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="w-8 text-[10px] font-bold uppercase tracking-wide text-slate-400">High</span>
+              <input
+                id="temp-max-filter"
+                v-model.number="preferredTempMaxF"
+                type="range"
+                min="50"
+                max="95"
+                step="1"
+                class="flex-1 accent-primary"
+              />
+              <span class="w-10 text-right text-sm font-extrabold text-slate-900">{{ preferredTempMaxF }}°</span>
+            </div>
+            <button
+              type="button"
+              class="text-[10px] font-bold uppercase tracking-[0.16em] text-primary transition hover:text-primary/70"
+              @click="resetWeatherBounds"
+            >
+              Reset weather bounds
+            </button>
           </div>
 
           <!-- Population filter row -->
@@ -290,7 +509,7 @@ useHead({
         />
 
         <div :class="isMobile ? 'relative z-10 w-full max-w-sm' : ''">
-          <Card :class="['shadow-[0_20px_50px_rgba(15,23,42,0.28)]', isMobile ? 'pointer-events-auto max-h-[85vh] overflow-y-auto w-full bg-slate-200 backdrop-blur-none' : 'pointer-events-auto w-[min(22rem,calc(100vw-2rem))]']">
+          <Card :class="`shadow-[0_20px_50px_rgba(15,23,42,0.28)] ${isMobile ? 'pointer-events-auto max-h-[85vh] overflow-y-auto w-full bg-slate-200 backdrop-blur-none' : 'pointer-events-auto w-[min(22rem,calc(100vw-2rem))]'}`">
             <CardHeader class="gap-2 pb-3">
               <div class="flex items-start justify-between gap-3">
                 <div>
@@ -329,10 +548,44 @@ useHead({
                   <p class="mt-1 text-base font-extrabold text-slate-900">{{ Math.round(selectedCity.snapshot.altitudeM * 3.28084) }}</p>
                   <p class="text-[10px] text-slate-400">ft</p>
                 </div>
+                <div v-if="shouldShowFlightSnapshot" class="col-span-2 rounded-xl bg-sky-50 p-3 text-left">
+                  <div class="flex items-center justify-between gap-3">
+                    <div>
+                      <p class="text-[10px] font-bold uppercase tracking-wide text-slate-400">Flight price</p>
+                      <p class="mt-1 text-base font-extrabold text-slate-900">
+                        {{ flightPriceQuote?.formattedPrice || 'Check route' }}
+                      </p>
+                      <p class="text-[10px] text-slate-500">
+                        <template v-if="selectedCityFlightDestination">
+                          Anytime one-way to {{ selectedCityFlightDestination.label }}
+                        </template>
+                        <template v-else>
+                          Destination airport mapping coming soon
+                        </template>
+                      </p>
+                    </div>
+                    <Badge variant="secondary">Skyscanner</Badge>
+                  </div>
+                  <div class="mt-3 flex items-center justify-between gap-3 rounded-xl bg-white px-3 py-2.5">
+                    <div>
+                      <p class="text-[10px] font-bold uppercase tracking-wide text-slate-400">Origin</p>
+                      <p class="text-sm font-bold text-slate-900">
+                        {{ flightOriginCode }} <span class="font-medium text-slate-500">{{ flightOriginLabel }}</span>
+                      </p>
+                    </div>
+                    <Button size="sm" class="h-10 px-3" :disabled="isResolvingFlightOrigin || isLoadingFlightPrice" @click="resolveFlightOriginFromLocation">
+                      {{ isResolvingFlightOrigin ? 'Locating…' : 'Refresh' }}
+                    </Button>
+                  </div>
+                  <p class="mt-2 text-[10px] text-slate-400">Origin is resolved from the user’s current location and nearest airport.</p>
+                  <p v-if="flightPriceError" class="mt-2 text-[11px] font-semibold text-red-600">{{ flightPriceError }}</p>
+                  <p v-else-if="isLoadingFlightPrice" class="mt-2 text-[11px] font-semibold text-slate-500">Loading fare from {{ flightOriginCode }}…</p>
+                  <p v-else-if="flightPriceQuote" class="mt-2 text-[11px] font-semibold text-emerald-700">{{ flightPriceQuote.origin }} → {{ flightPriceQuote.destination }} loaded.</p>
+                </div>
                 <div class="col-span-2 rounded-xl bg-sand-50 p-2.5 text-center">
                   <p class="text-[10px] font-bold uppercase tracking-wide text-slate-400">Perfect weather days</p>
                   <p class="mt-1 text-base font-extrabold text-slate-900">{{ selectedClimate?.perfectWeatherDays }}</p>
-                  <p class="text-[10px] text-slate-400">75–85°F per year</p>
+                  <p class="text-[10px] text-slate-400">{{ perfectWeatherRangeLabel }} per year</p>
                 </div>
               </div>
 
@@ -341,7 +594,7 @@ useHead({
                 <p class="mb-1 text-[10px] font-bold uppercase tracking-wide text-slate-400">Avg temperature</p>
                 <div class="flex gap-px">
                   <div
-                    v-for="d in selectedClimate?.temperatureByMonth"
+                    v-for="d in selectedTemperatureByMonth"
                     :key="d.month"
                     class="group relative flex-1 cursor-default rounded-sm"
                     style="height:28px"
@@ -367,10 +620,10 @@ useHead({
                 <p class="mb-1 text-[10px] font-bold uppercase tracking-wide text-slate-400">Avg rainfall</p>
                 <div class="flex items-end gap-px" style="height:32px">
                   <div
-                    v-for="d in selectedClimate?.rainfallByMonth"
+                    v-for="d in selectedRainfallByMonth"
                     :key="d.month"
                     class="group relative flex-1 cursor-default rounded-sm bg-blue-400"
-                    :style="{ height: `${Math.round((d.value / Math.max(...(selectedClimate?.rainfallByMonth.map(r => r.value) ?? [1]))) * 100)}%`, minHeight: '2px' }"
+                    :style="{ height: `${Math.round((d.value / Math.max(...selectedRainfallByMonth.map(r => r.value), 1)) * 100)}%`, minHeight: '2px' }"
                     @mouseenter="hoveredRain = { month: d.month, mm: d.value }"
                     @mouseleave="hoveredRain = null"
                   >
@@ -496,6 +749,19 @@ useHead({
                   </p>
                 </div>
               </div>
+              <a
+                v-if="selectedCityFlightHref"
+                :href="selectedCityFlightHref"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="group flex items-center justify-between rounded-xl bg-sky-50 px-4 py-3 transition hover:bg-sky-100"
+              >
+                <div>
+                  <p class="text-sm font-bold text-slate-900">Track flights into {{ selectedCity.name }}</p>
+                  <p class="text-xs text-slate-500">Skyscanner is loaded from config and ready for the partner URL later.</p>
+                </div>
+                <ArrowRight class="h-4 w-4 shrink-0 text-slate-400 transition group-hover:translate-x-0.5" />
+              </a>
             </div>
           </Accordion>
 
@@ -563,38 +829,108 @@ useHead({
             </div>
           </Accordion>
 
+          <Accordion v-if="selectedCityAmenityProfile" title="Coworking & Gyms">
+            <div class="space-y-4">
+              <div class="rounded-xl bg-sand-50 p-3">
+                <div class="flex items-center justify-between gap-3">
+                  <p class="text-sm font-bold text-slate-900">Coworking</p>
+                  <p class="text-xs text-slate-500">
+                    <span v-if="selectedCityAmenityProfile.coworking.dayPassUSD">~${{ selectedCityAmenityProfile.coworking.dayPassUSD }}/day</span>
+                    <span v-if="selectedCityAmenityProfile.coworking.monthlyUSD"> · ~${{ selectedCityAmenityProfile.coworking.monthlyUSD }}/mo</span>
+                  </p>
+                </div>
+                <p class="mt-1.5 text-sm leading-6 text-slate-600">{{ selectedCityAmenityProfile.coworking.summary }}</p>
+                <ul class="mt-2 space-y-1.5 text-sm text-slate-700">
+                  <li v-for="spot in selectedCityAmenityProfile.coworking.examples" :key="spot.name">
+                    <span class="font-semibold">{{ spot.name }}</span>
+                    <span v-if="spot.note" class="ml-1 text-slate-400">— {{ spot.note }}</span>
+                  </li>
+                </ul>
+              </div>
+              <div class="rounded-xl bg-sand-50 p-3">
+                <div class="flex items-center justify-between gap-3">
+                  <p class="text-sm font-bold text-slate-900">Gyms</p>
+                  <p v-if="selectedCityAmenityProfile.gyms.monthlyUSD" class="text-xs text-slate-500">~${{ selectedCityAmenityProfile.gyms.monthlyUSD }}/mo</p>
+                </div>
+                <p class="mt-1.5 text-sm leading-6 text-slate-600">{{ selectedCityAmenityProfile.gyms.summary }}</p>
+                <ul class="mt-2 space-y-1.5 text-sm text-slate-700">
+                  <li v-for="spot in selectedCityAmenityProfile.gyms.examples" :key="spot.name">
+                    <span class="font-semibold">{{ spot.name }}</span>
+                    <span v-if="spot.note" class="ml-1 text-slate-400">— {{ spot.note }}</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </Accordion>
+
+          <Accordion title="Getting Around & Essentials">
+            <div class="space-y-4">
+              <div
+                v-for="group in selectedCityResourceGroups.filter(group => group.id !== 'flights')"
+                :key="group.id"
+                class="space-y-2"
+              >
+                <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-slate-400">{{ group.title }}</p>
+                <div class="space-y-2">
+                  <a
+                    v-for="item in group.items"
+                    :key="item.id"
+                    :href="item.href"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="group flex items-start justify-between rounded-xl bg-slate-50 px-4 py-3 transition hover:bg-slate-100"
+                  >
+                    <div>
+                      <div class="flex items-center gap-2">
+                        <p class="text-sm font-bold text-slate-900">{{ item.label }}</p>
+                        <span
+                          v-if="item.badge || !item.isAffiliateReady"
+                          class="rounded-full bg-white px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-slate-400"
+                        >
+                          {{ item.badge || 'Placeholder' }}
+                        </span>
+                      </div>
+                      <p class="mt-0.5 text-xs leading-5 text-slate-500">{{ item.description }}</p>
+                    </div>
+                    <ArrowRight class="mt-0.5 h-4 w-4 shrink-0 text-slate-400 transition group-hover:translate-x-0.5" />
+                  </a>
+                </div>
+              </div>
+            </div>
+          </Accordion>
+
           <!-- 6 · Eat & Drink -->
           <Accordion title="Eat & Drink">
             <div class="space-y-4">
-              <template v-if="(selectedCity.details.restaurants?.length || 0) + (selectedCity.details.cafes?.length || 0) + (selectedCity.details.bars?.length || 0) > 0">
-                <div v-if="selectedCity.details.restaurants?.length">
+              <template v-if="selectedRestaurants.length + selectedCafes.length + selectedBars.length > 0">
+                <div v-if="selectedRestaurants.length">
                   <p class="mb-2 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.16em] text-slate-400">
                     <UtensilsCrossed class="h-3 w-3" /> Restaurants
                   </p>
                   <ul class="space-y-1.5">
-                    <li v-for="r in selectedCity.details.restaurants" :key="r.name" class="text-sm text-slate-700">
+                    <li v-for="r in selectedRestaurants" :key="r.name" class="text-sm text-slate-700">
                       <span class="font-semibold">{{ r.name }}</span>
                       <span v-if="r.note" class="ml-1 text-slate-400">— {{ r.note }}</span>
                     </li>
                   </ul>
                 </div>
-                <div v-if="selectedCity.details.cafes?.length">
+                <div v-if="selectedCafes.length">
                   <p class="mb-2 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.16em] text-slate-400">
                     ☕ Cafes
                   </p>
                   <ul class="space-y-1.5">
-                    <li v-for="c in selectedCity.details.cafes" :key="c.name" class="text-sm text-slate-700">
+                    <li v-for="c in selectedCafes" :key="c.name" class="text-sm text-slate-700">
                       <span class="font-semibold">{{ c.name }}</span>
                       <span v-if="c.note" class="ml-1 text-slate-400">— {{ c.note }}</span>
                     </li>
                   </ul>
                 </div>
-                <div v-if="selectedCity.details.bars?.length">
+                <div v-if="selectedBars.length">
                   <p class="mb-2 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.16em] text-slate-400">
                     <Wine class="h-3 w-3" /> Bars
                   </p>
                   <ul class="space-y-1.5">
-                    <li v-for="b in selectedCity.details.bars" :key="b.name" class="text-sm text-slate-700">
+                    <li v-for="b in selectedBars" :key="b.name" class="text-sm text-slate-700">
                       <span class="font-semibold">{{ b.name }}</span>
                       <span v-if="b.note" class="ml-1 text-slate-400">— {{ b.note }}</span>
                     </li>
@@ -616,9 +952,9 @@ useHead({
           <!-- 7 · See & Do -->
           <Accordion title="Top Attractions">
             <div class="space-y-3">
-              <template v-if="selectedCity.details.attractions?.length">
+              <template v-if="selectedAttractions.length">
                 <ul class="space-y-1.5">
-                  <li v-for="a in selectedCity.details.attractions" :key="a.name" class="text-sm text-slate-700">
+                  <li v-for="a in selectedAttractions" :key="a.name" class="text-sm text-slate-700">
                     <Star class="mr-1 inline h-3 w-3 text-amber-400" />
                     <span class="font-semibold">{{ a.name }}</span>
                     <span v-if="a.note" class="ml-1 text-slate-400">— {{ a.note }}</span>
@@ -646,16 +982,16 @@ useHead({
                     <Sun class="h-3 w-3" /> Perfect days
                   </div>
                   <p class="mt-1.5 text-xl font-extrabold text-slate-900">{{ selectedClimate?.perfectWeatherDays }}</p>
-                  <p class="text-[10px] text-slate-400">75–85°F days / year</p>
+                  <p class="text-[10px] text-slate-400">{{ perfectWeatherRangeLabel }} days / year</p>
                 </div>
                 <div class="rounded-xl bg-sand-50 p-3">
                   <div class="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wide text-slate-400">
                     <CloudRain class="h-3 w-3" /> Rainfall
                   </div>
                   <p class="mt-1.5 text-sm font-bold text-slate-900">
-                    {{ selectedClimate?.driestMonth.month }} {{ selectedClimate?.driestMonth.value }}mm
+                    {{ selectedClimate?.driestMonth?.month }} {{ selectedClimate?.driestMonth?.value }}mm
                   </p>
-                  <p class="text-[10px] text-slate-400">Peak {{ selectedClimate?.wettestMonth.month }} {{ selectedClimate?.wettestMonth.value }}mm</p>
+                  <p class="text-[10px] text-slate-400">Peak {{ selectedClimate?.wettestMonth?.month }} {{ selectedClimate?.wettestMonth?.value }}mm</p>
                 </div>
               </div>
 
@@ -664,7 +1000,7 @@ useHead({
                 <p class="mb-2 text-[10px] font-bold uppercase tracking-wide text-slate-400">Avg temperature</p>
                 <div class="flex items-end gap-0.5 h-12">
                   <div
-                    v-for="d in selectedClimate?.temperatureByMonth"
+                    v-for="d in selectedTemperatureByMonth"
                     :key="d.month"
                     class="flex-1 rounded-t-sm transition-opacity hover:opacity-80 cursor-default"
                     :style="{ height: Math.max(4, (d.value / 35) * 48) + 'px', backgroundColor: tempColor(d.value) }"
@@ -684,21 +1020,39 @@ useHead({
             </div>
           </Accordion>
 
-          <!-- Wise affiliate -->
+          <Accordion v-if="selectedCityExchangeSummary" title="Money & Exchange">
+            <div class="space-y-3">
+              <div class="rounded-xl bg-sand-50 p-3">
+                <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-slate-400">{{ selectedCityExchangeSummary?.label }}</p>
+                <p class="mt-1 text-sm font-bold text-slate-900">{{ selectedCityExchangeSummary?.status }}</p>
+                <p class="mt-1.5 text-sm leading-6 text-slate-600">{{ selectedCityExchangeSummary?.note }}</p>
+              </div>
+              <div class="rounded-xl bg-primary/10 p-3 text-sm leading-6 text-slate-700">
+                <span class="font-semibold">{{ selectedCityExchangeSummary?.currencyName }}</span>
+                <span class="text-slate-500"> · {{ selectedCityExchangeSummary?.updatePlan }}</span>
+              </div>
+            </div>
+          </Accordion>
+
           <div class="rounded-2xl border border-slate-100 p-4">
             <p class="mb-3 text-xs font-bold uppercase tracking-[0.18em] text-slate-400">Resources</p>
-            <a
-              href="https://wise.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="group flex items-center justify-between rounded-xl bg-[#9FE870]/20 px-4 py-3 transition hover:bg-[#9FE870]/35"
-            >
-              <div>
-                <p class="text-sm font-bold text-slate-900">Open a Wise account</p>
-                <p class="text-xs text-slate-500">Send money like a local, zero hidden fees</p>
-              </div>
-              <ArrowRight class="h-4 w-4 shrink-0 text-slate-400 transition group-hover:translate-x-0.5" />
-            </a>
+            <div class="space-y-2">
+              <a
+                v-for="group in selectedCityPrimaryResourceCards"
+                :key="group.id"
+                :href="group.href"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="group flex items-center justify-between rounded-xl px-4 py-3 transition"
+                :class="group.id === 'money' ? 'bg-[#9FE870]/20 hover:bg-[#9FE870]/35' : 'bg-slate-50 hover:bg-slate-100'"
+              >
+                <div>
+                  <p class="text-sm font-bold text-slate-900">{{ group.title }}</p>
+                  <p class="text-xs text-slate-500">{{ group.label }}{{ group.isAffiliateReady ? ' affiliate' : ' placeholder' }} ready from config</p>
+                </div>
+                <ArrowRight class="h-4 w-4 shrink-0 text-slate-400 transition group-hover:translate-x-0.5" />
+              </a>
+            </div>
             <p class="mt-2 text-right text-[10px] text-slate-300">Partner links</p>
           </div>
 

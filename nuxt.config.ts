@@ -17,6 +17,13 @@ export default defineNuxtConfig({
   mapbox: {
     accessToken: process.env.NUXT_MAPBOX_TOKEN || ''
   },
+  runtimeConfig: {
+    mapboxToken: process.env.NUXT_MAPBOX_TOKEN || '',
+    skyscannerApiKey: process.env.NUXT_SKYSCANNER_API_KEY || '',
+    skyscannerMarket: process.env.NUXT_SKYSCANNER_MARKET || 'US',
+    skyscannerLocale: process.env.NUXT_SKYSCANNER_LOCALE || 'en-US',
+    skyscannerCurrency: process.env.NUXT_SKYSCANNER_CURRENCY || 'USD'
+  },
   css: ['~/assets/css/main.css'],
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true }
