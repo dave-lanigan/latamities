@@ -53,6 +53,7 @@ const isPanelOpen = ref(false)
 const bubblePixelPos = ref<{ x: number; y: number } | null>(null)
 const hoveredTemp = ref<{ month: string; f: number } | null>(null)
 const hoveredRain = ref<{ month: string; mm: number } | null>(null)
+const currentMonthIndex = new Date().getMonth()
 const isCountriesOpen = ref(false)
 const selectedCountry = ref<CountryProfile | null>(null)
 const isMobile = ref(false)
@@ -865,9 +866,9 @@ onMounted(() => {
                       <p class="text-[10px] text-slate-400">1-bed, est. 30 nights</p>
                     </div>
                     <div class="text-right">
-                      <p class="text-[10px] font-bold uppercase tracking-wide text-slate-400">{{ selectedClimate?.warmestMonth?.month }} weather</p>
-                      <p class="mt-1 text-base font-extrabold text-slate-900">{{ selectedClimate ? displayTemperature(selectedClimate.warmestMonth.value) : '–' }}{{ unitTemperatureLabel }}</p>
-                      <p class="text-[10px] text-slate-400">peak month</p>
+                      <p class="text-[10px] font-bold uppercase tracking-wide text-lagoon-600">This month</p>
+                      <p class="mt-1 text-base font-extrabold text-slate-900">{{ selectedTemperatureByMonth[currentMonthIndex] ? displayTemperature(selectedTemperatureByMonth[currentMonthIndex].value) : '–' }}{{ unitTemperatureLabel }}</p>
+                      <p class="text-[10px] text-slate-400">{{ selectedRainfallByMonth[currentMonthIndex]?.value ?? '–' }}mm rain</p>
                     </div>
                   </div>
                 </div>
@@ -878,18 +879,18 @@ onMounted(() => {
                 <p class="mb-1 text-[10px] font-bold uppercase tracking-wide text-slate-400">Avg temperature</p>
                 <div class="flex gap-px">
                   <div
-                    v-for="d in selectedTemperatureByMonth"
+                    v-for="(d, i) in selectedTemperatureByMonth"
                     :key="d.month"
                     class="group relative flex-1 cursor-default rounded-sm"
                     style="height:28px"
-                    :style="{ backgroundColor: tempColor(d.value) }"
+                    :style="{ backgroundColor: tempColor(d.value), outline: i === currentMonthIndex ? '2px solid #0f766e' : 'none', outlineOffset: '1px' }"
                     @mouseenter="hoveredTemp = { month: d.month, f: Math.round(d.value * 9/5 + 32) }"
                     @mouseleave="hoveredTemp = null"
                   >
                     <div
                       v-if="hoveredTemp?.month === d.month"
                       class="pointer-events-none absolute bottom-full left-1/2 z-50 mb-1 -translate-x-1/2 whitespace-nowrap rounded bg-slate-800 px-1.5 py-0.5 text-[10px] font-semibold text-white shadow"
-                    >{{ d.month }} {{ hoveredTemp.f }}°F</div>
+                    >{{ d.month }} {{ displayTemperature(d.value) }}{{ unitTemperatureLabel }}</div>
                   </div>
                 </div>
                 <div class="mt-0.5 flex justify-between px-px">
@@ -904,10 +905,11 @@ onMounted(() => {
                 <p class="mb-1 text-[10px] font-bold uppercase tracking-wide text-slate-400">Avg rainfall</p>
                 <div class="flex items-end gap-px" style="height:32px">
                   <div
-                    v-for="d in selectedRainfallByMonth"
+                    v-for="(d, i) in selectedRainfallByMonth"
                     :key="d.month"
-                    class="group relative flex-1 cursor-default rounded-sm bg-blue-400"
-                    :style="{ height: `${Math.round((d.value / Math.max(...selectedRainfallByMonth.map(r => r.value), 1)) * 100)}%`, minHeight: '2px' }"
+                    class="group relative flex-1 cursor-default rounded-sm"
+                    :class="i === currentMonthIndex ? 'bg-lagoon-500' : 'bg-blue-400'"
+                    :style="{ height: `${Math.round((d.value / Math.max(...selectedRainfallByMonth.map(r => r.value), 1)) * 100)}%`, minHeight: '2px', outline: i === currentMonthIndex ? '2px solid #0f766e' : 'none', outlineOffset: '1px' }"
                     @mouseenter="hoveredRain = { month: d.month, mm: d.value }"
                     @mouseleave="hoveredRain = null"
                   >
