@@ -8,6 +8,7 @@ export interface MonthlyDatum {
 export interface PlaceHighlight {
   name: string
   note?: string
+  link?: string
 }
 
 export interface CityProfile {
@@ -724,7 +725,22 @@ const cityProfilesByName: Record<string, CityProfile> = {
         rideshareFromAirport: false,
         rideshareNote: 'Rideshare apps cannot pick up at UIO — book an official airport transfer or use the taxi desk in arrivals.',
       },
-      timeToNature: 'Volcanic viewpoints and cloud forest escapes are close.'
+      timeToNature: 'Volcanic viewpoints and cloud forest escapes are close.',
+      restaurants: [
+        { name: 'Somos Ecuador Restaurante', note: 'Regional Ecuadorian cooking in a warm, no-fuss setting — one of the best ways to eat local in Quito', link: 'https://www.google.com/maps/place/Somos+Ecuador+Restaurante/@-0.1826728,-78.4805985,17z/data=!3m1!4b1!4m6!3m5!1s0x91d59b558de798cf:0xf810e099a48a864a!8m2!3d-0.1826782!4d-78.4759904!16s%2Fg%2F11l8glkhv5!5m1!1e4?entry=ttu&g_ep=EgoyMDI2MDMxNS4wIKXMDSoASAFQAw%3D%3D' },
+        { name: 'NUEMA', note: 'Modern tasting menus built around Andean biodiversity — the most ambitious table in the city', link: 'https://www.google.com/maps/place/NUEMA/@-0.1981843,-78.4851386,17z/data=!3m1!4b1!4m6!3m5!1s0x91d5997942f86bf1:0xf1e5cf13911f8da5!8m2!3d-0.1981897!4d-78.4825583!16s%2Fg%2F11fj6p1_68!5m1!1e4?entry=ttu&g_ep=EgoyMDI2MDMxNS4wIKXMDSoASAFQAw%3D%3D' },
+        { name: 'Clara', note: 'Focused menu, calm room, good light — the kind of neighborhood spot that earns a second visit', link: 'https://www.google.com/maps/place/Clara+Restaurante/@-0.2066458,-78.488334,17z/data=!3m1!4b1!4m6!3m5!1s0x91d59b2a850bedd1:0x644ec64910d224ed!8m2!3d-0.2066512!4d-78.4857537!16s%2Fg%2F11y2ch0bjs!5m1!1e4?entry=ttu&g_ep=EgoyMDI2MDMxNS4wIKXMDSoASAFQAw%3D%3D' }
+      ],
+      cafes: [
+        { name: 'Strato' },
+        { name: 'Fankor' }
+      ],
+      bars: [
+        { name: 'Xqueje' },
+        { name: 'Vermuteria' },
+        { name: 'Plural Drinks' },
+        { name: 'Síncopa Bar' }
+      ]
     }
   },
   Montevideo: {

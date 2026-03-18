@@ -55,6 +55,7 @@ const hoveredRain = ref<{ month: string; mm: number } | null>(null)
 const isCountriesOpen = ref(false)
 const selectedCountry = ref<CountryProfile | null>(null)
 const isMobile = ref(false)
+const unitSystem = ref<'imperial' | 'metric'>('imperial')
 const minNiceWeatherDays = ref(150)
 const preferredTempMinF = ref(75)
 const preferredTempMaxF = ref(85)
@@ -103,6 +104,29 @@ watch(selectedCity, () => nextTick(updateBubblePos))
 
 const DAYS_IN_MONTH = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
+const cToF = (value: number) => (value * 9 / 5) + 32
+const fToC = (value: number) => (value - 32) * 5 / 9
+const displayTemperature = (valueC: number) => unitSystem.value === 'imperial' ? Math.round(cToF(valueC)) : Math.round(valueC)
+const unitTemperatureLabel = computed(() => unitSystem.value === 'imperial' ? '°F' : '°C')
+const displayRainfall = (mm: number) => unitSystem.value === 'imperial' ? (mm / 25.4).toFixed(1) : Math.round(mm)
+const unitRainfallLabel = computed(() => unitSystem.value === 'imperial' ? 'in' : 'mm')
+const temperatureSliderConfig = computed(() => unitSystem.value === 'imperial'
+  ? { min: 50, max: 95, step: 1 }
+  : { min: 10, max: 35, step: 1 }
+)
+const preferredTempMinDisplay = computed({
+  get: () => unitSystem.value === 'imperial' ? preferredTempMinF.value : Math.round(fToC(preferredTempMinF.value)),
+  set: (value: number) => {
+    preferredTempMinF.value = unitSystem.value === 'imperial' ? value : cToF(value)
+  }
+})
+const preferredTempMaxDisplay = computed({
+  get: () => unitSystem.value === 'imperial' ? preferredTempMaxF.value : Math.round(fToC(preferredTempMaxF.value)),
+  set: (value: number) => {
+    preferredTempMaxF.value = unitSystem.value === 'imperial' ? value : cToF(value)
+  }
+})
+
 const weatherBounds = computed(() => {
   const min = Math.min(preferredTempMinF.value, preferredTempMaxF.value)
   const max = Math.max(preferredTempMinF.value, preferredTempMaxF.value)
@@ -110,7 +134,21 @@ const weatherBounds = computed(() => {
   return { min, max }
 })
 
-const perfectWeatherRangeLabel = computed(() => `${weatherBounds.value.min}–${weatherBounds.value.max}°F`)
+const perfectWeatherRangeLabel = computed(() => {
+  if (unitSystem.value === 'imperial') {
+    return `${Math.round(weatherBounds.value.min)}–${Math.round(weatherBounds.value.max)}°F`
+  }
+
+  return `${Math.round(fToC(weatherBounds.value.min))}–${Math.round(fToC(weatherBounds.value.max))}°C`
+})
+
+// Fake Airbnb monthly rental — seeded from city id so each city gets a consistent plausible number
+const fakeAirbnbRental = computed(() => {
+  if (!selectedCity.value) return null
+  const seed = selectedCity.value.id.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0)
+  const base = 650 + (seed % 28) * 50   // $650 – $1 950
+  return `$${base.toLocaleString()}`
+})
 
 const countWeatherDaysInBounds = (city: CityProfile, minF: number, maxF: number) =>
   city.snapshot.temperatureByMonth.reduce((total, datum, index) => {
@@ -122,11 +160,12 @@ const selectedClimate = computed(() => {
   if (!selectedCity.value) return null
   const { rainfallByMonth, temperatureByMonth } = selectedCity.value.snapshot
   const avgTempC = temperatureByMonth.reduce((t, d) => t + d.value, 0) / temperatureByMonth.length
-  const avgTemp = Math.round(avgTempC * 9 / 5 + 32)
+  const avgTempF = Math.round(cToF(avgTempC))
   const driestMonth = rainfallByMonth.reduce((a, b) => b.value < a.value ? b : a)
   const wettestMonth = rainfallByMonth.reduce((a, b) => b.value > a.value ? b : a)
+  const warmestMonth = temperatureByMonth.reduce((a, b) => b.value > a.value ? b : a)
   const perfectWeatherDays = countWeatherDaysInBounds(selectedCity.value, weatherBounds.value.min, weatherBounds.value.max)
-  return { avgTemp, driestMonth, wettestMonth, perfectWeatherDays, temperatureByMonth, rainfallByMonth }
+  return { avgTempC, avgTempF, driestMonth, wettestMonth, warmestMonth, perfectWeatherDays, temperatureByMonth, rainfallByMonth }
 })
 
 const tempColor = (c: number) => {
@@ -259,9 +298,9 @@ const selectedClimateMetric = computed<ClimateMetric>(() => {
 
   return {
     title: 'Temperature',
-    unit: 'C',
+    unit: unitSystem.value === 'imperial' ? '°F' : '°C',
     values,
-    format: (value) => `${value}°C`,
+    format: (value) => `${displayTemperature(value)}${unitSystem.value === 'imperial' ? '°F' : '°C'}`,
     maxValue: Math.max(...values.map((item) => item.value), 1),
     color: '#f97316',
     peak: values.reduce((highest, current) => current.value > highest.value ? current : highest, values[0] ?? { month: '', value: 0 }),
@@ -538,7 +577,7 @@ onMounted(() => {
 <template>
   <div class="fixed inset-0">
     <!-- Title – top left -->
-    <div class="absolute left-4 top-4 z-40 pointer-events-none select-none">
+    <div v-show="!isPanelOpen || !isMobile" class="absolute left-4 top-4 z-40 pointer-events-none select-none">
       <div class="rounded-2xl bg-white/80 backdrop-blur px-4 py-2 shadow-[0_4px_20px_rgba(15,23,42,0.15)]">
         <span class="text-lg font-bold tracking-tight text-slate-800">LatAmities</span>
       </div>
@@ -568,6 +607,14 @@ onMounted(() => {
           v-if="isFiltersOpen"
           class="mt-2 w-56 rounded-2xl bg-white px-4 py-3 shadow-[0_4px_20px_rgba(15,23,42,0.18)]"
         >
+          <div class="mb-3 flex items-center justify-between">
+            <span class="text-[10px] font-bold uppercase tracking-wide text-slate-400">Units</span>
+            <div class="flex rounded-lg bg-slate-100 p-0.5 text-xs font-bold">
+              <button type="button" class="rounded-md px-2.5 py-1 transition" :class="unitSystem === 'imperial' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-400 hover:text-slate-600'" @click="unitSystem = 'imperial'">Imperial</button>
+              <button type="button" class="rounded-md px-2.5 py-1 transition" :class="unitSystem === 'metric' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-400 hover:text-slate-600'" @click="unitSystem = 'metric'">Metric</button>
+            </div>
+          </div>
+
           <!-- Weather filter row -->
           <div class="flex items-center gap-3">
             <Sun class="h-4 w-4 shrink-0 text-amber-400" />
@@ -594,35 +641,28 @@ onMounted(() => {
               <span class="w-8 text-[10px] font-bold uppercase tracking-wide text-slate-400">Low</span>
               <input
                 id="temp-min-filter"
-                v-model.number="preferredTempMinF"
+                v-model.number="preferredTempMinDisplay"
                 type="range"
-                min="50"
-                max="95"
-                step="1"
+                :min="temperatureSliderConfig.min"
+                :max="temperatureSliderConfig.max"
+                :step="temperatureSliderConfig.step"
                 class="flex-1 accent-primary"
               />
-              <span class="w-10 text-right text-sm font-extrabold text-slate-900">{{ preferredTempMinF }}°</span>
+              <span class="w-12 text-right text-sm font-extrabold text-slate-900">{{ preferredTempMinDisplay }}{{ unitTemperatureLabel }}</span>
             </div>
             <div class="flex items-center gap-2">
               <span class="w-8 text-[10px] font-bold uppercase tracking-wide text-slate-400">High</span>
               <input
                 id="temp-max-filter"
-                v-model.number="preferredTempMaxF"
+                v-model.number="preferredTempMaxDisplay"
                 type="range"
-                min="50"
-                max="95"
-                step="1"
+                :min="temperatureSliderConfig.min"
+                :max="temperatureSliderConfig.max"
+                :step="temperatureSliderConfig.step"
                 class="flex-1 accent-primary"
               />
-              <span class="w-10 text-right text-sm font-extrabold text-slate-900">{{ preferredTempMaxF }}°</span>
+              <span class="w-12 text-right text-sm font-extrabold text-slate-900">{{ preferredTempMaxDisplay }}{{ unitTemperatureLabel }}</span>
             </div>
-            <button
-              type="button"
-              class="text-[10px] font-bold uppercase tracking-[0.16em] text-primary transition hover:text-primary/70"
-              @click="resetWeatherBounds"
-            >
-              Reset weather bounds
-            </button>
           </div>
 
           <!-- Population filter row -->
@@ -731,13 +771,13 @@ onMounted(() => {
                 </div>
                 <div class="rounded-xl bg-sand-50 p-2.5 text-center">
                   <p class="text-[10px] font-bold uppercase tracking-wide text-slate-400">Avg temp</p>
-                  <p class="mt-1 text-base font-extrabold text-slate-900">{{ selectedClimate?.avgTemp }}°F</p>
+                  <p class="mt-1 text-base font-extrabold text-slate-900">{{ unitSystem === 'imperial' ? selectedClimate?.avgTempF : Math.round(selectedClimate?.avgTempC ?? 0) }}{{ unitTemperatureLabel }}</p>
                   <p class="text-[10px] text-slate-400">&nbsp;</p>
                 </div>
                 <div class="rounded-xl bg-sand-50 p-2.5 text-center">
                   <p class="text-[10px] font-bold uppercase tracking-wide text-slate-400">Altitude</p>
-                  <p class="mt-1 text-base font-extrabold text-slate-900">{{ Math.round(selectedCity.snapshot.altitudeM * 3.28084) }}</p>
-                  <p class="text-[10px] text-slate-400">ft</p>
+                  <p class="mt-1 text-base font-extrabold text-slate-900">{{ unitSystem === 'imperial' ? Math.round(selectedCity.snapshot.altitudeM * 3.28084) : Math.round(selectedCity.snapshot.altitudeM) }}</p>
+                  <p class="text-[10px] text-slate-400">{{ unitSystem === 'imperial' ? 'ft' : 'm' }}</p>
                 </div>
                 <div v-if="shouldShowFlightSnapshot" class="col-span-2 rounded-xl bg-sky-50 p-3 text-left">
                   <div class="flex items-center justify-between gap-3">
@@ -777,6 +817,20 @@ onMounted(() => {
                   <p class="text-[10px] font-bold uppercase tracking-wide text-slate-400">Perfect weather days</p>
                   <p class="mt-1 text-base font-extrabold text-slate-900">{{ selectedClimate?.perfectWeatherDays }}</p>
                   <p class="text-[10px] text-slate-400">{{ perfectWeatherRangeLabel }} per year</p>
+                </div>
+                <div class="col-span-2 rounded-xl bg-emerald-50 p-2.5">
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <p class="text-[10px] font-bold uppercase tracking-wide text-emerald-600">Airbnb avg / month</p>
+                      <p class="mt-1 text-base font-extrabold text-slate-900">{{ fakeAirbnbRental }}</p>
+                      <p class="text-[10px] text-slate-400">1-bed, est. 30 nights</p>
+                    </div>
+                    <div class="text-right">
+                      <p class="text-[10px] font-bold uppercase tracking-wide text-slate-400">{{ selectedClimate?.warmestMonth?.month }} weather</p>
+                      <p class="mt-1 text-base font-extrabold text-slate-900">{{ selectedClimate ? displayTemperature(selectedClimate.warmestMonth.value) : '–' }}{{ unitTemperatureLabel }}</p>
+                      <p class="text-[10px] text-slate-400">peak month</p>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -854,20 +908,23 @@ onMounted(() => {
         v-if="isPanelOpen && selectedCity"
         class="absolute right-0 top-0 z-30 h-full w-[75vw] overflow-y-auto bg-white shadow-[-8px_0_40px_rgba(15,23,42,0.18)] max-md:w-full"
       >
-        <div class="sticky top-0 z-10 flex items-center justify-between border-b border-slate-100 bg-white px-6 py-5">
-          <div>
-            <p class="text-xs font-bold uppercase tracking-[0.2em] text-primary">Profile</p>
-            <h2 class="mt-0.5 text-2xl font-extrabold text-slate-900">
-              {{ selectedCity.name }}, {{ selectedCity.country }}
-            </h2>
+        <div class="sticky top-0 z-10 bg-gradient-to-r from-lagoon-700 to-slate-800 px-6 py-5">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-xs font-bold uppercase tracking-[0.2em] text-teal-300">Profile</p>
+              <h2 class="mt-0.5 text-2xl font-extrabold text-white">
+                {{ selectedCity.name }}, {{ selectedCity.country }}
+              </h2>
+              <p class="mt-1 text-sm italic text-teal-200/80">{{ selectedCity.details.tagline }}</p>
+            </div>
+            <button
+              class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20"
+              aria-label="Close panel"
+              @click="closePanel"
+            >
+              <X class="h-4 w-4" />
+            </button>
           </div>
-          <button
-            class="flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 text-slate-500 transition hover:border-slate-300 hover:text-slate-900"
-            aria-label="Close panel"
-            @click="closePanel"
-          >
-            <X class="h-4 w-4" />
-          </button>
         </div>
 
         <div class="space-y-2 p-4">
@@ -879,11 +936,11 @@ onMounted(() => {
               <Badge v-for="tag in selectedCity.details.knownFor" :key="tag" variant="secondary">{{ tag }}</Badge>
             </div>
             <div class="mt-4 space-y-3">
-              <div class="rounded-xl bg-slate-50 p-3">
+              <div class="rounded-xl bg-teal-50 p-3">
                 <div class="flex items-start gap-3">
-                  <Plane class="mt-0.5 h-4 w-4 shrink-0 text-slate-400" />
+                  <Plane class="mt-0.5 h-4 w-4 shrink-0 text-lagoon-500" />
                   <div>
-                    <p class="text-sm font-bold text-slate-900">Arrival</p>
+                    <p class="text-sm font-bold text-lagoon-700">Arrival</p>
                     <p class="mt-1 text-sm leading-6 text-slate-600">{{ selectedCityAirport?.description }}</p>
                     <p v-if="selectedCityAirport?.rideshareNote" class="mt-1 text-xs leading-5 text-slate-500">{{ selectedCityAirport?.rideshareNote }}</p>
                   </div>
@@ -892,16 +949,16 @@ onMounted(() => {
               <div>
                 <p class="mb-2 text-[11px] font-bold uppercase tracking-[0.16em] text-slate-400">Best for</p>
                 <div class="flex flex-wrap gap-2">
-                  <Badge v-for="tag in selectedCity.details.bestFor" :key="tag" variant="outline">{{ tag }}</Badge>
+                  <Badge v-for="tag in selectedCity.details.bestFor" :key="tag" class="bg-emerald-100 text-emerald-800">{{ tag }}</Badge>
                 </div>
               </div>
-              <div>
-                <div class="flex items-center gap-1.5 mb-2 text-[11px] font-bold uppercase tracking-[0.16em] text-slate-400">
+              <div class="rounded-xl bg-amber-50 p-3">
+                <div class="flex items-center gap-1.5 mb-2 text-[11px] font-bold uppercase tracking-[0.16em] text-amber-600">
                   <ShieldAlert class="h-3 w-3" /> Watchouts
                 </div>
-                <ul class="space-y-1.5 text-sm leading-6 text-slate-600">
+                <ul class="space-y-1.5 text-sm leading-6 text-slate-700">
                   <li v-for="item in selectedCity.details.watchouts" :key="item" class="flex gap-2">
-                    <span class="mt-1 shrink-0 text-amber-400">·</span>{{ item }}
+                    <span class="mt-0.5 shrink-0 text-amber-400">⚠</span>{{ item }}
                   </li>
                 </ul>
               </div>
@@ -1017,18 +1074,20 @@ onMounted(() => {
           <Accordion title="Working Here">
             <div class="space-y-3">
               <div class="grid grid-cols-3 gap-2">
-                <div class="rounded-xl bg-sand-50 p-3 text-center">
-                  <Wifi class="mx-auto mb-1 h-3.5 w-3.5 text-slate-400" />
-                  <p class="text-base font-extrabold text-slate-900">{{ selectedCity.snapshot.internet.downloadMbps }}</p>
-                  <p class="text-[10px] text-slate-400">Mbps ↓</p>
+                <div class="rounded-xl bg-sky-50 p-3 text-center">
+                  <Wifi class="mx-auto mb-1 h-3.5 w-3.5 text-sky-400" />
+                  <p class="text-base font-extrabold text-sky-700">{{ selectedCity.snapshot.internet.downloadMbps }}</p>
+                  <p class="text-[10px] text-sky-500">Mbps ↓</p>
                 </div>
-                <div class="rounded-xl bg-sand-50 p-3 text-center">
-                  <p class="mt-4 text-base font-extrabold text-slate-900">{{ selectedCity.snapshot.internet.uploadMbps }}</p>
-                  <p class="text-[10px] text-slate-400">Mbps ↑</p>
+                <div class="rounded-xl bg-emerald-50 p-3 text-center">
+                  <Wifi class="mx-auto mb-1 h-3.5 w-3.5 text-emerald-400" />
+                  <p class="text-base font-extrabold text-emerald-700">{{ selectedCity.snapshot.internet.uploadMbps }}</p>
+                  <p class="text-[10px] text-emerald-500">Mbps ↑</p>
                 </div>
-                <div class="rounded-xl bg-sand-50 p-3 text-center">
-                  <p class="mt-4 text-base font-extrabold text-slate-900">{{ selectedCity.snapshot.internet.latencyMs }}</p>
-                  <p class="text-[10px] text-slate-400">ms latency</p>
+                <div class="rounded-xl bg-violet-50 p-3 text-center">
+                  <Wifi class="mx-auto mb-1 h-3.5 w-3.5 text-violet-400" />
+                  <p class="text-base font-extrabold text-violet-700">{{ selectedCity.snapshot.internet.latencyMs }}</p>
+                  <p class="text-[10px] text-violet-500">ms latency</p>
                 </div>
               </div>
               <p class="text-sm leading-7 text-slate-600">{{ selectedCity.details.workstyle }}</p>
@@ -1105,12 +1164,12 @@ onMounted(() => {
 
           <Accordion title="Restaurants">
             <div class="space-y-4">
-              <ul v-if="selectedRestaurants.length" class="space-y-2">
-                <li v-for="r in selectedRestaurants" :key="r.name" class="text-sm text-slate-700">
-                  <a :href="mapsSearchUrl(`${r.name} ${selectedCity.name}`)" target="_blank" rel="noopener noreferrer" class="font-semibold text-slate-900 hover:text-lagoon-500">
+              <ul v-if="selectedRestaurants.length" class="space-y-3">
+                <li v-for="r in selectedRestaurants" :key="r.name" class="border-l-2 border-coral-400 pl-3">
+                  <a :href="r.link ?? mapsSearchUrl(`${r.name} ${selectedCity.name}`)" target="_blank" rel="noopener noreferrer" class="text-sm font-semibold text-slate-900 hover:text-lagoon-500">
                     {{ r.name }}
                   </a>
-                  <span v-if="r.note" class="ml-1 text-slate-400">— {{ r.note }}</span>
+                  <p v-if="r.note" class="text-xs text-slate-400 mt-0.5">{{ r.note }}</p>
                 </li>
               </ul>
               <p v-else class="text-sm text-slate-400 italic">Restaurant picks coming soon.</p>
@@ -1127,12 +1186,12 @@ onMounted(() => {
 
           <Accordion title="Cafes">
             <div class="space-y-4">
-              <ul v-if="selectedCafes.length" class="space-y-2">
-                <li v-for="c in selectedCafes" :key="c.name" class="text-sm text-slate-700">
-                  <a :href="mapsSearchUrl(`${c.name} ${selectedCity.name}`)" target="_blank" rel="noopener noreferrer" class="font-semibold text-slate-900 hover:text-lagoon-500">
+              <ul v-if="selectedCafes.length" class="space-y-3">
+                <li v-for="c in selectedCafes" :key="c.name" class="border-l-2 border-amber-400 pl-3">
+                  <a :href="c.link ?? mapsSearchUrl(`${c.name} ${selectedCity.name}`)" target="_blank" rel="noopener noreferrer" class="text-sm font-semibold text-slate-900 hover:text-lagoon-500">
                     {{ c.name }}
                   </a>
-                  <span v-if="c.note" class="ml-1 text-slate-400">— {{ c.note }}</span>
+                  <p v-if="c.note" class="text-xs text-slate-400 mt-0.5">{{ c.note }}</p>
                 </li>
               </ul>
               <p v-else class="text-sm text-slate-400 italic">Cafe picks coming soon.</p>
@@ -1149,12 +1208,12 @@ onMounted(() => {
 
           <Accordion title="Bars">
             <div class="space-y-4">
-              <ul v-if="selectedBars.length" class="space-y-2">
-                <li v-for="b in selectedBars" :key="b.name" class="text-sm text-slate-700">
-                  <a :href="mapsSearchUrl(`${b.name} ${selectedCity.name}`)" target="_blank" rel="noopener noreferrer" class="font-semibold text-slate-900 hover:text-lagoon-500">
+              <ul v-if="selectedBars.length" class="space-y-3">
+                <li v-for="b in selectedBars" :key="b.name" class="border-l-2 border-violet-400 pl-3">
+                  <a :href="b.link ?? mapsSearchUrl(`${b.name} ${selectedCity.name}`)" target="_blank" rel="noopener noreferrer" class="text-sm font-semibold text-slate-900 hover:text-lagoon-500">
                     {{ b.name }}
                   </a>
-                  <span v-if="b.note" class="ml-1 text-slate-400">— {{ b.note }}</span>
+                  <p v-if="b.note" class="text-xs text-slate-400 mt-0.5">{{ b.note }}</p>
                 </li>
               </ul>
               <p v-else class="text-sm text-slate-400 italic">Bar picks coming soon.</p>
@@ -1203,7 +1262,7 @@ onMounted(() => {
                   @click="climateView = 'temperature'"
                 >
                   <p class="text-[10px] font-bold uppercase tracking-wide" :class="climateView === 'temperature' ? 'text-white/70' : 'text-slate-400'">Temperature</p>
-                  <p class="mt-1 text-sm font-bold">{{ selectedClimate?.warmestMonth?.month }} {{ selectedClimate?.warmestMonth?.value }}°C</p>
+                  <p class="mt-1 text-sm font-bold">Warmest: {{ selectedClimate?.warmestMonth?.month }} {{ selectedClimate ? displayTemperature(selectedClimate.warmestMonth.value) : '' }}{{ unitTemperatureLabel }}</p>
                 </button>
                 <button
                   class="rounded-xl px-3 py-3 text-left transition"
@@ -1211,7 +1270,7 @@ onMounted(() => {
                   @click="climateView = 'rainfall'"
                 >
                   <p class="text-[10px] font-bold uppercase tracking-wide" :class="climateView === 'rainfall' ? 'text-white/70' : 'text-slate-400'">Rainfall</p>
-                  <p class="mt-1 text-sm font-bold">{{ selectedClimate?.driestMonth?.month }} {{ selectedClimate?.driestMonth?.value }}mm</p>
+                  <p class="mt-1 text-sm font-bold">Driest: {{ selectedClimate?.driestMonth?.month }} {{ selectedClimate ? displayRainfall(selectedClimate.driestMonth.value) : '' }}{{ unitRainfallLabel }}</p>
                 </button>
               </div>
               <div class="rounded-[28px] bg-sand-50 p-4">
@@ -1231,7 +1290,7 @@ onMounted(() => {
                 </div>
                 <div class="mt-4 flex justify-center overflow-hidden rounded-[24px] bg-[linear-gradient(180deg,#f8fafc_0%,#eef2ff_50%,#f8fafc_100%)] px-2 py-6">
                   <div
-                    class="relative h-[23rem] w-full max-w-[46rem] select-none [perspective:1400px]"
+                    class="relative h-[23rem] w-full max-w-[46rem] select-none touch-none [perspective:1400px]"
                     :class="isDraggingClimate ? 'cursor-grabbing' : 'cursor-grab'"
                     @pointerdown="startClimateSpin"
                     @pointermove="updateClimateSpin"
@@ -1283,13 +1342,7 @@ onMounted(() => {
                         {{ point.formattedValue }}
                       </text>
                     </svg>
-                    <div class="pointer-events-none absolute right-4 top-4">
-                      <div class="rounded-2xl border border-white/70 bg-white/90 px-4 py-3 text-right shadow-[0_12px_30px_rgba(15,23,42,0.14)] backdrop-blur-sm">
-                        <p class="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-400">{{ selectedClimateMetric.title }}</p>
-                        <p class="mt-1 text-2xl font-extrabold text-slate-900">{{ selectedClimateMetric.peak.value }}{{ selectedClimateMetric.unit }}</p>
-                        <p class="text-xs text-slate-500">Peak in {{ selectedClimateMetric.peak.month }}</p>
-                      </div>
-                    </div>
+
                   </div>
                 </div>
                 <div class="mt-4 grid grid-cols-2 gap-2 text-sm">
@@ -1300,8 +1353,8 @@ onMounted(() => {
                   </div>
                   <div class="rounded-xl bg-white px-3 py-2 ring-1 ring-slate-100">
                     <p class="text-[10px] font-bold uppercase tracking-wide text-slate-400">Driest month</p>
-                    <p class="mt-1 font-bold text-slate-900">{{ selectedClimate?.driestMonth?.month }} {{ selectedClimate?.driestMonth?.value }}mm</p>
-                    <p class="text-[10px] text-slate-400">Wettest {{ selectedClimate?.wettestMonth?.month }} {{ selectedClimate?.wettestMonth?.value }}mm</p>
+                    <p class="mt-1 font-bold text-slate-900">{{ selectedClimate?.driestMonth?.month }} {{ selectedClimate ? displayRainfall(selectedClimate.driestMonth.value) : '' }}{{ unitRainfallLabel }}</p>
+                    <p class="text-[10px] text-slate-400">Wettest {{ selectedClimate?.wettestMonth?.month }} {{ selectedClimate ? displayRainfall(selectedClimate.wettestMonth.value) : '' }}{{ unitRainfallLabel }}</p>
                   </div>
                 </div>
               </div>
@@ -1366,7 +1419,7 @@ onMounted(() => {
     </Transition>
 
     <!-- Floating Countries Widget -->
-    <div class="absolute bottom-6 left-1/2 z-40 -translate-x-1/2 flex flex-col items-center">
+    <div v-show="!isPanelOpen || !isMobile" class="absolute bottom-6 left-1/2 z-40 -translate-x-1/2 flex flex-col items-center">
       <Transition
         enter-active-class="transition duration-200 ease-out"
         enter-from-class="translate-y-2 opacity-0"
