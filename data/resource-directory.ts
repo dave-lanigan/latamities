@@ -45,16 +45,16 @@ export const resourceProviders: Record<string, ResourceLink> = {
     id: 'skyscanner',
     label: 'Skyscanner',
     category: 'flights',
-    description: 'Affiliate slot for destination search and fare discovery.',
+    description: 'Compare every airline and route into the city in one search — best for finding the cheapest window to book.',
     websiteUrl: 'https://www.skyscanner.com/',
     affiliateUrl: '',
-    badge: 'Affiliate slot'
+    badge: 'Affiliate'
   },
   uber: {
     id: 'uber',
     label: 'Uber',
     category: 'getting-around',
-    description: 'Primary rideshare option where coverage is strong.',
+    description: 'Set up before you land — fixed-price rides from the airport mean no haggling on arrival day.',
     websiteUrl: 'https://www.uber.com/',
     affiliateUrl: ''
   },
@@ -62,7 +62,7 @@ export const resourceProviders: Record<string, ResourceLink> = {
     id: 'didi',
     label: 'Didi',
     category: 'getting-around',
-    description: 'Common backup rideshare in larger LATAM cities.',
+    description: 'Worth having as a backup — in some cities Didi has more drivers and lower prices than Uber.',
     websiteUrl: 'https://www.didiglobal.com/',
     affiliateUrl: ''
   },
@@ -70,7 +70,7 @@ export const resourceProviders: Record<string, ResourceLink> = {
     id: 'rappi',
     label: 'Rappi',
     category: 'delivery',
-    description: 'Food delivery and errands app used heavily in major hubs.',
+    description: 'The Latin American super-app for food, groceries, pharmacy, and errands. More useful than DoorDash or Deliveroo in most major cities here.',
     websiteUrl: 'https://www.rappi.com/',
     affiliateUrl: ''
   },
@@ -78,16 +78,16 @@ export const resourceProviders: Record<string, ResourceLink> = {
     id: 'wise',
     label: 'Wise',
     category: 'money-cash',
-    description: 'Best default slot for sending money into the region.',
+    description: 'Open a Wise account before you travel — mid-market exchange rates with no hidden fees beat any airport bureau or bank transfer.',
     websiteUrl: 'https://wise.com/',
     affiliateUrl: '',
-    badge: 'Affiliate slot'
+    badge: 'Affiliate'
   },
   meru: {
     id: 'meru',
     label: 'Meru',
     category: 'money-cash',
-    description: 'Use when local QR-code or domestic money movement matters more than an international transfer rail.',
+    description: 'Local QR-based payments used in Bolivia — helpful when vendors don\'t accept cards or international transfers.',
     websiteUrl: 'https://www.meru.com.bo/',
     affiliateUrl: ''
   },
@@ -95,7 +95,7 @@ export const resourceProviders: Record<string, ResourceLink> = {
     id: 'moneygram',
     label: 'MoneyGram',
     category: 'money-cash',
-    description: 'Cash pickup fallback when cards or transfers are inconvenient.',
+    description: 'Cash pickup at local agents — useful if you need to receive money in hand or send to someone without a bank account.',
     websiteUrl: 'https://www.moneygram.com/',
     affiliateUrl: ''
   },
@@ -103,7 +103,7 @@ export const resourceProviders: Record<string, ResourceLink> = {
     id: 'offramp',
     label: 'Offramp',
     category: 'money-cash',
-    description: 'Crypto-to-cash QR flow worth tracking in markets where local rails are less convenient.',
+    description: 'Convert crypto to local cash via QR code — a practical option in markets where banking infrastructure is less accessible.',
     websiteUrl: 'https://www.offramp.xyz/',
     affiliateUrl: ''
   },
@@ -111,7 +111,7 @@ export const resourceProviders: Record<string, ResourceLink> = {
     id: 'esimio',
     label: 'esim.io',
     category: 'connectivity',
-    description: 'Good placeholder for arrival-day connectivity.',
+    description: 'Buy and activate a data eSIM before you fly — you\'ll have a working number and data the moment you land, no SIM hunting required.',
     websiteUrl: 'https://esim.io/',
     affiliateUrl: ''
   },
@@ -119,7 +119,7 @@ export const resourceProviders: Record<string, ResourceLink> = {
     id: 'gigsky',
     label: 'GigSky',
     category: 'connectivity',
-    description: 'Second eSIM option so the section is not single-provider.',
+    description: 'Alternative eSIM provider — worth comparing plans as regional coverage and pricing vary between carriers.',
     websiteUrl: 'https://www.gigsky.com/',
     affiliateUrl: ''
   }

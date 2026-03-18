@@ -10,6 +10,7 @@ import {
   Filter,
   Globe2,
   Home,
+  Info,
   MapPin,
   Plane,
   ShieldAlert,
@@ -55,6 +56,8 @@ const hoveredRain = ref<{ month: string; mm: number } | null>(null)
 const isCountriesOpen = ref(false)
 const selectedCountry = ref<CountryProfile | null>(null)
 const isMobile = ref(false)
+const isInfoOpen = ref(false)
+
 const unitSystem = ref<'imperial' | 'metric'>('imperial')
 const minNiceWeatherDays = ref(150)
 const preferredTempMinF = ref(75)
@@ -436,7 +439,7 @@ const updateClimateSpin = (event: PointerEvent) => {
   const deltaX = event.clientX - climatePointerX.value
   const deltaY = event.clientY - climatePointerY.value
 
-  climateRotation.value += deltaX * 0.22
+  climateRotation.value -= deltaX * 0.22
   climatePitch.value = clamp(climatePitch.value - deltaY * 0.12, 42, 72)
   climatePointerX.value = event.clientX
   climatePointerY.value = event.clientY
@@ -584,28 +587,63 @@ onMounted(() => {
     </div>
 
     <!-- Filter icon button + dropdown – top right, hidden when detail panel is open -->
-    <div v-if="!isPanelOpen" class="absolute right-4 top-4 z-40">
-      <button
-        type="button"
-        class="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-[0_4px_20px_rgba(15,23,42,0.18)] transition hover:bg-slate-50"
-        :aria-label="isFiltersOpen ? 'Close filters' : 'Open filters'"
-        @click="isFiltersOpen = !isFiltersOpen"
-      >
-        <Filter class="h-4 w-4 text-slate-600" />
-      </button>
+    <div v-if="!isPanelOpen" class="absolute right-4 top-4 z-40 flex items-start gap-2">
+      <!-- Info button -->
+      <div class="relative">
+        <button
+          type="button"
+          class="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-[0_4px_20px_rgba(15,23,42,0.18)] transition hover:bg-slate-50"
+          aria-label="About & info"
+          @click="isInfoOpen = !isInfoOpen; isFiltersOpen = false"
+        >
+          <Info class="h-4 w-4 text-slate-600" />
+        </button>
+        <Transition
+          enter-active-class="transition duration-150 ease-out"
+          enter-from-class="-translate-y-1 opacity-0"
+          enter-to-class="translate-y-0 opacity-100"
+          leave-active-class="transition duration-100 ease-in"
+          leave-from-class="translate-y-0 opacity-100"
+          leave-to-class="-translate-y-1 opacity-0"
+        >
+          <div v-if="isInfoOpen" class="absolute right-0 mt-2 w-64 rounded-2xl bg-white px-5 py-4 shadow-[0_4px_20px_rgba(15,23,42,0.18)] space-y-3">
+            <div>
+              <p class="text-sm font-extrabold text-slate-900">LatAmities</p>
+              <p class="mt-1 text-xs leading-5 text-slate-500">A map-first guide to Latin American cities for remote workers and digital nomads. Data covers climate, cost of living, internet, and travel logistics.</p>
+            </div>
+            <div class="h-px bg-slate-100" />
+            <div class="space-y-1.5 text-xs">
+              <a href="/about" class="block font-semibold text-lagoon-500 hover:underline">About</a>
+              <a href="/terms" class="block font-semibold text-lagoon-500 hover:underline">Terms of use</a>
+              <a href="/privacy" class="block font-semibold text-lagoon-500 hover:underline">Privacy policy</a>
+            </div>
+            <div class="h-px bg-slate-100" />
+            <p class="text-[10px] text-slate-400">&copy; {{ new Date().getFullYear() }} LatAmities. All rights reserved.</p>
+          </div>
+        </Transition>
+      </div>
 
-      <!-- Dropdown panel -->
-      <Transition
-        enter-active-class="transition duration-150 ease-out"
-        enter-from-class="-translate-y-1 opacity-0"
-        enter-to-class="translate-y-0 opacity-100"
-        leave-active-class="transition duration-100 ease-in"
-        leave-from-class="translate-y-0 opacity-100"
-        leave-to-class="-translate-y-1 opacity-0"
-      >
+      <!-- Filter button -->
+      <div class="relative">
+        <button
+          type="button"
+          class="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-[0_4px_20px_rgba(15,23,42,0.18)] transition hover:bg-slate-50"
+          :aria-label="isFiltersOpen ? 'Close filters' : 'Open filters'"
+          @click="isFiltersOpen = !isFiltersOpen; isInfoOpen = false"
+        >
+          <Filter class="h-4 w-4 text-slate-600" />
+        </button>
+        <Transition
+          enter-active-class="transition duration-150 ease-out"
+          enter-from-class="-translate-y-1 opacity-0"
+          enter-to-class="translate-y-0 opacity-100"
+          leave-active-class="transition duration-100 ease-in"
+          leave-from-class="translate-y-0 opacity-100"
+          leave-to-class="-translate-y-1 opacity-0"
+        >
         <div
           v-if="isFiltersOpen"
-          class="mt-2 w-56 rounded-2xl bg-white px-4 py-3 shadow-[0_4px_20px_rgba(15,23,42,0.18)]"
+          class="absolute right-0 mt-2 w-56 rounded-2xl bg-white px-4 py-3 shadow-[0_4px_20px_rgba(15,23,42,0.18)]"
         >
           <div class="mb-3 flex items-center justify-between">
             <span class="text-[10px] font-bold uppercase tracking-wide text-slate-400">Units</span>
@@ -684,8 +722,9 @@ onMounted(() => {
 
           <p class="mt-2 text-[10px] text-slate-400">{{ filteredCities.length }} / {{ cityProfiles.length }} cities</p>
         </div>
-      </Transition>
-    </div>
+        </Transition>
+      </div><!-- end filter wrapper -->
+    </div><!-- end top-right flex -->
 
     <MapboxMap
       :map-id="MAP_ID"
@@ -1145,19 +1184,24 @@ onMounted(() => {
               <div v-for="group in selectedEssentialGroups" :key="group.id" class="rounded-xl bg-slate-50 p-4">
                 <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-slate-400">{{ group.title }}</p>
                 <p class="mt-1 text-sm leading-6 text-slate-600">{{ group.summary }}</p>
-                <div class="mt-3 flex flex-wrap gap-x-4 gap-y-2">
+                <div class="mt-3 space-y-2">
                   <a
                     v-for="item in group.items"
                     :key="item.id"
                     :href="item.href"
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="text-sm font-semibold text-lagoon-500 hover:underline"
+                    class="flex items-start gap-3 rounded-lg bg-white px-3 py-2.5 transition hover:bg-lagoon-50"
                   >
-                    {{ item.label }}<span v-if="item.badge || !item.isAffiliateReady" class="ml-1 text-xs font-bold uppercase tracking-wide text-slate-400">{{ item.badge || 'Soon' }}</span>
+                    <div class="min-w-0 flex-1">
+                      <p class="text-sm font-semibold text-lagoon-500">
+                        {{ item.label }}<span v-if="item.badge" class="ml-1.5 inline-block rounded bg-slate-100 px-1 py-0.5 text-[9px] font-bold uppercase tracking-wide text-slate-400">{{ item.badge }}</span>
+                      </p>
+                      <p v-if="item.description" class="mt-0.5 text-xs leading-4 text-slate-500">{{ item.description }}</p>
+                    </div>
+                    <span class="mt-0.5 shrink-0 text-slate-300">↗</span>
                   </a>
                 </div>
-                <p class="mt-2 text-xs leading-5 text-slate-500">{{ group.items.map(item => item.description).join(' · ') }}</p>
               </div>
             </div>
           </Accordion>
