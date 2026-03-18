@@ -1,6 +1,6 @@
 import type { CityProfile } from './city-profiles'
 
-export type ResourceCategory = 'flights' | 'transport' | 'money' | 'connectivity'
+export type ResourceCategory = 'flights' | 'getting-around' | 'delivery' | 'money-cash' | 'connectivity'
 
 export interface ResourceLink {
   id: string
@@ -20,14 +20,24 @@ export interface ResolvedResourceLink extends ResourceLink {
 export interface ResourceGroup {
   id: ResourceCategory
   title: string
+  summary: string
   items: ResolvedResourceLink[]
 }
 
 const categoryTitles: Record<ResourceCategory, string> = {
   flights: 'Flights',
-  transport: 'Transport & delivery',
-  money: 'Money & cash',
+  'getting-around': 'Getting around',
+  delivery: 'Delivery',
+  'money-cash': 'Money & cash',
   connectivity: 'eSIM & connectivity'
+}
+
+const categorySummaries: Record<ResourceCategory, string> = {
+  flights: 'Search and price discovery for getting into the city.',
+  'getting-around': 'Use the strongest ride and taxi options first, then fall back to local cash or airport transport when app coverage is weaker.',
+  delivery: 'Rappi dominates in many large cities, but local delivery density still varies a lot by neighborhood.',
+  'money-cash': 'Wise is still the cleanest default for transfers, while local QR and cash-offramp tools matter more in specific markets.',
+  connectivity: 'Keep one eSIM fallback ready for arrival day so you are not solving SIM issues from the airport.'
 }
 
 export const resourceProviders: Record<string, ResourceLink> = {
@@ -43,7 +53,7 @@ export const resourceProviders: Record<string, ResourceLink> = {
   uber: {
     id: 'uber',
     label: 'Uber',
-    category: 'transport',
+    category: 'getting-around',
     description: 'Primary rideshare option where coverage is strong.',
     websiteUrl: 'https://www.uber.com/',
     affiliateUrl: ''
@@ -51,7 +61,7 @@ export const resourceProviders: Record<string, ResourceLink> = {
   didi: {
     id: 'didi',
     label: 'Didi',
-    category: 'transport',
+    category: 'getting-around',
     description: 'Common backup rideshare in larger LATAM cities.',
     websiteUrl: 'https://www.didiglobal.com/',
     affiliateUrl: ''
@@ -59,7 +69,7 @@ export const resourceProviders: Record<string, ResourceLink> = {
   rappi: {
     id: 'rappi',
     label: 'Rappi',
-    category: 'transport',
+    category: 'delivery',
     description: 'Food delivery and errands app used heavily in major hubs.',
     websiteUrl: 'https://www.rappi.com/',
     affiliateUrl: ''
@@ -67,7 +77,7 @@ export const resourceProviders: Record<string, ResourceLink> = {
   wise: {
     id: 'wise',
     label: 'Wise',
-    category: 'money',
+    category: 'money-cash',
     description: 'Best default slot for sending money into the region.',
     websiteUrl: 'https://wise.com/',
     affiliateUrl: '',
@@ -76,15 +86,15 @@ export const resourceProviders: Record<string, ResourceLink> = {
   meru: {
     id: 'meru',
     label: 'Meru',
-    category: 'money',
-    description: 'Local-friendly money movement option to track in Bolivia and adjacent markets.',
-    websiteUrl: 'https://www.meru.com/',
+    category: 'money-cash',
+    description: 'Use when local QR-code or domestic money movement matters more than an international transfer rail.',
+    websiteUrl: 'https://www.meru.com.bo/',
     affiliateUrl: ''
   },
   moneygram: {
     id: 'moneygram',
     label: 'MoneyGram',
-    category: 'money',
+    category: 'money-cash',
     description: 'Cash pickup fallback when cards or transfers are inconvenient.',
     websiteUrl: 'https://www.moneygram.com/',
     affiliateUrl: ''
@@ -92,8 +102,8 @@ export const resourceProviders: Record<string, ResourceLink> = {
   offramp: {
     id: 'offramp',
     label: 'Offramp',
-    category: 'money',
-    description: 'Useful to track where crypto-to-cash offramps matter.',
+    category: 'money-cash',
+    description: 'Crypto-to-cash QR flow worth tracking in markets where local rails are less convenient.',
     websiteUrl: 'https://www.offramp.xyz/',
     affiliateUrl: ''
   },
@@ -117,48 +127,60 @@ export const resourceProviders: Record<string, ResourceLink> = {
 
 const basePlacements: Partial<Record<ResourceCategory, string[]>> = {
   flights: ['skyscanner'],
-  money: ['wise', 'moneygram'],
+  'money-cash': ['wise', 'moneygram'],
   connectivity: ['esimio', 'gigsky']
 }
 
 const countryPlacements: Partial<Record<string, Partial<Record<ResourceCategory, string[]>>>> = {
   Argentina: {
-    transport: ['uber', 'didi', 'rappi'],
-    money: ['wise', 'moneygram']
+    'getting-around': ['uber', 'didi'],
+    delivery: ['rappi'],
+    'money-cash': ['wise', 'offramp', 'moneygram']
   },
   Bolivia: {
-    money: ['wise', 'meru', 'moneygram'],
+    'getting-around': ['uber'],
+    'money-cash': ['wise', 'meru', 'moneygram'],
     connectivity: ['esimio', 'gigsky']
   },
+  Brazil: {
+    'getting-around': ['uber'],
+    delivery: ['rappi'],
+    'money-cash': ['wise', 'offramp', 'moneygram']
+  },
   Colombia: {
-    transport: ['uber', 'didi', 'rappi'],
-    money: ['wise', 'moneygram']
+    'getting-around': ['uber', 'didi'],
+    delivery: ['rappi'],
+    'money-cash': ['wise', 'moneygram']
   },
   Mexico: {
-    transport: ['uber', 'didi', 'rappi'],
-    money: ['wise', 'moneygram']
+    'getting-around': ['uber', 'didi'],
+    delivery: ['rappi'],
+    'money-cash': ['wise', 'moneygram']
   },
   Peru: {
-    transport: ['uber', 'didi', 'rappi'],
-    money: ['wise', 'offramp', 'moneygram']
+    'getting-around': ['uber', 'didi'],
+    delivery: ['rappi'],
+    'money-cash': ['wise', 'offramp', 'moneygram']
   }
 }
 
 const cityPlacements: Partial<Record<string, Partial<Record<ResourceCategory, string[]>>>> = {
   'buenos-aires': {
-    money: ['wise', 'moneygram']
+    'money-cash': ['wise', 'offramp', 'moneygram']
   },
   medellin: {
-    transport: ['uber', 'didi', 'rappi']
+    'getting-around': ['uber', 'didi'],
+    delivery: ['rappi']
   },
   'mexico-city': {
-    transport: ['uber', 'didi', 'rappi']
+    'getting-around': ['uber', 'didi'],
+    delivery: ['rappi']
   },
   'la-paz': {
-    money: ['wise', 'meru', 'moneygram']
+    'money-cash': ['wise', 'meru', 'moneygram']
   },
   cochabamba: {
-    money: ['wise', 'meru', 'moneygram']
+    'money-cash': ['wise', 'meru', 'moneygram']
   }
 }
 
@@ -187,6 +209,7 @@ export const resolveResourceGroups = (city: Pick<CityProfile, 'id' | 'country'>)
     return {
       id: category,
       title: categoryTitles[category],
+      summary: categorySummaries[category],
       items
     }
   }).filter((group) => group.items.length > 0)

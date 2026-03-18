@@ -33,9 +33,11 @@ import CardHeader from '~/components/ui/CardHeader.vue'
 import CardTitle from '~/components/ui/CardTitle.vue'
 import { cityAmenityProfiles } from '~~/data/city-amenities'
 import { cityFlightDestinations } from '~~/data/city-flight-destinations'
-import cityProfiles, { type CityProfile } from '~~/data/city-profiles'
+import { cityOutdoorGuides } from '~~/data/city-outdoor-guides'
+import cityProfiles, { type CityProfile, type MonthlyDatum } from '~~/data/city-profiles'
 import { countryFinanceProfiles } from '~~/data/country-finance'
 import countryData, { type CountryProfile } from '~~/data/country-profiles'
+import { cityStayGuides } from '~~/data/city-stay-guides'
 import { resolveResourceGroups, type ResourceGroup, type ResolvedResourceLink } from '~~/data/resource-directory'
 
 const MAP_ID = 'main'
@@ -64,6 +66,13 @@ const isResolvingFlightOrigin = ref(false)
 const isLoadingFlightPrice = ref(false)
 const flightPriceError = ref('')
 const flightPriceQuote = ref<{ formattedPrice: string | null; origin: string; destination: string } | null>(null)
+const climateView = ref<'temperature' | 'rainfall'>('temperature')
+const climateRotation = ref(-22)
+const climatePitch = ref(58)
+const isDraggingClimate = ref(false)
+const activeClimatePointerId = ref<number | null>(null)
+const climatePointerX = ref(0)
+const climatePointerY = ref(0)
 
 const checkMobile = () => { isMobile.value = window.innerWidth < 640 }
 onMounted(() => {
@@ -169,6 +178,17 @@ type PrimaryResourceCard = {
   isAffiliateReady: boolean
 }
 
+type ClimateMetric = {
+  title: string
+  unit: string
+  values: MonthlyDatum[]
+  format: (value: number) => string
+  maxValue: number
+  color: string
+  peak: MonthlyDatum
+  floorColor: string
+}
+
 const selectedCityResourceGroups = computed<ResourceGroup[]>(() => selectedCity.value ? resolveResourceGroups(selectedCity.value) : [])
 const selectedCityFlightResource = computed<ResolvedResourceLink | null>(() =>
   selectedCityResourceGroups.value.find((group) => group.id === 'flights')?.items[0] ?? null
@@ -193,12 +213,149 @@ const selectedCityPrimaryResourceCards = computed<PrimaryResourceCard[]>(() =>
 )
 const selectedCityAmenityProfile = computed(() => selectedCity.value ? cityAmenityProfiles[selectedCity.value.id] ?? null : null)
 const selectedCityFinanceProfile = computed(() => selectedCity.value ? countryFinanceProfiles[selectedCity.value.country] ?? null : null)
+const selectedCityAirport = computed(() => selectedCity.value?.details.airport ?? null)
+const selectedCityStayGuide = computed(() => {
+  if (!selectedCity.value) return null
+
+  const explicitGuide = cityStayGuides[selectedCity.value.id]
+
+  if (explicitGuide) {
+    return explicitGuide
+  }
+
+  return {
+    blurb: `${selectedCity.value.details.neighborhoods.slice(0, 2).join(' and ')} are the easiest starting points for most stays because they keep daily errands and transport friction relatively low. ${selectedCity.value.details.mobility}`,
+    buildings: []
+  }
+})
+const selectedCityOutdoorGuide = computed(() => selectedCity.value ? cityOutdoorGuides[selectedCity.value.id] ?? null : null)
+const selectedCityStayBuildings = computed(() => selectedCityStayGuide.value?.buildings ?? [])
 const selectedTemperatureByMonth = computed(() => selectedClimate.value?.temperatureByMonth ?? [])
 const selectedRainfallByMonth = computed(() => selectedClimate.value?.rainfallByMonth ?? [])
 const selectedRestaurants = computed(() => selectedCity.value?.details.restaurants ?? [])
 const selectedCafes = computed(() => selectedCity.value?.details.cafes ?? [])
 const selectedBars = computed(() => selectedCity.value?.details.bars ?? [])
 const selectedAttractions = computed(() => selectedCity.value?.details.attractions ?? [])
+const selectedEssentialGroups = computed(() =>
+  selectedCityResourceGroups.value.filter((group) => group.id !== 'flights')
+)
+const selectedClimateMetric = computed<ClimateMetric>(() => {
+  if (climateView.value === 'rainfall') {
+    const values = selectedRainfallByMonth.value
+
+    return {
+      title: 'Rainfall',
+      unit: 'mm',
+      values,
+      format: (value) => `${value}mm`,
+      maxValue: Math.max(...values.map((item) => item.value), 1),
+      color: '#0f766e',
+      peak: values.reduce((highest, current) => current.value > highest.value ? current : highest, values[0] ?? { month: '', value: 0 }),
+      floorColor: '#ccfbf1'
+    }
+  }
+
+  const values = selectedTemperatureByMonth.value
+
+  return {
+    title: 'Temperature',
+    unit: 'C',
+    values,
+    format: (value) => `${value}°C`,
+    maxValue: Math.max(...values.map((item) => item.value), 1),
+    color: '#f97316',
+    peak: values.reduce((highest, current) => current.value > highest.value ? current : highest, values[0] ?? { month: '', value: 0 }),
+    floorColor: '#ffedd5'
+  }
+})
+const climateGraphViewport = { width: 360, height: 360, centerX: 180, centerY: 186, perspective: 520 }
+
+const projectClimatePoint = (x: number, y: number, z: number) => {
+  const yaw = (climateRotation.value * Math.PI) / 180
+  const pitch = (climatePitch.value * Math.PI) / 180
+
+  const yawX = x * Math.cos(yaw) - y * Math.sin(yaw)
+  const yawY = x * Math.sin(yaw) + y * Math.cos(yaw)
+  const yawZ = z
+
+  const pitchX = yawX
+  const pitchY = yawY * Math.cos(pitch) - yawZ * Math.sin(pitch)
+  const pitchZ = yawY * Math.sin(pitch) + yawZ * Math.cos(pitch)
+
+  const scale = climateGraphViewport.perspective / (climateGraphViewport.perspective - pitchZ)
+
+  return {
+    x: climateGraphViewport.centerX + (pitchX * scale),
+    y: climateGraphViewport.centerY + (pitchY * scale),
+    depth: pitchZ,
+    scale
+  }
+}
+
+const buildProjectedPath = (points: Array<{ x: number; y: number }>, closePath = false) => {
+  if (!points.length) return ''
+
+  const commands = points.map((point, index) => `${index === 0 ? 'M' : 'L'} ${point.x} ${point.y}`)
+
+  return closePath ? `${commands.join(' ')} Z` : commands.join(' ')
+}
+
+const climateBaseRadius = 108
+const climateLabelRadius = 144
+const climateHeightScale = 148
+
+const climateGuideRings = computed(() =>
+  [0.25, 0.5, 0.75, 1].map((fraction) => {
+    const radius = climateBaseRadius * fraction
+    const samples = Array.from({ length: 48 }, (_, index) => {
+      const angle = (index / 48) * Math.PI * 2
+      return projectClimatePoint(Math.cos(angle) * radius, Math.sin(angle) * radius, 0)
+    })
+
+    return {
+      label: selectedClimateMetric.value.format(Math.round(selectedClimateMetric.value.maxValue * fraction)),
+      path: buildProjectedPath(samples, true)
+    }
+  })
+)
+
+const selectedClimatePoints = computed(() => {
+  const values = selectedClimateMetric.value.values
+  const maxValue = Math.max(selectedClimateMetric.value.maxValue, 1)
+
+  return values.map((datum, index) => {
+    const angle = ((index / values.length) * Math.PI * 2) - Math.PI / 2
+    const planeX = Math.cos(angle) * climateBaseRadius
+    const planeY = Math.sin(angle) * climateBaseRadius
+    const height = (datum.value / maxValue) * climateHeightScale
+    const base = projectClimatePoint(planeX, planeY, 0)
+    const top = projectClimatePoint(planeX, planeY, height)
+    const label = projectClimatePoint(Math.cos(angle) * climateLabelRadius, Math.sin(angle) * climateLabelRadius, 0)
+
+    return {
+      ...datum,
+      shortLabel: datum.month.slice(0, 3),
+      formattedValue: selectedClimateMetric.value.format(datum.value),
+      planeX,
+      planeY,
+      height,
+      base,
+      top,
+      label,
+      color: climateView.value === 'temperature'
+        ? tempColor(datum.value)
+        : `rgb(15 118 110 / ${0.35 + (datum.value / maxValue) * 0.65})`
+    }
+  }).sort((left, right) => left.top.depth - right.top.depth)
+})
+
+const climateBasePath = computed(() => {
+  const points = selectedClimatePoints.value
+
+  if (!points.length) return ''
+
+  return buildProjectedPath(points.map((point) => point.base), true)
+})
 const selectedCityExchangeSummary = computed(() => {
   const finance = selectedCityFinanceProfile.value
   const unofficialRate = finance?.unofficialRate
@@ -220,6 +377,40 @@ const resetWeatherBounds = () => {
   preferredTempMinF.value = 75
   preferredTempMaxF.value = 85
 }
+
+const rotateClimate = (direction: number) => {
+  climateRotation.value += direction * 18
+}
+
+const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value))
+
+const startClimateSpin = (event: PointerEvent) => {
+  activeClimatePointerId.value = event.pointerId
+  climatePointerX.value = event.clientX
+  climatePointerY.value = event.clientY
+  isDraggingClimate.value = true
+}
+
+const updateClimateSpin = (event: PointerEvent) => {
+  if (!isDraggingClimate.value || activeClimatePointerId.value !== event.pointerId) return
+
+  const deltaX = event.clientX - climatePointerX.value
+  const deltaY = event.clientY - climatePointerY.value
+
+  climateRotation.value += deltaX * 0.22
+  climatePitch.value = clamp(climatePitch.value - deltaY * 0.12, 42, 72)
+  climatePointerX.value = event.clientX
+  climatePointerY.value = event.clientY
+}
+
+const endClimateSpin = (event?: PointerEvent) => {
+  if (event && activeClimatePointerId.value !== event.pointerId) return
+
+  activeClimatePointerId.value = null
+  isDraggingClimate.value = false
+}
+
+const mapsSearchUrl = (query: string) => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`
 
 const resolveFlightOriginFromLocation = async () => {
   if (!import.meta.client || !navigator.geolocation) {
@@ -661,7 +852,7 @@ onMounted(() => {
     >
       <div
         v-if="isPanelOpen && selectedCity"
-        class="absolute right-0 top-0 z-30 h-full w-[min(30rem,100vw)] overflow-y-auto bg-white shadow-[-8px_0_40px_rgba(15,23,42,0.18)]"
+        class="absolute right-0 top-0 z-30 h-full w-[75vw] overflow-y-auto bg-white shadow-[-8px_0_40px_rgba(15,23,42,0.18)] max-md:w-full"
       >
         <div class="sticky top-0 z-10 flex items-center justify-between border-b border-slate-100 bg-white px-6 py-5">
           <div>
@@ -688,6 +879,16 @@ onMounted(() => {
               <Badge v-for="tag in selectedCity.details.knownFor" :key="tag" variant="secondary">{{ tag }}</Badge>
             </div>
             <div class="mt-4 space-y-3">
+              <div class="rounded-xl bg-slate-50 p-3">
+                <div class="flex items-start gap-3">
+                  <Plane class="mt-0.5 h-4 w-4 shrink-0 text-slate-400" />
+                  <div>
+                    <p class="text-sm font-bold text-slate-900">Arrival</p>
+                    <p class="mt-1 text-sm leading-6 text-slate-600">{{ selectedCityAirport?.description }}</p>
+                    <p v-if="selectedCityAirport?.rideshareNote" class="mt-1 text-xs leading-5 text-slate-500">{{ selectedCityAirport?.rideshareNote }}</p>
+                  </div>
+                </div>
+              </div>
               <div>
                 <p class="mb-2 text-[11px] font-bold uppercase tracking-[0.16em] text-slate-400">Best for</p>
                 <div class="flex flex-wrap gap-2">
@@ -707,90 +908,107 @@ onMounted(() => {
             </div>
           </Accordion>
 
-          <!-- 2 · Neighborhoods -->
-          <Accordion title="Best Neighborhoods">
-            <div class="flex flex-wrap gap-2">
-              <span
-                v-for="n in selectedCity.details.neighborhoods"
-                :key="n"
-                class="rounded-xl bg-sand-50 px-3 py-1.5 text-sm font-semibold text-slate-800"
-              >
-                <MapPin class="mr-1 inline h-3 w-3 text-slate-400" />{{ n }}
-              </span>
-            </div>
-            <p class="mt-3 text-sm leading-7 text-slate-600">{{ selectedCity.details.mobility }}</p>
-          </Accordion>
-
-          <!-- 3 · Airport & Transport -->
-          <Accordion title="Airport & Transport">
-            <div class="space-y-3">
-              <div class="flex items-start gap-3 rounded-xl bg-slate-50 p-3">
-                <Plane class="mt-0.5 h-4 w-4 shrink-0 text-slate-400" />
-                <p class="text-sm leading-6 text-slate-700">{{ selectedCity.details.airport.description }}</p>
+          <Accordion title="Neighborhoods & Stays">
+            <div class="space-y-4">
+              <p class="text-sm leading-7 text-slate-600">{{ selectedCityStayGuide?.blurb }}</p>
+              <div class="flex flex-wrap gap-2">
+                <span
+                  v-for="n in selectedCity.details.neighborhoods"
+                  :key="n"
+                  class="rounded-xl bg-sand-50 px-3 py-1.5 text-sm font-semibold text-slate-800"
+                >
+                  <MapPin class="mr-1 inline h-3 w-3 text-slate-400" />{{ n }}
+                </span>
               </div>
-              <div
-                class="flex items-start gap-3 rounded-xl p-3"
-                :class="selectedCity.details.airport.rideshareFromAirport ? 'bg-emerald-50' : 'bg-red-50'"
-              >
-                <component
-                  :is="selectedCity.details.airport.rideshareFromAirport ? CircleCheck : CircleX"
-                  class="mt-0.5 h-4 w-4 shrink-0"
-                  :class="selectedCity.details.airport.rideshareFromAirport ? 'text-emerald-500' : 'text-red-500'"
-                />
-                <div>
-                  <p
-                    class="text-sm font-semibold"
-                    :class="selectedCity.details.airport.rideshareFromAirport ? 'text-emerald-800' : 'text-red-800'"
+              <div class="rounded-xl bg-sand-50 px-4 py-3">
+                <div class="flex items-center justify-between gap-3">
+                  <div class="flex items-center gap-2">
+                    <Home class="h-4 w-4 text-slate-400" />
+                    <div>
+                      <p class="text-sm font-bold text-slate-900">
+                        <template v-if="selectedCity.details.airbnb?.avgNightlyUSD != null">
+                          ~${{ selectedCity.details.airbnb.avgNightlyUSD }} <span class="text-xs font-normal text-slate-500">/ night avg</span>
+                        </template>
+                        <template v-else>
+                          <span class="text-slate-400">Avg Airbnb cost coming soon</span>
+                        </template>
+                      </p>
+                      <p class="text-xs text-slate-400">Apartment-style stay baseline</p>
+                    </div>
+                  </div>
+                  <a
+                    :href="`https://www.airbnb.com/s/${encodeURIComponent(selectedCity.name + ', ' + selectedCity.country)}/homes`"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="text-xs font-bold text-lagoon-500 hover:underline"
+                  >Search stays</a>
+                </div>
+              </div>
+              <div>
+                <p class="mb-2 text-[11px] font-bold uppercase tracking-[0.16em] text-slate-400">Buildings</p>
+                <div v-if="selectedCityStayBuildings.length" class="flex flex-wrap gap-2">
+                  <a
+                    v-for="building in selectedCityStayBuildings"
+                    :key="building"
+                    :href="mapsSearchUrl(`${building} ${selectedCity.name}`)"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="rounded-full bg-white px-3 py-1.5 text-sm font-semibold text-slate-700 ring-1 ring-slate-200 transition hover:bg-slate-50"
                   >
-                    {{ selectedCity.details.airport.rideshareFromAirport ? 'Rideshare legal from airport' : 'Rideshare not legal from airport' }}
-                  </p>
-                  <p v-if="selectedCity.details.airport.rideshareNote" class="mt-0.5 text-xs leading-5 text-slate-500">
-                    {{ selectedCity.details.airport.rideshareNote }}
-                  </p>
+                    {{ building }}
+                  </a>
                 </div>
+                <p v-else class="text-sm text-slate-400 italic">Building picks coming soon.</p>
               </div>
-              <a
-                v-if="selectedCityFlightHref"
-                :href="selectedCityFlightHref"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="group flex items-center justify-between rounded-xl bg-sky-50 px-4 py-3 transition hover:bg-sky-100"
-              >
-                <div>
-                  <p class="text-sm font-bold text-slate-900">Track flights into {{ selectedCity.name }}</p>
-                  <p class="text-xs text-slate-500">Skyscanner is loaded from config and ready for the partner URL later.</p>
-                </div>
-                <ArrowRight class="h-4 w-4 shrink-0 text-slate-400 transition group-hover:translate-x-0.5" />
-              </a>
             </div>
           </Accordion>
 
-          <!-- 4 · Stay (Airbnb) -->
-          <Accordion title="Where to Stay">
-            <div class="space-y-2">
-              <div class="flex items-center justify-between rounded-xl bg-sand-50 px-4 py-3">
-                <div class="flex items-center gap-2">
-                  <Home class="h-4 w-4 text-slate-400" />
+          <Accordion title="Flights">
+            <div class="space-y-4">
+              <div>
+                <p class="mb-2 text-[11px] font-bold uppercase tracking-[0.16em] text-slate-400">Airport transport</p>
+                <p class="text-sm leading-7 text-slate-600">{{ selectedCityAirport?.description }}</p>
+                <div
+                  class="mt-3 flex items-start gap-3 rounded-xl p-3"
+                  :class="selectedCityAirport?.rideshareFromAirport ? 'bg-emerald-50' : 'bg-red-50'"
+                >
+                  <component
+                    :is="selectedCityAirport?.rideshareFromAirport ? CircleCheck : CircleX"
+                    class="mt-0.5 h-4 w-4 shrink-0"
+                    :class="selectedCityAirport?.rideshareFromAirport ? 'text-emerald-500' : 'text-red-500'"
+                  />
                   <div>
-                    <p class="text-sm font-bold text-slate-900">
-                      <template v-if="selectedCity.details.airbnb?.avgNightlyUSD != null">
-                        ~${{ selectedCity.details.airbnb.avgNightlyUSD }} <span class="text-xs font-normal text-slate-500">/ night avg</span>
-                      </template>
-                      <template v-else>
-                        <span class="text-slate-400">Avg price coming soon</span>
-                      </template>
+                    <p class="text-sm font-semibold" :class="selectedCityAirport?.rideshareFromAirport ? 'text-emerald-800' : 'text-red-800'">
+                      {{ selectedCityAirport?.rideshareFromAirport ? 'Rideshare works from the airport' : 'Use taxi or official transfer first' }}
                     </p>
-                    <p class="text-xs text-slate-400">Airbnb · entire place</p>
+                    <p v-if="selectedCityAirport?.rideshareNote" class="mt-0.5 text-xs leading-5 text-slate-500">{{ selectedCityAirport?.rideshareNote }}</p>
                   </div>
                 </div>
-                <a
-                  :href="`https://www.airbnb.com/s/${encodeURIComponent(selectedCity.name + ', ' + selectedCity.country)}/homes`"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="flex items-center gap-1 rounded-lg bg-[#FF5A5F] px-3 py-1.5 text-xs font-bold text-white transition hover:bg-[#e55157]"
-                >
-                  Search <ArrowRight class="h-3 w-3" />
-                </a>
+                <div class="mt-3 flex flex-wrap gap-x-4 gap-y-2 text-sm font-semibold text-lagoon-500">
+                  <a :href="mapsSearchUrl(`${selectedCity.name} airport taxi`)" target="_blank" rel="noopener noreferrer" class="hover:underline">Airport taxis</a>
+                  <a :href="mapsSearchUrl(`${selectedCity.name} airport bus`)" target="_blank" rel="noopener noreferrer" class="hover:underline">Airport transport</a>
+                  <a v-if="selectedCityFlightHref" :href="selectedCityFlightHref" target="_blank" rel="noopener noreferrer" class="hover:underline">Skyscanner search</a>
+                </div>
+              </div>
+              <div class="rounded-xl bg-sky-50 p-4">
+                <div class="flex items-start justify-between gap-3">
+                  <div>
+                    <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-slate-400">Flight price</p>
+                    <p class="mt-1 text-xl font-extrabold text-slate-900">{{ flightPriceQuote?.formattedPrice || 'Waiting on location' }}</p>
+                    <p class="text-xs text-slate-500">
+                      <template v-if="shouldShowFlightSnapshot && selectedCityFlightDestination">
+                        {{ flightOriginCode }} to {{ selectedCityFlightDestination.label }}
+                      </template>
+                      <template v-else>
+                        Uses the nearest airport from the user’s current location.
+                      </template>
+                    </p>
+                  </div>
+                  <Button size="sm" class="h-10 px-3" :disabled="isResolvingFlightOrigin || isLoadingFlightPrice" @click="resolveFlightOriginFromLocation">
+                    {{ isResolvingFlightOrigin ? 'Locating…' : 'Refresh' }}
+                  </Button>
+                </div>
+                <p v-if="flightPriceError" class="mt-3 text-[11px] font-semibold text-red-600">{{ flightPriceError }}</p>
               </div>
             </div>
           </Accordion>
@@ -865,86 +1083,88 @@ onMounted(() => {
 
           <Accordion title="Getting Around & Essentials">
             <div class="space-y-4">
-              <div
-                v-for="group in selectedCityResourceGroups.filter(group => group.id !== 'flights')"
-                :key="group.id"
-                class="space-y-2"
-              >
+              <div v-for="group in selectedEssentialGroups" :key="group.id" class="rounded-xl bg-slate-50 p-4">
                 <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-slate-400">{{ group.title }}</p>
-                <div class="space-y-2">
+                <p class="mt-1 text-sm leading-6 text-slate-600">{{ group.summary }}</p>
+                <div class="mt-3 flex flex-wrap gap-x-4 gap-y-2">
                   <a
                     v-for="item in group.items"
                     :key="item.id"
                     :href="item.href"
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="group flex items-start justify-between rounded-xl bg-slate-50 px-4 py-3 transition hover:bg-slate-100"
+                    class="text-sm font-semibold text-lagoon-500 hover:underline"
                   >
-                    <div>
-                      <div class="flex items-center gap-2">
-                        <p class="text-sm font-bold text-slate-900">{{ item.label }}</p>
-                        <span
-                          v-if="item.badge || !item.isAffiliateReady"
-                          class="rounded-full bg-white px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-slate-400"
-                        >
-                          {{ item.badge || 'Placeholder' }}
-                        </span>
-                      </div>
-                      <p class="mt-0.5 text-xs leading-5 text-slate-500">{{ item.description }}</p>
-                    </div>
-                    <ArrowRight class="mt-0.5 h-4 w-4 shrink-0 text-slate-400 transition group-hover:translate-x-0.5" />
+                    {{ item.label }}<span v-if="item.badge || !item.isAffiliateReady" class="ml-1 text-xs font-bold uppercase tracking-wide text-slate-400">{{ item.badge || 'Soon' }}</span>
                   </a>
                 </div>
+                <p class="mt-2 text-xs leading-5 text-slate-500">{{ group.items.map(item => item.description).join(' · ') }}</p>
               </div>
             </div>
           </Accordion>
 
-          <!-- 6 · Eat & Drink -->
-          <Accordion title="Eat & Drink">
+          <Accordion title="Restaurants">
             <div class="space-y-4">
-              <template v-if="selectedRestaurants.length + selectedCafes.length + selectedBars.length > 0">
-                <div v-if="selectedRestaurants.length">
-                  <p class="mb-2 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.16em] text-slate-400">
-                    <UtensilsCrossed class="h-3 w-3" /> Restaurants
-                  </p>
-                  <ul class="space-y-1.5">
-                    <li v-for="r in selectedRestaurants" :key="r.name" class="text-sm text-slate-700">
-                      <span class="font-semibold">{{ r.name }}</span>
-                      <span v-if="r.note" class="ml-1 text-slate-400">— {{ r.note }}</span>
-                    </li>
-                  </ul>
-                </div>
-                <div v-if="selectedCafes.length">
-                  <p class="mb-2 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.16em] text-slate-400">
-                    ☕ Cafes
-                  </p>
-                  <ul class="space-y-1.5">
-                    <li v-for="c in selectedCafes" :key="c.name" class="text-sm text-slate-700">
-                      <span class="font-semibold">{{ c.name }}</span>
-                      <span v-if="c.note" class="ml-1 text-slate-400">— {{ c.note }}</span>
-                    </li>
-                  </ul>
-                </div>
-                <div v-if="selectedBars.length">
-                  <p class="mb-2 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.16em] text-slate-400">
-                    <Wine class="h-3 w-3" /> Bars
-                  </p>
-                  <ul class="space-y-1.5">
-                    <li v-for="b in selectedBars" :key="b.name" class="text-sm text-slate-700">
-                      <span class="font-semibold">{{ b.name }}</span>
-                      <span v-if="b.note" class="ml-1 text-slate-400">— {{ b.note }}</span>
-                    </li>
-                  </ul>
-                </div>
-              </template>
-              <p v-else class="text-sm text-slate-400 italic">Curated picks coming soon.</p>
+              <ul v-if="selectedRestaurants.length" class="space-y-2">
+                <li v-for="r in selectedRestaurants" :key="r.name" class="text-sm text-slate-700">
+                  <a :href="mapsSearchUrl(`${r.name} ${selectedCity.name}`)" target="_blank" rel="noopener noreferrer" class="font-semibold text-slate-900 hover:text-lagoon-500">
+                    {{ r.name }}
+                  </a>
+                  <span v-if="r.note" class="ml-1 text-slate-400">— {{ r.note }}</span>
+                </li>
+              </ul>
+              <p v-else class="text-sm text-slate-400 italic">Restaurant picks coming soon.</p>
               <a
-                :href="`https://www.tripadvisor.com/Search?q=${encodeURIComponent(selectedCity.name + ' restaurants')}`"
+                :href="mapsSearchUrl(`${selectedCity.name} restaurants`)"
                 target="_blank"
                 rel="noopener noreferrer"
                 class="group flex items-center gap-1.5 text-xs font-semibold text-lagoon-500 hover:underline"
               >
-                See more on TripAdvisor <ArrowRight class="h-3 w-3 transition group-hover:translate-x-0.5" />
+                Open restaurant map <ArrowRight class="h-3 w-3 transition group-hover:translate-x-0.5" />
+              </a>
+            </div>
+          </Accordion>
+
+          <Accordion title="Cafes">
+            <div class="space-y-4">
+              <ul v-if="selectedCafes.length" class="space-y-2">
+                <li v-for="c in selectedCafes" :key="c.name" class="text-sm text-slate-700">
+                  <a :href="mapsSearchUrl(`${c.name} ${selectedCity.name}`)" target="_blank" rel="noopener noreferrer" class="font-semibold text-slate-900 hover:text-lagoon-500">
+                    {{ c.name }}
+                  </a>
+                  <span v-if="c.note" class="ml-1 text-slate-400">— {{ c.note }}</span>
+                </li>
+              </ul>
+              <p v-else class="text-sm text-slate-400 italic">Cafe picks coming soon.</p>
+              <a
+                :href="mapsSearchUrl(`${selectedCity.name} cafes`)"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="group flex items-center gap-1.5 text-xs font-semibold text-lagoon-500 hover:underline"
+              >
+                Open cafe map <ArrowRight class="h-3 w-3 transition group-hover:translate-x-0.5" />
+              </a>
+            </div>
+          </Accordion>
+
+          <Accordion title="Bars">
+            <div class="space-y-4">
+              <ul v-if="selectedBars.length" class="space-y-2">
+                <li v-for="b in selectedBars" :key="b.name" class="text-sm text-slate-700">
+                  <a :href="mapsSearchUrl(`${b.name} ${selectedCity.name}`)" target="_blank" rel="noopener noreferrer" class="font-semibold text-slate-900 hover:text-lagoon-500">
+                    {{ b.name }}
+                  </a>
+                  <span v-if="b.note" class="ml-1 text-slate-400">— {{ b.note }}</span>
+                </li>
+              </ul>
+              <p v-else class="text-sm text-slate-400 italic">Bar picks coming soon.</p>
+              <a
+                :href="mapsSearchUrl(`${selectedCity.name} cocktail bars`)"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="group flex items-center gap-1.5 text-xs font-semibold text-lagoon-500 hover:underline"
+              >
+                Open bar map <ArrowRight class="h-3 w-3 transition group-hover:translate-x-0.5" />
               </a>
             </div>
           </Accordion>
@@ -975,47 +1195,132 @@ onMounted(() => {
 
           <!-- 8 · Climate & Nature -->
           <Accordion title="Climate & Nature">
-            <div class="space-y-3">
+            <div class="space-y-4">
               <div class="grid grid-cols-2 gap-2">
-                <div class="rounded-xl bg-sand-50 p-3">
-                  <div class="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wide text-slate-400">
-                    <Sun class="h-3 w-3" /> Perfect days
-                  </div>
-                  <p class="mt-1.5 text-xl font-extrabold text-slate-900">{{ selectedClimate?.perfectWeatherDays }}</p>
-                  <p class="text-[10px] text-slate-400">{{ perfectWeatherRangeLabel }} days / year</p>
-                </div>
-                <div class="rounded-xl bg-sand-50 p-3">
-                  <div class="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wide text-slate-400">
-                    <CloudRain class="h-3 w-3" /> Rainfall
-                  </div>
-                  <p class="mt-1.5 text-sm font-bold text-slate-900">
-                    {{ selectedClimate?.driestMonth?.month }} {{ selectedClimate?.driestMonth?.value }}mm
-                  </p>
-                  <p class="text-[10px] text-slate-400">Peak {{ selectedClimate?.wettestMonth?.month }} {{ selectedClimate?.wettestMonth?.value }}mm</p>
-                </div>
+                <button
+                  class="rounded-xl px-3 py-3 text-left transition"
+                  :class="climateView === 'temperature' ? 'bg-lagoon-500 text-white' : 'bg-sand-50 text-slate-700'"
+                  @click="climateView = 'temperature'"
+                >
+                  <p class="text-[10px] font-bold uppercase tracking-wide" :class="climateView === 'temperature' ? 'text-white/70' : 'text-slate-400'">Temperature</p>
+                  <p class="mt-1 text-sm font-bold">{{ selectedClimate?.warmestMonth?.month }} {{ selectedClimate?.warmestMonth?.value }}°C</p>
+                </button>
+                <button
+                  class="rounded-xl px-3 py-3 text-left transition"
+                  :class="climateView === 'rainfall' ? 'bg-lagoon-500 text-white' : 'bg-sand-50 text-slate-700'"
+                  @click="climateView = 'rainfall'"
+                >
+                  <p class="text-[10px] font-bold uppercase tracking-wide" :class="climateView === 'rainfall' ? 'text-white/70' : 'text-slate-400'">Rainfall</p>
+                  <p class="mt-1 text-sm font-bold">{{ selectedClimate?.driestMonth?.month }} {{ selectedClimate?.driestMonth?.value }}mm</p>
+                </button>
               </div>
-
-              <!-- Temperature bar chart -->
-              <div>
-                <p class="mb-2 text-[10px] font-bold uppercase tracking-wide text-slate-400">Avg temperature</p>
-                <div class="flex items-end gap-0.5 h-12">
+              <div class="rounded-[28px] bg-sand-50 p-4">
+                <div class="flex items-center justify-between">
+                  <div>
+                    <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-slate-400">Monthly weather</p>
+                    <p class="mt-1 text-sm text-slate-600">Months sit around the radial base plane, with each point lifted by its value.</p>
+                  </div>
+                  <div class="flex gap-2">
+                    <button type="button" class="flex h-8 w-8 items-center justify-center rounded-full bg-white text-slate-500 ring-1 ring-slate-200 transition hover:text-slate-900" @click="rotateClimate(-1)">‹</button>
+                    <button type="button" class="flex h-8 w-8 items-center justify-center rounded-full bg-white text-slate-500 ring-1 ring-slate-200 transition hover:text-slate-900" @click="rotateClimate(1)">›</button>
+                  </div>
+                </div>
+                <div class="mt-2 flex items-center justify-between text-[11px] font-semibold text-slate-400">
+                  <span>Drag to rotate the radial 3D graph</span>
+                  <span>{{ selectedClimateMetric.unit }} per point</span>
+                </div>
+                <div class="mt-4 flex justify-center overflow-hidden rounded-[24px] bg-[linear-gradient(180deg,#f8fafc_0%,#eef2ff_50%,#f8fafc_100%)] px-2 py-6">
                   <div
-                    v-for="d in selectedTemperatureByMonth"
-                    :key="d.month"
-                    class="flex-1 rounded-t-sm transition-opacity hover:opacity-80 cursor-default"
-                    :style="{ height: Math.max(4, (d.value / 35) * 48) + 'px', backgroundColor: tempColor(d.value) }"
-                    :title="`${d.month}: ${d.value}°C`"
-                  />
+                    class="relative h-[23rem] w-full max-w-[46rem] select-none [perspective:1400px]"
+                    :class="isDraggingClimate ? 'cursor-grabbing' : 'cursor-grab'"
+                    @pointerdown="startClimateSpin"
+                    @pointermove="updateClimateSpin"
+                    @pointerup="endClimateSpin"
+                    @pointerleave="endClimateSpin"
+                    @pointercancel="endClimateSpin"
+                  >
+                    <div class="absolute inset-x-16 bottom-8 h-12 rounded-full bg-slate-900/10 blur-3xl"></div>
+                    <svg :viewBox="`0 0 ${climateGraphViewport.width} ${climateGraphViewport.height}`" class="absolute inset-0 h-full w-full overflow-visible">
+                      <path
+                        v-for="ring in climateGuideRings"
+                        :key="ring.label"
+                        :d="ring.path"
+                        fill="none"
+                        stroke="rgba(148,163,184,0.22)"
+                        stroke-width="1.5"
+                      />
+                      <path :d="climateBasePath" fill="none" stroke="rgba(148,163,184,0.45)" stroke-width="2" stroke-dasharray="4 6" />
+                      <circle
+                        v-for="point in selectedClimatePoints"
+                        :key="point.month"
+                        :cx="point.top.x"
+                        :cy="point.top.y"
+                        r="6.5"
+                        fill="white"
+                        :stroke="point.color"
+                        stroke-width="3.5"
+                      />
+                      <text
+                        v-for="point in selectedClimatePoints"
+                        :key="`${point.month}-label`"
+                        :x="point.label.x"
+                        :y="point.label.y"
+                        text-anchor="middle"
+                        dominant-baseline="middle"
+                        class="fill-slate-500 text-[10px] font-bold uppercase tracking-wide"
+                      >
+                        {{ point.shortLabel }}
+                      </text>
+                      <text
+                        v-for="point in selectedClimatePoints"
+                        :key="`${point.month}-value`"
+                        :x="point.top.x"
+                        :y="point.top.y - 14"
+                        text-anchor="middle"
+                        dominant-baseline="middle"
+                        class="fill-slate-700 text-[10px] font-bold"
+                      >
+                        {{ point.formattedValue }}
+                      </text>
+                    </svg>
+                    <div class="pointer-events-none absolute right-4 top-4">
+                      <div class="rounded-2xl border border-white/70 bg-white/90 px-4 py-3 text-right shadow-[0_12px_30px_rgba(15,23,42,0.14)] backdrop-blur-sm">
+                        <p class="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-400">{{ selectedClimateMetric.title }}</p>
+                        <p class="mt-1 text-2xl font-extrabold text-slate-900">{{ selectedClimateMetric.peak.value }}{{ selectedClimateMetric.unit }}</p>
+                        <p class="text-xs text-slate-500">Peak in {{ selectedClimateMetric.peak.month }}</p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div class="mt-1 flex justify-between text-[9px] text-slate-300">
-                  <span>Jan</span><span>Jun</span><span>Dec</span>
+                <div class="mt-4 grid grid-cols-2 gap-2 text-sm">
+                  <div class="rounded-xl bg-white px-3 py-2 ring-1 ring-slate-100">
+                    <p class="text-[10px] font-bold uppercase tracking-wide text-slate-400">Perfect days</p>
+                    <p class="mt-1 font-bold text-slate-900">{{ selectedClimate?.perfectWeatherDays }}</p>
+                    <p class="text-[10px] text-slate-400">{{ perfectWeatherRangeLabel }} days / year</p>
+                  </div>
+                  <div class="rounded-xl bg-white px-3 py-2 ring-1 ring-slate-100">
+                    <p class="text-[10px] font-bold uppercase tracking-wide text-slate-400">Driest month</p>
+                    <p class="mt-1 font-bold text-slate-900">{{ selectedClimate?.driestMonth?.month }} {{ selectedClimate?.driestMonth?.value }}mm</p>
+                    <p class="text-[10px] text-slate-400">Wettest {{ selectedClimate?.wettestMonth?.month }} {{ selectedClimate?.wettestMonth?.value }}mm</p>
+                  </div>
                 </div>
               </div>
-
               <p class="text-sm leading-6 text-slate-600">{{ selectedCity.details.climateNote }}</p>
               <div class="flex items-start gap-2 rounded-xl bg-primary/10 p-3">
                 <Trees class="mt-0.5 h-4 w-4 shrink-0 text-primary" />
                 <p class="text-sm leading-6 text-slate-700">{{ selectedCity.details.timeToNature }}</p>
+              </div>
+              <div v-if="selectedCityOutdoorGuide" class="rounded-xl bg-slate-50 p-4">
+                <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-slate-400">Outdoor activities</p>
+                <p class="mt-1 text-sm leading-6 text-slate-600">{{ selectedCityOutdoorGuide.summary }}</p>
+                <ul class="mt-3 space-y-2">
+                  <li v-for="activity in selectedCityOutdoorGuide.activities" :key="activity.name" class="text-sm text-slate-700">
+                    <a :href="mapsSearchUrl(`${activity.name} ${selectedCity.name}`)" target="_blank" rel="noopener noreferrer" class="font-semibold text-slate-900 hover:text-lagoon-500">
+                      {{ activity.name }}
+                    </a>
+                    <span v-if="activity.note" class="ml-1 text-slate-400">— {{ activity.note }}</span>
+                  </li>
+                </ul>
               </div>
             </div>
           </Accordion>
@@ -1044,7 +1349,7 @@ onMounted(() => {
                 target="_blank"
                 rel="noopener noreferrer"
                 class="group flex items-center justify-between rounded-xl px-4 py-3 transition"
-                :class="group.id === 'money' ? 'bg-[#9FE870]/20 hover:bg-[#9FE870]/35' : 'bg-slate-50 hover:bg-slate-100'"
+                :class="group.id === 'money-cash' ? 'bg-[#9FE870]/20 hover:bg-[#9FE870]/35' : 'bg-slate-50 hover:bg-slate-100'"
               >
                 <div>
                   <p class="text-sm font-bold text-slate-900">{{ group.title }}</p>
