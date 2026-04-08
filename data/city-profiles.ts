@@ -833,9 +833,9 @@ const cityProfilesByName: Record<string, CityProfile> = {
       timeToNature: 'Mountain access is immediate and dramatic.'
     }
   },
-  'Sant Cruz de la Sierra': {
+  'Santa Cruz de la Sierra': {
     id: 'sant-cruz-de-la-sierra',
-    name: 'Sant Cruz de la Sierra',
+    name: 'Santa Cruz de la Sierra',
     country: 'Bolivia',
     coordinates: [-63.1812, -17.7833],
     snapshot: {
