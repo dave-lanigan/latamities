@@ -11,6 +11,7 @@ import {
   Globe2,
   Home,
   Info,
+  LoaderCircle,
   MapPin,
   Plane,
   ShieldAlert,
@@ -51,6 +52,7 @@ const mapOptions = {
 const selectedCity = ref<CityProfile | null>(null)
 const isPanelOpen = ref(false)
 const bubblePixelPos = ref<{ x: number; y: number } | null>(null)
+const bubbleCardRef = ref<HTMLElement | null>(null)
 const hoveredTemp = ref<{ month: string; f: number } | null>(null)
 const hoveredRain = ref<{ month: string; mm: number } | null>(null)
 const currentMonthIndex = new Date().getMonth()
@@ -61,8 +63,8 @@ const isInfoOpen = ref(false)
 
 const unitSystem = ref<'imperial' | 'metric'>('imperial')
 const minNiceWeatherDays = ref(150)
-const preferredTempMinF = ref(75)
-const preferredTempMaxF = ref(85)
+const preferredTempMinF = ref(65)
+const preferredTempMaxF = ref(80)
 const minPopulationM = ref(1)
 const isFiltersOpen = ref(false)
 const flightOriginCode = ref('')
@@ -71,6 +73,10 @@ const isResolvingFlightOrigin = ref(false)
 const isLoadingFlightPrice = ref(false)
 const flightPriceError = ref('')
 const flightPriceQuote = ref<{ formattedPrice: string | null; origin: string; destination: string } | null>(null)
+const isLoadingAirbnbAverage = ref(false)
+const airbnbAverageError = ref('')
+const airbnbAverage = ref<{ formattedPrice: string; sampleSize: number; provider: string; searches?: { url: string; checkin: string; checkout: string }[] } | null>(null)
+let airbnbAverageRequestId = 0
 const climateView = ref<'temperature' | 'rainfall'>('temperature')
 const climateRotation = ref(-22)
 const climatePitch = ref(58)
@@ -95,6 +101,23 @@ const updateBubblePos = () => {
   }
   const pt = _map.project(selectedCity.value.coordinates as [number, number])
   bubblePixelPos.value = { x: pt.x, y: pt.y }
+}
+
+const centerBubble = async () => {
+  if (!_map || !selectedCity.value || isMobile.value) return
+
+  await nextTick()
+  updateBubblePos()
+  await nextTick()
+
+  if (!bubbleCardRef.value) return
+
+  const { height } = bubbleCardRef.value.getBoundingClientRect()
+  _map.easeTo({
+    center: selectedCity.value.coordinates as [number, number],
+    offset: [0, (height / 2) + 24],
+    duration: 500
+  })
 }
 
 useMapbox(MAP_ID, (map) => {
@@ -146,14 +169,6 @@ const perfectWeatherRangeLabel = computed(() => {
   return `${Math.round(fToC(weatherBounds.value.min))}–${Math.round(fToC(weatherBounds.value.max))}°C`
 })
 
-// Fake Airbnb monthly rental — seeded from city id so each city gets a consistent plausible number
-const fakeAirbnbRental = computed(() => {
-  if (!selectedCity.value) return null
-  const seed = selectedCity.value.id.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0)
-  const base = 650 + (seed % 28) * 50   // $650 – $1 950
-  return `$${base.toLocaleString()}`
-})
-
 const countWeatherDaysInBounds = (city: CityProfile, minF: number, maxF: number) =>
   city.snapshot.temperatureByMonth.reduce((total, datum, index) => {
     const f = datum.value * 9 / 5 + 32
@@ -190,7 +205,8 @@ const selectCity = (city: CityProfile) => {
     return
   }
   selectedCity.value = city
-  nextTick(updateBubblePos)
+  void lookupAirbnbAverage()
+  void centerBubble()
 }
 
 const dismissBubble = () => { selectedCity.value = null }
@@ -211,6 +227,7 @@ const filteredCities = computed(() =>
     cityPopulationM(city) >= minPopulationM.value
   )
 )
+const filteredCityIds = computed(() => new Set(filteredCities.value.map(city => city.id)))
 
 type PrimaryResourceGroup = ResourceGroup & { primaryItem: ResolvedResourceLink }
 type PrimaryResourceCard = {
@@ -238,7 +255,7 @@ const selectedCityFlightResource = computed<ResolvedResourceLink | null>(() =>
 )
 const selectedCityFlightHref = computed(() => selectedCityFlightResource.value?.href ?? '')
 const selectedCityFlightDestination = computed(() => selectedCity.value ? cityFlightDestinations[selectedCity.value.id] ?? null : null)
-const shouldShowFlightSnapshot = computed(() => Boolean(flightOriginCode.value && selectedCityFlightDestination.value))
+const shouldShowFlightSnapshot = computed(() => Boolean(selectedCityFlightDestination.value))
 const selectedCityPrimaryResourceGroups = computed<PrimaryResourceGroup[]>(() =>
   selectedCityResourceGroups.value.flatMap((group) => {
     const primaryItem = group.items[0]
@@ -417,8 +434,8 @@ const selectedCityExchangeSummary = computed(() => {
 })
 
 const resetWeatherBounds = () => {
-  preferredTempMinF.value = 75
-  preferredTempMaxF.value = 85
+  preferredTempMinF.value = 65
+  preferredTempMaxF.value = 80
 }
 
 const rotateClimate = (direction: number) => {
@@ -533,9 +550,46 @@ const lookupFlightPrice = async () => {
   }
 }
 
+const lookupAirbnbAverage = async () => {
+  if (!selectedCity.value) return
+
+  const city = selectedCity.value
+  const requestId = ++airbnbAverageRequestId
+  airbnbAverageError.value = ''
+  airbnbAverage.value = null
+  isLoadingAirbnbAverage.value = true
+
+  try {
+    const response = await $fetch<{ formattedPrice: string; sampleSize: number; provider: string; searches?: { url: string; checkin: string; checkout: string }[] }>('/api/airbnb-average', {
+      query: {
+        city: city.name,
+        country: city.country,
+        longitude: city.coordinates[0],
+        latitude: city.coordinates[1]
+      }
+    })
+
+    console.log('Airbnb search URLs', response.searches?.map((search) => search.url) ?? [])
+
+    if (requestId === airbnbAverageRequestId) {
+      airbnbAverage.value = response
+    }
+  } catch (error) {
+    if (requestId === airbnbAverageRequestId) {
+      airbnbAverageError.value = error instanceof Error ? error.message : 'Unable to fetch Airbnb prices right now.'
+    }
+  } finally {
+    if (requestId === airbnbAverageRequestId) {
+      isLoadingAirbnbAverage.value = false
+    }
+  }
+}
+
 watch(() => selectedCity.value?.id, () => {
   flightPriceError.value = ''
   flightPriceQuote.value = null
+  airbnbAverageError.value = ''
+  airbnbAverage.value = null
 
   if (flightOriginCode.value && selectedCityFlightDestination.value) {
     void lookupFlightPrice()
@@ -733,13 +787,14 @@ onMounted(() => {
       style="width: 100%; height: 100%;"
     >
       <MapboxDefaultMarker
-        v-for="city in filteredCities"
+        v-for="city in cityProfiles"
         :key="city.id"
         :marker-id="`marker-${city.id}`"
         :lnglat="city.coordinates"
       >
         <template #marker>
           <button
+            v-show="filteredCityIds.has(city.id)"
             type="button"
             class="city-marker"
             :data-active="selectedCity?.id === city.id ? 'true' : 'false'"
@@ -779,7 +834,7 @@ onMounted(() => {
           @click="dismissBubble"
         />
 
-        <div :class="isMobile ? 'relative z-10 w-full max-w-sm' : ''">
+        <div ref="bubbleCardRef" :class="isMobile ? 'relative z-10 w-full max-w-sm' : ''">
           <Card :class="`shadow-[0_20px_50px_rgba(15,23,42,0.28)] ${isMobile ? 'pointer-events-auto max-h-[85vh] overflow-y-auto w-full bg-slate-200 backdrop-blur-none' : 'pointer-events-auto w-[min(22rem,calc(100vw-2rem))]'}`">
             <CardHeader class="gap-2 pb-3">
               <div class="flex items-start justify-between gap-3">
@@ -841,14 +896,17 @@ onMounted(() => {
                     <div>
                       <p class="text-[10px] font-bold uppercase tracking-wide text-slate-400">Origin</p>
                       <p class="text-sm font-bold text-slate-900">
-                        {{ flightOriginCode }} <span class="font-medium text-slate-500">{{ flightOriginLabel }}</span>
+                        <template v-if="flightOriginCode">
+                          {{ flightOriginCode }} <span class="font-medium text-slate-500">{{ flightOriginLabel }}</span>
+                        </template>
+                        <template v-else>Location not set</template>
                       </p>
                     </div>
                     <Button size="sm" class="h-10 px-3" :disabled="isResolvingFlightOrigin || isLoadingFlightPrice" @click="resolveFlightOriginFromLocation">
-                      {{ isResolvingFlightOrigin ? 'Locating…' : 'Refresh' }}
+                      {{ isResolvingFlightOrigin ? 'Locating…' : flightOriginCode ? 'Refresh' : 'Use my location' }}
                     </Button>
                   </div>
-                  <p class="mt-2 text-[10px] text-slate-400">Origin is resolved from the user’s current location and nearest airport.</p>
+                  <p class="mt-2 text-[10px] text-slate-400">Use your location to select the nearest departure airport.</p>
                   <p v-if="flightPriceError" class="mt-2 text-[11px] font-semibold text-red-600">{{ flightPriceError }}</p>
                   <p v-else-if="isLoadingFlightPrice" class="mt-2 text-[11px] font-semibold text-slate-500">Loading fare from {{ flightOriginCode }}…</p>
                   <p v-else-if="flightPriceQuote" class="mt-2 text-[11px] font-semibold text-emerald-700">{{ flightPriceQuote.origin }} → {{ flightPriceQuote.destination }} loaded.</p>
@@ -862,8 +920,11 @@ onMounted(() => {
                   <div class="flex items-center justify-between">
                     <div>
                       <p class="text-[10px] font-bold uppercase tracking-wide text-emerald-600">Airbnb avg / month</p>
-                      <p class="mt-1 text-base font-extrabold text-slate-900">{{ fakeAirbnbRental }}</p>
-                      <p class="text-[10px] text-slate-400">1-bed, est. 30 nights</p>
+                      <p class="mt-1 flex items-center justify-center gap-1.5 text-base font-extrabold text-slate-900">
+                        <LoaderCircle v-if="isLoadingAirbnbAverage" class="h-3.5 w-3.5 animate-spin text-slate-400" />
+                        <template v-else>{{ airbnbAverage?.formattedPrice || 'Unavailable' }}</template>
+                      </p>
+                      <p class="text-[10px] text-slate-400">Studio or 1-bed, 30 nights</p>
                     </div>
                     <div class="text-right">
                       <p class="text-[10px] font-bold uppercase tracking-wide text-lagoon-600">This month</p>
@@ -1023,15 +1084,20 @@ onMounted(() => {
                   <div class="flex items-center gap-2">
                     <Home class="h-4 w-4 text-slate-400" />
                     <div>
-                      <p class="text-sm font-bold text-slate-900">
-                        <template v-if="selectedCity.details.airbnb?.avgNightlyUSD != null">
-                          ~${{ selectedCity.details.airbnb.avgNightlyUSD }} <span class="text-xs font-normal text-slate-500">/ night avg</span>
+                      <p class="flex items-center gap-1.5 text-sm font-bold text-slate-900">
+                        <LoaderCircle v-if="isLoadingAirbnbAverage" class="h-3.5 w-3.5 animate-spin text-slate-400" />
+                        <template v-else-if="airbnbAverage">
+                          ~{{ airbnbAverage.formattedPrice }} <span class="text-xs font-normal text-slate-500">/ month avg</span>
                         </template>
                         <template v-else>
-                          <span class="text-slate-400">Avg Airbnb cost coming soon</span>
+                          <span class="text-slate-400">Avg Airbnb cost unavailable</span>
                         </template>
                       </p>
-                      <p class="text-xs text-slate-400">Apartment-style stay baseline</p>
+                      <p class="text-xs text-slate-400">
+                        <template v-if="airbnbAverage">Studio or 1-bed baseline from {{ airbnbAverage.sampleSize }} listings</template>
+                        <template v-else-if="airbnbAverageError">{{ airbnbAverageError }}</template>
+                        <template v-else>Studio or 1-bed, 30 nights</template>
+                      </p>
                     </div>
                   </div>
                   <a
@@ -1094,16 +1160,16 @@ onMounted(() => {
                     <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-slate-400">Flight price</p>
                     <p class="mt-1 text-xl font-extrabold text-slate-900">{{ flightPriceQuote?.formattedPrice || 'Waiting on location' }}</p>
                     <p class="text-xs text-slate-500">
-                      <template v-if="shouldShowFlightSnapshot && selectedCityFlightDestination">
+                      <template v-if="flightOriginCode && selectedCityFlightDestination">
                         {{ flightOriginCode }} to {{ selectedCityFlightDestination.label }}
                       </template>
                       <template v-else>
-                        Uses the nearest airport from the user’s current location.
+                        Choose your location to find a departure airport.
                       </template>
                     </p>
                   </div>
                   <Button size="sm" class="h-10 px-3" :disabled="isResolvingFlightOrigin || isLoadingFlightPrice" @click="resolveFlightOriginFromLocation">
-                    {{ isResolvingFlightOrigin ? 'Locating…' : 'Refresh' }}
+                    {{ isResolvingFlightOrigin ? 'Locating…' : flightOriginCode ? 'Refresh' : 'Use my location' }}
                   </Button>
                 </div>
                 <p v-if="flightPriceError" class="mt-3 text-[11px] font-semibold text-red-600">{{ flightPriceError }}</p>

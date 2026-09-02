@@ -46,7 +46,7 @@ export interface CityProfile {
     }
     timeToNature: string
     knownFor?: string[]
-    airbnb?: { avgNightlyUSD: number | null }
+    airbnb?: { avgMonthlyUSD: number | null; sampleSize?: number; updatedAt?: string }
     restaurants?: PlaceHighlight[]
     cafes?: PlaceHighlight[]
     bars?: PlaceHighlight[]
@@ -833,9 +833,9 @@ const cityProfilesByName: Record<string, CityProfile> = {
       timeToNature: 'Mountain access is immediate and dramatic.'
     }
   },
-  'Sant Cruz de la Sierra': {
-    id: 'sant-cruz-de-la-sierra',
-    name: 'Sant Cruz de la Sierra',
+  'Santa Cruz de la Sierra': {
+    id: 'santa-cruz-de-la-sierra',
+    name: 'Santa Cruz de la Sierra',
     country: 'Bolivia',
     coordinates: [-63.1812, -17.7833],
     snapshot: {

@@ -21,7 +21,7 @@ export const cityFlightDestinations: Partial<Record<string, CityFlightDestinatio
   montevideo: { iata: 'MVD', label: 'Montevideo' },
   asuncion: { iata: 'ASU', label: 'Asuncion' },
   'la-paz': { iata: 'LPB', label: 'La Paz' },
-  'sant-cruz-de-la-sierra': { iata: 'VVI', label: 'Santa Cruz de la Sierra' },
+  'santa-cruz-de-la-sierra': { iata: 'VVI', label: 'Santa Cruz de la Sierra' },
   cochabamba: { iata: 'CBB', label: 'Cochabamba' },
   'san-salvador': { iata: 'SAL', label: 'San Salvador' },
   cuenca: { iata: 'CUE', label: 'Cuenca' },
