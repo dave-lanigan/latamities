@@ -63,6 +63,22 @@ const climate = {
     temperatureByMonth: series([20, 22, 24, 26, 28, 27, 25, 25, 24, 22, 21, 20]),
     rainfallByMonth: series([8, 5, 6, 9, 40, 165, 245, 215, 145, 55, 14, 7])
   },
+  oaxacaHighland: {
+    temperatureByMonth: series([18, 20, 22, 24, 25, 24, 23, 23, 22, 21, 20, 18]),
+    rainfallByMonth: series([10, 8, 12, 25, 70, 160, 140, 150, 180, 85, 22, 12])
+  },
+  monterreySemiArid: {
+    temperatureByMonth: series([15, 18, 22, 26, 30, 33, 35, 35, 31, 26, 20, 16]),
+    rainfallByMonth: series([15, 14, 20, 38, 65, 55, 40, 75, 150, 65, 25, 18])
+  },
+  mexicanPacific: {
+    temperatureByMonth: series([25, 25, 26, 27, 29, 30, 30, 30, 30, 29, 27, 25]),
+    rainfallByMonth: series([20, 8, 4, 3, 18, 175, 250, 265, 245, 95, 25, 15])
+  },
+  veracruzTropical: {
+    temperatureByMonth: series([23, 24, 26, 28, 30, 29, 29, 29, 28, 27, 25, 23]),
+    rainfallByMonth: series([40, 32, 38, 55, 100, 220, 170, 195, 255, 180, 80, 50])
+  },
   riverPlate: {
     temperatureByMonth: series([25, 24, 22, 18, 14, 11, 10, 12, 14, 17, 20, 23]),
     rainfallByMonth: series([118, 111, 124, 104, 87, 67, 63, 68, 78, 120, 117, 110])
@@ -170,6 +186,18 @@ const climate = {
   manausEquatorial: {
     temperatureByMonth: series([28, 28, 28, 28, 28, 28, 28, 29, 30, 30, 30, 29]),
     rainfallByMonth: series([290, 290, 310, 285, 205, 100, 65, 45, 65, 100, 140, 205])
+  },
+  belemEquatorial: {
+    temperatureByMonth: series([27, 27, 27, 27, 27, 27, 27, 28, 28, 28, 28, 28]),
+    rainfallByMonth: series([390, 410, 430, 390, 300, 175, 150, 105, 100, 115, 160, 280])
+  },
+  vitoriaCoastal: {
+    temperatureByMonth: series([28, 29, 28, 26, 24, 23, 22, 23, 24, 25, 26, 28]),
+    rainfallByMonth: series([145, 120, 145, 90, 55, 40, 45, 45, 65, 120, 185, 205])
+  },
+  joaoPessoaTropical: {
+    temperatureByMonth: series([30, 30, 30, 29, 28, 27, 27, 27, 28, 29, 30, 30]),
+    rainfallByMonth: series([55, 80, 145, 260, 310, 315, 235, 140, 75, 35, 25, 35])
   },
   beloHorizonteClimate: {
     temperatureByMonth: series([26, 27, 26, 24, 22, 20, 20, 22, 24, 25, 25, 26]),
@@ -1282,6 +1310,36 @@ const cityProfilesByName: Record<string, CityProfile> = {
       timeToNature: 'The Amazon is immediate — river tours, jungle lodges, and the Meeting of the Waters are minutes away.'
     }
   },
+  Belém: {
+    id: 'belem',
+    name: 'Belém',
+    country: 'Brazil',
+    coordinates: [-48.4902, -1.4558],
+    snapshot: {
+      populationMetro: '2.5M',
+      altitudeM: 10,
+      landscape: 'Amazon river estuary city',
+      purchasingPowerRank: 37,
+      internet: { downloadMbps: 125, uploadMbps: 48, latencyMs: 25 },
+      ...climate.belemEquatorial
+    },
+    details: {
+      tagline: 'The Amazon’s food capital, where river life, markets, and equatorial weather shape every day.',
+      overview: 'Belém is the largest city at the mouth of the Amazon, known for extraordinary Pará cuisine, river markets, and a deeply local urban culture. Nazaré and Umarizal are the easiest practical bases, while Cidade Velha offers historic character. It is compelling for cultural immersion but demands comfort with heat, rain, and a less polished remote-work ecosystem.',
+      bestFor: ['Amazonian food culture', 'River-city experience', 'Deep Brazilian immersion'],
+      watchouts: ['Equatorial heat and humidity are constant', 'Heavy rainfall can disrupt routines', 'Remote-work infrastructure is thinner than southern Brazil'],
+      neighborhoods: ['Nazaré', 'Umarizal', 'Batista Campos', 'Cidade Velha'],
+      mobility: 'Rideshare and taxis are practical; walking works best within individual central districts.',
+      climateNote: 'Hot and humid all year, with especially heavy rain from December through May.',
+      workstyle: 'Apartment-first with reliable service in central districts; coworking options are limited.',
+      pace: 'River-oriented, culinary, and intensely tropical.',
+      airport: {
+        description: 'BEL has extensive domestic service and some international links.',
+        rideshareFromAirport: true
+      },
+      timeToNature: 'River islands, mangroves, and Amazon tributary trips start close to the city.'
+    }
+  },
   'Belo Horizonte': {
     id: 'belo-horizonte',
     name: 'Belo Horizonte',
@@ -1342,6 +1400,36 @@ const cityProfilesByName: Record<string, CityProfile> = {
       timeToNature: 'Beaches and lagoons are immediate; Serra Gaúcha is a weekend trip.'
     }
   },
+  Vitória: {
+    id: 'vitoria',
+    name: 'Vitória',
+    country: 'Brazil',
+    coordinates: [-40.3378, -20.3155],
+    snapshot: {
+      populationMetro: '2.0M',
+      altitudeM: 4,
+      landscape: 'Island-and-bay city beneath granite peaks',
+      purchasingPowerRank: 38,
+      internet: { downloadMbps: 165, uploadMbps: 72, latencyMs: 18 },
+      ...climate.vitoriaCoastal
+    },
+    details: {
+      tagline: 'A compact, underrated Atlantic capital with beaches, mountains, and an easy everyday rhythm.',
+      overview: 'Vitória combines urban services, bayfront neighborhoods, beaches, and nearby mountain escapes without the scale or intensity of Rio. Praia do Canto and Enseada do Suá are the most straightforward bases, while neighboring Vila Velha offers broader beachfront living. It is a calm, functional coastal choice with a strong local feel.',
+      bestFor: ['Low-friction coastal living', 'Beach and mountain access', 'Quieter Brazilian city life'],
+      watchouts: ['Smaller expat and coworking scene', 'Summer can be hot and rainy', 'International flight options are limited'],
+      neighborhoods: ['Praia do Canto', 'Enseada do Suá', 'Jardim da Penha', 'Vila Velha'],
+      mobility: 'Rideshare is reliable and central districts are manageable on foot; bridges connect nearby beach areas.',
+      climateNote: 'Warm year-round with a wetter summer and drier, mild winter.',
+      workstyle: 'Reliable apartment internet and a modest but practical café and coworking scene.',
+      pace: 'Relaxed, clean, and more residential than Brazil’s major tourist hubs.',
+      airport: {
+        description: 'VIX has domestic connections through Brazil’s larger hubs.',
+        rideshareFromAirport: true
+      },
+      timeToNature: 'Beaches are immediate, with Espírito Santo mountain towns and trails reachable on weekends.'
+    }
+  },
   Fortaleza: {
     id: 'fortaleza',
     name: 'Fortaleza',
@@ -1370,6 +1458,36 @@ const cityProfilesByName: Record<string, CityProfile> = {
         rideshareFromAirport: true,
       },
       timeToNature: 'Jericoacoara and the Lençóis Maranhenses are within a day of travel.'
+    }
+  },
+  'João Pessoa': {
+    id: 'joao-pessoa',
+    name: 'João Pessoa',
+    country: 'Brazil',
+    coordinates: [-34.877, -7.115],
+    snapshot: {
+      populationMetro: '1.3M',
+      altitudeM: 40,
+      landscape: 'Low-rise Atlantic coast with reefs and palms',
+      purchasingPowerRank: 39,
+      internet: { downloadMbps: 140, uploadMbps: 58, latencyMs: 22 },
+      ...climate.joaoPessoaTropical
+    },
+    details: {
+      tagline: 'A calm, green northeastern beach city with gentle daily life and strong value.',
+      overview: 'João Pessoa offers a quieter alternative to Recife and Fortaleza: a long urban beachfront, leafy residential neighborhoods, and a relaxed local pace. Manaíra, Tambaú, and Cabo Branco give the easiest access to beaches, restaurants, and services. It suits remote workers who want coastal routine and affordability more than big-city intensity.',
+      bestFor: ['Quiet beach routine', 'Affordable Brazil', 'Walkable waterfront living'],
+      watchouts: ['Rainy season is long', 'Coworking and nightlife are limited', 'International connectivity usually requires a domestic connection'],
+      neighborhoods: ['Manaíra', 'Tambaú', 'Cabo Branco', 'Altiplano'],
+      mobility: 'The waterfront neighborhoods are walkable; rideshare is easy for cross-city trips.',
+      climateNote: 'Warm all year, with wetter months from April through August.',
+      workstyle: 'Good apartment internet and enough cafés for light work; better for a calm home-office rhythm.',
+      pace: 'Gentle, beach-oriented, and distinctly low-key.',
+      airport: {
+        description: 'JPA provides domestic links, mainly through São Paulo, Rio, Recife, and Brasília.',
+        rideshareFromAirport: true
+      },
+      timeToNature: 'Urban beaches are immediate, with reef pools and the Paraíba coast close by.'
     }
   },
   Recife: {
@@ -2241,6 +2359,156 @@ const cityProfilesByName: Record<string, CityProfile> = {
         rideshareFromAirport: true,
       },
       timeToNature: 'Coffee plantations, cloud forests, Nevados, and Valle de Cocora nearby.'
+    }
+  },
+  Oaxaca: {
+    id: 'oaxaca',
+    name: 'Oaxaca',
+    country: 'Mexico',
+    coordinates: [-96.7266, 17.0732],
+    snapshot: {
+      populationMetro: '700K',
+      altitudeM: 1555,
+      landscape: 'Mountain-ringed colonial valley',
+      purchasingPowerRank: 28,
+      internet: { downloadMbps: 92, uploadMbps: 36, latencyMs: 27 },
+      ...climate.oaxacaHighland
+    },
+    details: {
+      tagline: 'Mexico’s food and craft capital, with a relaxed highland rhythm and deep cultural life.',
+      overview: 'Oaxaca balances a walkable colonial center, one of Mexico’s strongest food scenes, and quick access to mountain villages, mezcal country, and Pacific beaches. It works well for people who value culture and a slower daily rhythm over the scale and convenience of Mexico City.',
+      bestFor: ['Food and mezcal culture', 'Creative long stays', 'Walkable colonial living'],
+      watchouts: ['Summer rains are intense', 'Reliable workspace options are thinner than major Mexican cities', 'Tourist demand raises prices in the historic center'],
+      neighborhoods: ['Centro Histórico', 'Jalatlaco', 'Xochimilco', 'Reforma'],
+      mobility: 'The central neighborhoods are walkable; rideshare and taxis are practical for longer trips.',
+      climateNote: 'Warm, dry days dominate November through April; summer brings regular afternoon rain.',
+      workstyle: 'Apartment-first with a growing café and coworking layer around Centro and Reforma.',
+      pace: 'Creative, culinary, and deliberately unhurried.',
+      airport: {
+        description: 'OAX (Oaxaca International) has domestic links to Mexico City and other Mexican hubs, plus limited international service.',
+        rideshareFromAirport: true
+      },
+      timeToNature: 'Sierra Norte hiking, Hierve el Agua, and mezcal villages are easy day trips; the coast is a longer weekend transfer.'
+    }
+  },
+  Monterrey: {
+    id: 'monterrey',
+    name: 'Monterrey',
+    country: 'Mexico',
+    coordinates: [-100.3161, 25.6866],
+    snapshot: {
+      populationMetro: '5.3M',
+      altitudeM: 540,
+      landscape: 'Industrial mountain basin',
+      purchasingPowerRank: 18,
+      internet: { downloadMbps: 170, uploadMbps: 72, latencyMs: 17 },
+      ...climate.monterreySemiArid
+    },
+    details: {
+      tagline: 'Northern Mexico’s business capital, framed by mountains and built for practical urban life.',
+      overview: 'Monterrey is one of Mexico’s strongest business cities, with a higher-income economy, modern services, and dramatic mountain scenery. San Pedro and Valle Oriente offer the easiest polished landing zone, while Barrio Antiguo and Centro bring more culture and nightlife. It suits remote workers who want infrastructure, flights, and outdoors more than beach-town softness.',
+      bestFor: ['Business infrastructure', 'Mountain access', 'Modern apartments'],
+      watchouts: ['Summer heat is severe', 'Car dependence is higher than in central Mexican cities', 'Costs are high by Mexican standards'],
+      neighborhoods: ['San Pedro', 'Valle Oriente', 'Barrio Antiguo', 'Obispado'],
+      mobility: 'Rideshare is reliable, but distances and heat make many routines car-oriented.',
+      climateNote: 'Hot semi-arid climate with very hot summers and milder winters.',
+      workstyle: 'Strong apartment and office infrastructure, with reliable cafés and coworking in business districts.',
+      pace: 'Fast, commercial, and outdoorsy on weekends.',
+      airport: {
+        description: 'MTY is a major northern hub with strong domestic and US connectivity.',
+        rideshareFromAirport: true
+      },
+      timeToNature: 'Chipinque, La Huasteca, and Sierra Madre hikes are quick escapes from the city.'
+    }
+  },
+  'Puerto Vallarta': {
+    id: 'puerto-vallarta',
+    name: 'Puerto Vallarta',
+    country: 'Mexico',
+    coordinates: [-105.2302, 20.6534],
+    snapshot: {
+      populationMetro: '550K',
+      altitudeM: 7,
+      landscape: 'Pacific bay backed by jungle mountains',
+      purchasingPowerRank: 34,
+      internet: { downloadMbps: 115, uploadMbps: 42, latencyMs: 24 },
+      ...climate.mexicanPacific
+    },
+    details: {
+      tagline: 'A full-service Pacific beach base with walkable neighborhoods and strong visitor infrastructure.',
+      overview: 'Puerto Vallarta is one of Mexico’s easiest coastal bases because it pairs beaches, restaurants, healthcare, and international flights with actual city services. Zona Romántica and Versalles work well for short stays, while Marina and Fluvial suit quieter apartment routines. Heat, humidity, and high-season pricing are the tradeoffs.',
+      bestFor: ['Beach-plus-city routines', 'International flights', 'Restaurant density'],
+      watchouts: ['Humid rainy season', 'High-season rents can jump sharply', 'Tourist zones can feel saturated'],
+      neighborhoods: ['Zona Romántica', 'Versalles', 'Marina Vallarta', 'Fluvial'],
+      mobility: 'Central areas are walkable; buses, taxis, and rideshare cover longer trips.',
+      climateNote: 'Dry and sunny in winter, then hot and humid with heavy summer rains.',
+      workstyle: 'Good apartment internet and a useful café layer, though backup workspace matters in rainy season.',
+      pace: 'Social, coastal, and visitor-friendly.',
+      airport: {
+        description: 'PVR has strong Mexico, US, and Canada service and sits close to town.',
+        rideshareFromAirport: true
+      },
+      timeToNature: 'Beaches, jungle trails, and bay trips are immediate; Sayulita and San Pancho are easy side trips.'
+    }
+  },
+  Mazatlan: {
+    id: 'mazatlan',
+    name: 'Mazatlan',
+    country: 'Mexico',
+    coordinates: [-106.4245, 23.2494],
+    snapshot: {
+      populationMetro: '650K',
+      altitudeM: 10,
+      landscape: 'Pacific port city with long malecón',
+      purchasingPowerRank: 36,
+      internet: { downloadMbps: 105, uploadMbps: 38, latencyMs: 25 },
+      ...climate.mexicanPacific
+    },
+    details: {
+      tagline: 'A lower-key Pacific city with beaches, old-town character, and a more local rhythm than resort hubs.',
+      overview: 'Mazatlán mixes a working port, a long beachfront malecón, and a restored historic center with better value than many better-known Mexican beach bases. Centro Histórico gives the most atmosphere, while Zona Dorada and Marina Mazatlán are easier for serviced apartments and beach access.',
+      bestFor: ['Beach value', 'Historic-center atmosphere', 'Seafood and local culture'],
+      watchouts: ['Summer heat and humidity are intense', 'Remote-work infrastructure is thinner than Puerto Vallarta', 'Some areas are spread out'],
+      neighborhoods: ['Centro Histórico', 'Olas Altas', 'Zona Dorada', 'Marina Mazatlán'],
+      mobility: 'Rideshare and taxis are practical; the malecón is useful for walking and cycling.',
+      climateNote: 'Dry pleasant winters shift into hot, humid, storm-prone summers.',
+      workstyle: 'Best as an apartment-first city with cafés as occasional work spots.',
+      pace: 'Local, coastal, and less polished than major resort cities.',
+      airport: {
+        description: 'MZT has domestic flights and seasonal international service.',
+        rideshareFromAirport: true
+      },
+      timeToNature: 'Beaches, islands, and estuary trips are close; the Sierra Madre is reachable for longer outings.'
+    }
+  },
+  Veracruz: {
+    id: 'veracruz',
+    name: 'Veracruz',
+    country: 'Mexico',
+    coordinates: [-96.1342, 19.1738],
+    snapshot: {
+      populationMetro: '850K',
+      altitudeM: 10,
+      landscape: 'Gulf port city with humid tropical coast',
+      purchasingPowerRank: 35,
+      internet: { downloadMbps: 110, uploadMbps: 40, latencyMs: 24 },
+      ...climate.veracruzTropical
+    },
+    details: {
+      tagline: 'Mexico’s historic Gulf port, warmer, more local, and more affordable than the big nomad circuits.',
+      overview: 'Veracruz is a working port city with Afro-Caribbean influence, seafood, music, and a humid Gulf climate. Boca del Río is the easiest modern base for apartments and services, while the historic center offers more character. It is practical and affordable, but less polished for remote workers than Mexico’s larger hubs.',
+      bestFor: ['Gulf coast culture', 'Seafood and music', 'Affordable coastal living'],
+      watchouts: ['Humidity is high most of the year', 'Beach quality is less dramatic than the Pacific or Caribbean', 'Nomad and coworking scenes are limited'],
+      neighborhoods: ['Boca del Río', 'Centro Histórico', 'Costa Verde', 'Reforma'],
+      mobility: 'Rideshare and taxis are the easiest default; the waterfront is walkable in sections.',
+      climateNote: 'Warm and humid year-round, with heavier rainfall from June through October.',
+      workstyle: 'Apartment-first with adequate cafés and services around Boca del Río.',
+      pace: 'Warm, musical, local, and port-city practical.',
+      airport: {
+        description: 'VER connects mainly through Mexico City and regional Mexican routes.',
+        rideshareFromAirport: true
+      },
+      timeToNature: 'Beaches, mangroves, and the Antigua river area are nearby; mountain towns are longer day trips.'
     }
   },
   Oruro: {

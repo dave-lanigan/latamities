@@ -624,7 +624,8 @@ const fmtPc = (n: number) => `$${n >= 1000 ? (n / 1000).toFixed(1) + 'k' : n}`
 
 useHead({
   title: 'Latamities',
-  meta: [{ name: 'description', content: 'Map-first city profiles for remote workers in Latin America.' }]
+  meta: [{ name: 'description', content: 'Map-first city profiles for remote workers in Latin America.' }],
+  link: [{ rel: 'icon', type: 'image/svg+xml', href: '/icon.svg' }]
 })
 
 onMounted(() => {
@@ -635,14 +636,14 @@ onMounted(() => {
 <template>
   <div class="fixed inset-0">
     <!-- Title – top left -->
-    <div v-show="!isPanelOpen || !isMobile" class="absolute left-4 top-4 z-40 pointer-events-none select-none">
+    <div v-show="!isMobile || (!selectedCity && !isPanelOpen)" class="absolute left-4 top-4 z-40 pointer-events-none select-none">
       <div class="rounded-2xl bg-white/80 backdrop-blur px-4 py-2 shadow-[0_4px_20px_rgba(15,23,42,0.15)]">
         <span class="text-lg font-bold tracking-tight text-slate-800">LatAmities</span>
       </div>
     </div>
 
     <!-- Filter icon button + dropdown – top right, hidden when detail panel is open -->
-    <div v-if="!isPanelOpen" class="absolute right-4 top-4 z-40 flex items-start gap-2">
+    <div v-if="!isPanelOpen && (!isMobile || !selectedCity)" class="absolute right-4 top-4 z-40 flex items-start gap-2">
       <!-- Info button -->
       <div class="relative">
         <button
@@ -873,43 +874,6 @@ onMounted(() => {
                   <p class="text-[10px] font-bold uppercase tracking-wide text-slate-400">Altitude</p>
                   <p class="mt-1 text-base font-extrabold text-slate-900">{{ unitSystem === 'imperial' ? Math.round(selectedCity.snapshot.altitudeM * 3.28084) : Math.round(selectedCity.snapshot.altitudeM) }}</p>
                   <p class="text-[10px] text-slate-400">{{ unitSystem === 'imperial' ? 'ft' : 'm' }}</p>
-                </div>
-                <div v-if="shouldShowFlightSnapshot" class="col-span-2 rounded-xl bg-sky-50 p-3 text-left">
-                  <div class="flex items-center justify-between gap-3">
-                    <div>
-                      <p class="text-[10px] font-bold uppercase tracking-wide text-slate-400">Flight price</p>
-                      <p class="mt-1 text-base font-extrabold text-slate-900">
-                        {{ flightPriceQuote?.formattedPrice || 'Check route' }}
-                      </p>
-                      <p class="text-[10px] text-slate-500">
-                        <template v-if="selectedCityFlightDestination">
-                          Anytime one-way to {{ selectedCityFlightDestination.label }}
-                        </template>
-                        <template v-else>
-                          Destination airport mapping coming soon
-                        </template>
-                      </p>
-                    </div>
-                    <Badge variant="secondary">Skyscanner</Badge>
-                  </div>
-                  <div class="mt-3 flex items-center justify-between gap-3 rounded-xl bg-white px-3 py-2.5">
-                    <div>
-                      <p class="text-[10px] font-bold uppercase tracking-wide text-slate-400">Origin</p>
-                      <p class="text-sm font-bold text-slate-900">
-                        <template v-if="flightOriginCode">
-                          {{ flightOriginCode }} <span class="font-medium text-slate-500">{{ flightOriginLabel }}</span>
-                        </template>
-                        <template v-else>Location not set</template>
-                      </p>
-                    </div>
-                    <Button size="sm" class="h-10 px-3" :disabled="isResolvingFlightOrigin || isLoadingFlightPrice" @click="resolveFlightOriginFromLocation">
-                      {{ isResolvingFlightOrigin ? 'Locating…' : flightOriginCode ? 'Refresh' : 'Use my location' }}
-                    </Button>
-                  </div>
-                  <p class="mt-2 text-[10px] text-slate-400">Use your location to select the nearest departure airport.</p>
-                  <p v-if="flightPriceError" class="mt-2 text-[11px] font-semibold text-red-600">{{ flightPriceError }}</p>
-                  <p v-else-if="isLoadingFlightPrice" class="mt-2 text-[11px] font-semibold text-slate-500">Loading fare from {{ flightOriginCode }}…</p>
-                  <p v-else-if="flightPriceQuote" class="mt-2 text-[11px] font-semibold text-emerald-700">{{ flightPriceQuote.origin }} → {{ flightPriceQuote.destination }} loaded.</p>
                 </div>
                 <div class="col-span-2 rounded-xl bg-sand-50 p-2.5 text-center">
                   <p class="text-[10px] font-bold uppercase tracking-wide text-slate-400">Perfect weather days</p>
@@ -1531,7 +1495,7 @@ onMounted(() => {
     </Transition>
 
     <!-- Floating Countries Widget -->
-    <div v-show="!isPanelOpen || !isMobile" class="absolute bottom-6 left-1/2 z-40 -translate-x-1/2 flex flex-col items-center">
+    <div v-show="!isMobile || (!selectedCity && !isPanelOpen)" class="absolute bottom-6 left-1/2 z-40 -translate-x-1/2 flex flex-col items-center">
       <Transition
         enter-active-class="transition duration-200 ease-out"
         enter-from-class="translate-y-2 opacity-0"

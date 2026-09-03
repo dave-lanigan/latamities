@@ -20,6 +20,10 @@ export const cityStayGuides: Partial<Record<string, CityStayGuide>> = {
     blurb: 'Laureles is usually the easiest stay for a longer working month because it is flatter, calmer, and easier to stitch together on foot. El Poblado works better for higher-end buildings and shorter social stays, but you pay for that convenience.',
     buildings: ['Energy Living', 'Blux', 'Square Apartments']
   },
+  oaxaca: {
+    blurb: 'Jalatlaco and Reforma are easy first bases when you want a little more quiet than Centro while keeping cafés and daily errands nearby. Centro Histórico is best for walkability and atmosphere, but noise and visitor traffic make an apartment a better bet than a hotel for longer stays.',
+    buildings: []
+  },
   lima: {
     blurb: 'Miraflores is still the easiest arrival neighborhood because daily errands, the waterfront, and airport rides are predictable. Barranco is better if you want a more textured stay and do not mind trading a bit of polish for atmosphere.',
     buildings: ['Upper Pardo', 'Nomad by Wynwood House', 'Soul Mate Inn area apartments']
