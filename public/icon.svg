@@ -1,17 +1,22 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
-  <defs>
-    <linearGradient id="ocean" x1="20" y1="14" x2="108" y2="116" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#14b8a6"/>
-      <stop offset="1" stop-color="#0f766e"/>
-    </linearGradient>
-    <linearGradient id="land" x1="38" y1="35" x2="90" y2="92" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#fef3c7"/>
-      <stop offset="1" stop-color="#f59e0b"/>
-    </linearGradient>
-  </defs>
-  <rect width="128" height="128" rx="30" fill="url(#ocean)"/>
-  <path d="M71 20c-9 5-16 13-20 22l-11 8 4 14-8 13 12 9 3 17 16-7 13 6 9-11 16-6-5-13 6-15-12-9-5-17-18-1Z" fill="url(#land)"/>
-  <path d="m54 48 11 9-6 11 9 8-6 12M78 38l-5 12 10 8-5 13 8 8" fill="none" stroke="#d97706" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" opacity=".7"/>
-  <circle cx="72" cy="69" r="10" fill="#f43f5e" stroke="#fff" stroke-width="4"/>
-  <path d="M72 64v10M67 69h10" stroke="#fff" stroke-linecap="round" stroke-width="3"/>
+  <path
+    fill="#0f766e"
+    d="M28 18c4-2 9 0 13 3 4 4 8 9 12 11 4 2 8 2 11 0 2-1 5-1 6 1s0 5-2 7c3 1 6 2 7 5 1 4-2 7-6 8-6 1-11-1-15-4-4-2-9-3-14-4-4-1-8-4-10-8-3-5-4-14-2-19ZM79 30c2-1 6-1 9 1 3 1 6 4 7 7 0 3-3 4-6 4-3 0-6-1-8-3-1-2-3-5-2-7ZM88 33c2-1 5-1 8 0 3 1 6 3 7 5 1 2-2 3-5 3-3 0-6-1-8-2-2-2-4-4-2-6ZM73 38c8-4 18-4 28-1 8 2 15 7 19 13 6 1 10 5 10 10 0 5-3 9-8 11 0 8-4 15-11 18-3 2-5 6-7 11-3 7-8 12-13 16-4 3-7 8-7 14 0 5-4 8-9 8-8 0-14-7-16-16-1-8 0-17 2-25 2-10 2-20 0-29-1-8-4-14-1-20 2-4 7-8 13-10Z"
+  />
+  <path
+    d="M53 57v30h22"
+    fill="none"
+    stroke="#0f766e"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    stroke-width="7"
+  />
+  <path
+    d="M70 90 80 61l10 29M74 79h12"
+    fill="none"
+    stroke="#fff"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    stroke-width="7"
+  />
 </svg>
