@@ -361,7 +361,20 @@ const cityProfilesByName: Record<string, CityProfile> = {
         description: 'GDL with strong domestic links and good US connections.',
         rideshareFromAirport: true,
       },
-      timeToNature: 'Roughly 45 to 90 minutes to forest trails and lakeside day trips.'
+      timeToNature: 'Roughly 45 to 90 minutes to forest trails and lakeside day trips.',
+      bars: [
+        { name: 'Mecenas', note: 'Shrine to craftsmanship', link: 'https://www.theworlds50best.com/discovery/Establishments/Mexico/Guadalajara/Mecenas.html' },
+        { name: 'De La O Cantina', note: 'Rustic tiki cantina', link: 'https://www.theworlds50best.com/discovery/Establishments/Mexico/Guadalajara/De-La-O-Cantina.html' },
+        { name: 'El Gallo Altanero', note: 'Innovative agave pours', link: 'https://www.theworlds50best.com/discovery/Establishments/Mexico/Guadalajara/El-Gallo-Altanero.html' },
+        { name: 'Farmacia Rita Pérez', note: 'Laidback neighbourhood spot', link: 'https://www.theworlds50best.com/discovery/Establishments/Mexico/Guadalajara/Farmacia-Rita-P%C3%A9rez.html' },
+        { name: 'Pare de Sufrir Mezcaleria', note: 'A mezcal education', link: 'https://www.theworlds50best.com/discovery/Establishments/Mexico/Guadalajara/Pare-de-Sufrir-Mezcaleria.html' }
+      ],
+      restaurants: [
+        { name: 'Alcalde', note: 'Regional Jalisco flavours', link: 'https://www.theworlds50best.com/discovery/Establishments/Mexico/Guadalajara/Alcalde.html' },
+        { name: 'Bruna', note: 'Reimagined Guadalajara grills', link: 'https://www.theworlds50best.com/discovery/Establishments/Mexico/Guadalajara/Bruna.html' },
+        { name: 'La Docena', note: 'Hip oyster specialist', link: 'https://www.theworlds50best.com/discovery/Establishments/Mexico/Guadalajara/La-Docena.html' },
+        { name: 'Xokol', note: 'Back-to-basics Latin', link: 'https://www.theworlds50best.com/discovery/Establishments/Mexico/Guadalajara/Xokol.html' }
+      ],
     }
   },
   'Buenos Aires': {
@@ -391,7 +404,58 @@ const cityProfilesByName: Record<string, CityProfile> = {
         description: 'EZE for long-haul and AEP for regional hops.',
         rideshareFromAirport: true,
       },
-      timeToNature: 'Urban first; delta boat trips and estancias are more weekend than daily escapes.'
+      timeToNature: 'Urban first; delta boat trips and estancias are more weekend than daily escapes.',
+      bars: [
+        { name: 'Al Fondo', note: 'Seriously good speakeasy', link: 'https://www.theworlds50best.com/discovery/Establishments/Argentina/Buenos-Aires/Al-Fondo.html' },
+        { name: 'Bar 878', note: 'A local hero', link: 'https://www.theworlds50best.com/discovery/Establishments/Argentina/Buenos-Aires/Bar-878.html' },
+        { name: 'Boticario', note: 'Experimental vintage pharmacy', link: 'https://www.theworlds50best.com/discovery/Establishments/Argentina/Buenos-Aires/Boticario.html' },
+        { name: 'Casa Cavia', note: 'Female-led excellence', link: 'https://www.theworlds50best.com/discovery/Establishments/Argentina/Buenos-Aires/Casa-Cavia.html' },
+        { name: 'Chintonería', note: 'Diminutive gin haven', link: 'https://www.theworlds50best.com/discovery/Establishments/Argentina/Buenos-Aires/Chintoner%C3%ADa.html' },
+        { name: 'CoChinChina', note: 'Franco-Vietnamese flavours', link: 'https://www.theworlds50best.com/discovery/Establishments/Argentina/Buenos-Aires/CoChinChina.html' },
+        { name: 'Doppelgänger', note: 'Dedicated to classics', link: 'https://www.theworlds50best.com/discovery/Establishments/Argentina/Buenos-Aires/Doppelg%C3%A4nger.html' },
+        { name: 'El Limon', note: 'Cool and casual with great food', link: 'https://www.theworlds50best.com/discovery/Establishments/Argentina/Buenos-Aires/El-Limon.html' },
+        { name: 'Florería Atlántico', note: 'Hidden Argentine den', link: 'https://www.theworlds50best.com/discovery/Establishments/Argentina/Buenos-Aires/Florer%C3%ADa-Atl%C3%A1ntico.html' },
+        { name: 'Frank\'s', note: 'South American Speakeasy Chic', link: 'https://www.theworlds50best.com/discovery/Establishments/Argentina/Buenos-Aires/Franks.html' },
+        { name: 'Gran Bar Danzon', note: 'Chic cocktails and wine', link: 'https://www.theworlds50best.com/discovery/Establishments/Argentina/Buenos-Aires/Gran-Bar-Danzon.html' },
+        { name: 'La Uat', note: 'Party bar with \'80s energy', link: 'https://www.theworlds50best.com/discovery/Establishments/Argentina/Buenos-Aires/La-Uat.html' },
+        { name: 'Nicky Harrison', note: 'Immersive speakeasy experience', link: 'https://www.theworlds50best.com/discovery/Establishments/Argentina/Buenos-Aires/Nicky-Harrison.html' },
+        { name: 'Presidente', note: 'Upscale inventive cocktails', link: 'https://www.theworlds50best.com/discovery/Establishments/Argentina/Buenos-Aires/Presidente.html' },
+        { name: 'Punto Mona', note: 'Luxe lounge and terrace', link: 'https://www.theworlds50best.com/discovery/Establishments/Argentina/Buenos-Aires/Punto-Mona.html' },
+        { name: 'Trade Sky Bar', note: 'Stylish sky-high drinking', link: 'https://www.theworlds50best.com/discovery/Establishments/Argentina/Buenos-Aires/Trade-Sky-Bar.html' },
+        { name: 'Tres Monos', note: 'Good times great drinks', link: 'https://www.theworlds50best.com/discovery/Establishments/Argentina/Buenos-Aires/Tres-Monos.html' },
+        { name: 'Uptown', note: 'Subway-themed cocktails', link: 'https://www.theworlds50best.com/discovery/Establishments/Argentina/Buenos-Aires/Uptown.html' },
+        { name: 'Verne Club', note: 'Old-school speakeasy', link: 'https://www.theworlds50best.com/discovery/Establishments/Argentina/Buenos-Aires/Verne-Club.html' },
+        { name: 'Victor Audio Bar', note: 'Personal listening lounge', link: 'https://www.theworlds50best.com/discovery/Establishments/Argentina/Buenos-Aires/Victor-Audio-Bar.html' }
+      ],
+      restaurants: [
+        { name: 'Alo’s', note: 'Organic Argentinian haven', link: 'https://www.theworlds50best.com/discovery/Establishments/Argentina/Buenos-Aires/Alos.html' },
+        { name: 'Anafe', note: 'Global flavour hub', link: 'https://www.theworlds50best.com/discovery/Establishments/Argentina/Buenos-Aires/Anafe.html' },
+        { name: 'Anchoita', note: 'Produce-driven Argentine heroes', link: 'https://www.theworlds50best.com/discovery/Establishments/Argentina/Buenos-Aires/Anchoita.html' },
+        { name: 'Aramburu', note: 'Experimental tasting menus', link: 'https://www.theworlds50best.com/discovery/Establishments/Argentina/Buenos-Aires/Aramburu.html' },
+        { name: 'Café San Juan', note: 'Contemporary Argentine bodegón', link: 'https://www.theworlds50best.com/discovery/Establishments/Argentina/Buenos-Aires/Caf%C3%A9-San-Juan.html' },
+        { name: 'Crizia', note: 'Smart seafood specialist', link: 'https://www.theworlds50best.com/discovery/Establishments/Argentina/Buenos-Aires/Crizia.html' },
+        { name: 'Don Julio', note: 'Legendary neighbourhood steakhouse', link: 'https://www.theworlds50best.com/discovery/Establishments/Argentina/Buenos-Aires/Don-Julio.html' },
+        { name: 'El Preferido de Palermo', note: 'Banging neighbourhood bodega', link: 'https://www.theworlds50best.com/discovery/Establishments/Argentina/Buenos-Aires/El-Preferido-de-Palermo.html' },
+        { name: 'Elena', note: 'Elegant Argentine steakhouse', link: 'https://www.theworlds50best.com/discovery/Establishments/Argentina/Buenos-Aires/Elena.html' },
+        { name: 'Fico', note: 'Neighbourhood dining with finesse', link: 'https://www.theworlds50best.com/discovery/Establishments/Argentina/Buenos-Aires/Fico.html' },
+        { name: 'Gran Dabbang', note: 'Latin-Asian street eats', link: 'https://www.theworlds50best.com/discovery/Establishments/Argentina/Buenos-Aires/Gran-Dabbang.html' },
+        { name: 'Julia', note: 'Independent-minded bistro', link: 'https://www.theworlds50best.com/discovery/Establishments/Argentina/Buenos-Aires/Julia.html' },
+        { name: 'La Cabrera', note: 'Classically meaty Argentinian', link: 'https://www.theworlds50best.com/discovery/Establishments/Argentina/Buenos-Aires/La-Cabrera.html' },
+        { name: 'La Carnicería', note: 'Buzzy butcher\'s shop', link: 'https://www.theworlds50best.com/discovery/Establishments/Argentina/Buenos-Aires/La-Carnicer%C3%ADa.html' },
+        { name: 'Mengano', note: 'Contemporary bodega', link: 'https://www.theworlds50best.com/discovery/Establishments/Argentina/Buenos-Aires/Mengano.html' },
+        { name: 'Mercado de Liniers', note: 'Innovative tasting menus', link: 'https://www.theworlds50best.com/discovery/Establishments/Argentina/Buenos-Aires/Mercado-de-Liniers.html' },
+        { name: 'Mishiguene', note: 'Updating Jewish classics', link: 'https://www.theworlds50best.com/discovery/Establishments/Argentina/Buenos-Aires/Mishiguene.html' },
+        { name: 'Narda Comedor', note: 'Globally inspired greens', link: 'https://www.theworlds50best.com/discovery/Establishments/Argentina/Buenos-Aires/Narda-Comedor.html' },
+        { name: 'Ness', note: 'Punk meets technical finesse', link: 'https://www.theworlds50best.com/discovery/Establishments/Argentina/Buenos-Aires/Ness.html' },
+        { name: 'Niño Gordo', note: 'Playful Asian tribute', link: 'https://www.theworlds50best.com/discovery/Establishments/Argentina/Buenos-Aires/Ni%C3%B1o-Gordo.html' },
+        { name: 'Osaka Concepción', note: 'Nuanced Nikkei flavours', link: 'https://www.theworlds50best.com/discovery/Establishments/Argentina/Buenos-Aires/Osaka-Concepci%C3%B3n.html' },
+        { name: 'Oviedo', note: 'Timeless seafood sensation', link: 'https://www.theworlds50best.com/discovery/Establishments/Argentina/Buenos-Aires/Oviedo.html' },
+        { name: 'Picarón', note: 'Stylish small plates bistro', link: 'https://www.theworlds50best.com/discovery/Establishments/Argentina/Buenos-Aires/Picar%C3%B3n.html' },
+        { name: 'Piedra Pasillo', note: 'Art-driven culinary excellence', link: 'https://www.theworlds50best.com/discovery/Establishments/Argentina/Buenos-Aires/Piedra-Pasillo.html' },
+        { name: 'Roux', note: 'Compelling modern cuisine', link: 'https://www.theworlds50best.com/discovery/Establishments/Argentina/Buenos-Aires/Roux.html' },
+        { name: 'Sudestada', note: 'Bold, blended casual dining', link: 'https://www.theworlds50best.com/discovery/Establishments/Argentina/Buenos-Aires/Sudestada.html' },
+        { name: 'Trescha', note: 'Fine-dining masterclass', link: 'https://www.theworlds50best.com/discovery/Establishments/Argentina/Buenos-Aires/Trescha.html' }
+      ],
     }
   },
   Santiago: {
@@ -422,7 +486,30 @@ const cityProfilesByName: Record<string, CityProfile> = {
         rideshareFromAirport: false,
         rideshareNote: 'Rideshare apps are not permitted at SCL — use the official taxi rank in the arrivals hall.',
       },
-      timeToNature: 'Ski areas and mountain trails are day-trip close in season.'
+      timeToNature: 'Ski areas and mountain trails are day-trip close in season.',
+      bars: [
+        { name: 'Bar La Providencia', note: 'Low-key excellence', link: 'https://www.theworlds50best.com/discovery/Establishments/Chile/Santiago/Bar-La-Providencia.html' },
+        { name: 'Lolita Jones', note: 'Cocktails down Mexico way', link: 'https://www.theworlds50best.com/discovery/Establishments/Chile/Santiago/Lolita-Jones.html' },
+        { name: 'Prima Bar', note: 'Considered cocktails elegant surroundings', link: 'https://www.theworlds50best.com/discovery/Establishments/Chile/Santiago/Prima-Bar.html' },
+        { name: 'Siam Thai', note: 'Top-quality Thai', link: 'https://www.theworlds50best.com/discovery/Establishments/Chile/Santiago/Siam-Thai.html' }
+      ],
+      restaurants: [
+        { name: '99 Restaurante', note: 'Dynamic Chilean bistronomy', link: 'https://www.theworlds50best.com/discovery/Establishments/Chile/Santiago/99-Restaurante.html' },
+        { name: 'Ambrosia', note: 'Classy comfort food', link: 'https://www.theworlds50best.com/discovery/Establishments/Chile/Santiago/Ambrosia.html' },
+        { name: 'Boragó', note: 'Sustainable Chilean gastronomy', link: 'https://www.theworlds50best.com/discovery/Establishments/Chile/Santiago/Borag%C3%B3.html' },
+        { name: 'Buriana', note: 'Sexy Italian spot', link: 'https://www.theworlds50best.com/discovery/Establishments/Chile/Santiago/Buriana.html' },
+        { name: 'Casa las Cujas', note: 'Bringing beach to Santiago', link: 'https://www.theworlds50best.com/discovery/Establishments/Chile/Santiago/Casa-las-Cujas.html' },
+        { name: 'Demencia', note: 'Theatrical small plates', link: 'https://www.theworlds50best.com/discovery/Establishments/Chile/Santiago/Demencia.html' },
+        { name: 'Demo Magnolia', note: 'Simple but spectacular', link: 'https://www.theworlds50best.com/discovery/Establishments/Chile/Santiago/Demo-Magnolia.html' },
+        { name: 'Fukasawa', note: 'Skillful family-run Japanese', link: 'https://www.theworlds50best.com/discovery/Establishments/Chile/Santiago/Fukasawa.html' },
+        { name: 'Karai by Mitsuharu', note: 'Nth degree Nikkei', link: 'https://www.theworlds50best.com/discovery/Establishments/Chile/Santiago/Karai-by-Mitsuharu.html' },
+        { name: 'La Calma by Fredes', note: 'Sensational seafood experience', link: 'https://www.theworlds50best.com/discovery/Establishments/Chile/Santiago/La-Calma-by-Fredes.html' },
+        { name: 'La Mesa', note: 'Stunningly sustainable dining', link: 'https://www.theworlds50best.com/discovery/Establishments/Chile/Santiago/La-Mesa.html' },
+        { name: 'Mestizo', note: 'Modern Chilean plates', link: 'https://www.theworlds50best.com/discovery/Establishments/Chile/Santiago/Mestizo.html' },
+        { name: 'Osaka', note: 'Chile’s Nikkei flavours', link: 'https://www.theworlds50best.com/discovery/Establishments/Chile/Santiago/Osaka.html' },
+        { name: 'Pulpería Santa Elvira', note: 'Distinctively Chilean dining', link: 'https://www.theworlds50best.com/discovery/Establishments/Chile/Santiago/Pulper%C3%ADa-Santa-Elvira.html' },
+        { name: 'Yum Cha', note: 'Tea and tasting menu', link: 'https://www.theworlds50best.com/discovery/Establishments/Chile/Santiago/Yum-Cha.html' }
+      ],
     }
   },
   Lima: {
@@ -452,7 +539,37 @@ const cityProfilesByName: Record<string, CityProfile> = {
         description: 'LIM is the region’s major connecting hub.',
         rideshareFromAirport: true,
       },
-      timeToNature: 'Surf and cliff walks are immediate; mountain hikes are longer outings.'
+      timeToNature: 'Surf and cliff walks are immediate; mountain hikes are longer outings.',
+      bars: [
+        { name: 'Bijou Lima', note: 'Chic capital hideaway', link: 'https://www.theworlds50best.com/discovery/Establishments/Peru/Lima/Bijou-Lima.html' },
+        { name: 'Carnaval', note: 'High-end cocktail artistry', link: 'https://www.theworlds50best.com/discovery/Establishments/Peru/Lima/Carnaval.html' },
+        { name: 'Lady Bee', note: 'Sustainably-minded Peruvian style', link: 'https://www.theworlds50best.com/discovery/Establishments/Peru/Lima/Lady-Bee.html' },
+        { name: 'Limaq Bar', note: 'Modern-day Peru', link: 'https://www.theworlds50best.com/discovery/Establishments/Peru/Lima/Limaq-Bar.html' },
+        { name: 'Ole Bar Restaurante', note: 'Established Peruvian classic', link: 'https://www.theworlds50best.com/discovery/Establishments/Peru/Lima/Ole-Bar-Restaurante.html' },
+        { name: 'Sastrería Martinez', note: 'Handsome Prohibition-era drinking spot', link: 'https://www.theworlds50best.com/discovery/Establishments/Peru/Lima/Sastrer%C3%ADa-Martinez.html' },
+        { name: 'The Parrot Shadow', note: 'Globally-minded tropical drinks', link: 'https://www.theworlds50best.com/discovery/Establishments/Peru/Lima/The-Parrot-Shadow.html' }
+      ],
+      restaurants: [
+        { name: 'Astrid y Gastón', note: 'Ground-breaking Peruvian landmark', link: 'https://www.theworlds50best.com/discovery/Establishments/Peru/Lima/Astrid-y-Gast%C3%B3n.html' },
+        { name: 'Central', note: 'Revolutionary indigenous gastronomy', link: 'https://www.theworlds50best.com/discovery/Establishments/Peru/Lima/Central.html' },
+        { name: 'Cosme', note: 'Peruvian-Asian twists', link: 'https://www.theworlds50best.com/discovery/Establishments/Peru/Lima/Cosme.html' },
+        { name: 'Costanera 700', note: 'Nikkei capital classic', link: 'https://www.theworlds50best.com/discovery/Establishments/Peru/Lima/Costanera-700.html' },
+        { name: 'El Mercado', note: 'Sustainable seafood hotspot', link: 'https://www.theworlds50best.com/discovery/Establishments/Peru/Lima/El-Mercado.html' },
+        { name: 'Isolina', note: 'Classy comfort food', link: 'https://www.theworlds50best.com/discovery/Establishments/Peru/Lima/Isolina.html' },
+        { name: 'Kjolle', note: 'Laid-back Peruvian', link: 'https://www.theworlds50best.com/discovery/Establishments/Peru/Lima/Kjolle.html' },
+        { name: 'La Gloria', note: 'Historic mansion destination', link: 'https://www.theworlds50best.com/discovery/Establishments/Peru/Lima/La-Gloria.html' },
+        { name: 'La Mar', note: 'Iconic Lima cevicheria', link: 'https://www.theworlds50best.com/discovery/Establishments/Peru/Lima/La-Mar.html' },
+        { name: 'Maido', note: 'Nikkei haute cuisine', link: 'https://www.theworlds50best.com/discovery/Establishments/Peru/Lima/Maido.html' },
+        { name: 'Mayta', note: 'Exquisite Latin flavours', link: 'https://www.theworlds50best.com/discovery/Establishments/Peru/Lima/Mayta.html' },
+        { name: 'Mérito', note: 'Contemporary Venezuelan flavours', link: 'https://www.theworlds50best.com/discovery/Establishments/Peru/Lima/M%C3%A9rito.html' },
+        { name: 'Osso', note: 'Finger-licking Peruvian barbecue', link: 'https://www.theworlds50best.com/discovery/Establishments/Peru/Lima/Osso.html' },
+        { name: 'Rafael', note: 'Popular culinary mash-up', link: 'https://www.theworlds50best.com/discovery/Establishments/Peru/Lima/Rafael.html' },
+        { name: 'Sapiens', note: 'Fire-fuelled Peruvian kitchen', link: 'https://www.theworlds50best.com/discovery/Establishments/Peru/Lima/Sapiens.html' },
+        { name: 'Shizen Restaurante Nikkei', note: 'Ceviche meets sushi', link: 'https://www.theworlds50best.com/discovery/Establishments/Peru/Lima/Shizen-Restaurante-Nikkei.html' },
+        { name: 'Siete', note: 'Sharing plates and cocktails', link: 'https://www.theworlds50best.com/discovery/Establishments/Peru/Lima/Siete.html' },
+        { name: 'Tomo Cocina Nikkei', note: 'Andean-inspired sushi-ya', link: 'https://www.theworlds50best.com/discovery/Establishments/Peru/Lima/Tomo-Cocina-Nikkei.html' },
+        { name: 'Verbena', note: 'Electric night out', link: 'https://www.theworlds50best.com/discovery/Establishments/Peru/Lima/Verbena.html' }
+      ],
     }
   },
   'Bogotá': {
@@ -482,7 +599,31 @@ const cityProfilesByName: Record<string, CityProfile> = {
         description: 'BOG is one of the best-connected hubs in Latin America.',
         rideshareFromAirport: true,
       },
-      timeToNature: 'Cloud forest and mountain viewpoints are close if you start early.'
+      timeToNature: 'Cloud forest and mountain viewpoints are close if you start early.',
+      bars: [
+        { name: 'Decadente', note: 'Cool neighbourhood secret', link: 'https://www.theworlds50best.com/discovery/Establishments/Colombia/Bogot%C3%A1/Decadente.html' },
+        { name: 'Jardín Tragos y Pasteles', note: 'Secluded café and garden', link: 'https://www.theworlds50best.com/discovery/Establishments/Colombia/Bogot%C3%A1/Jard%C3%ADn-Tragos-y-Pasteles.html' },
+        { name: 'La Sala de Laura', note: 'Colombia distilled', link: 'https://www.theworlds50best.com/discovery/Establishments/Colombia/Bogot%C3%A1/La-Sala-de-Laura.html' }
+      ],
+      restaurants: [
+        { name: 'Afluente', note: 'Showcasing Colombian biodiversity', link: 'https://www.theworlds50best.com/discovery/Establishments/Colombia/Bogot%C3%A1/Afluente.html' },
+        { name: 'Cacio & Pepe', note: 'Hip modern Italian', link: 'https://www.theworlds50best.com/discovery/Establishments/Colombia/Bogot%C3%A1/Cacio-and-Pepe.html' },
+        { name: 'Café Bar Universal', note: 'Light bright and bustling', link: 'https://www.theworlds50best.com/discovery/Establishments/Colombia/Bogot%C3%A1/Caf%C3%A9-Bar-Universal.html' },
+        { name: 'Debora', note: 'Chic Colombian cuisine', link: 'https://www.theworlds50best.com/discovery/Establishments/Colombia/Bogot%C3%A1/Debora.html' },
+        { name: 'El Chato', note: 'Seasonal Colombian magic', link: 'https://www.theworlds50best.com/discovery/Establishments/Colombia/Bogot%C3%A1/El-Chato.html' },
+        { name: 'El Cielo', note: 'Show-stopping technique', link: 'https://www.theworlds50best.com/discovery/Establishments/Colombia/Bogot%C3%A1/El-Cielo.html' },
+        { name: 'Harry Sasson', note: 'Eclectic international flavours', link: 'https://www.theworlds50best.com/discovery/Establishments/Colombia/Bogot%C3%A1/Harry-Sasson.html' },
+        { name: 'Humo Negro', note: 'Sustainable Colombian izakaya', link: 'https://www.theworlds50best.com/discovery/Establishments/Colombia/Bogot%C3%A1/humo-negro-bogota.html' },
+        { name: 'Leo', note: 'Mapping Colombia’s ingredients', link: 'https://www.theworlds50best.com/discovery/Establishments/Colombia/Bogot%C3%A1/Leo.html' },
+        { name: 'Mesa Franca', note: 'Fresh Colombian perspective', link: 'https://www.theworlds50best.com/discovery/Establishments/Colombia/Bogot%C3%A1/Mesa-Franca.html' },
+        { name: 'Nueve', note: 'Mediterranean-influenced sharing plates', link: 'https://www.theworlds50best.com/discovery/Establishments/Colombia/Bogot%C3%A1/Nueve.html' },
+        { name: 'Oda', note: 'Refined South American', link: 'https://www.theworlds50best.com/discovery/Establishments/Colombia/Bogot%C3%A1/Oda.html' },
+        { name: 'Osaka', note: 'Nikkei-style nuance', link: 'https://www.theworlds50best.com/discovery/Establishments/Colombia/Bogot%C3%A1/Osaka.html' },
+        { name: 'Pajares Salinas', note: 'Timeless sophisticated Spanish', link: 'https://www.theworlds50best.com/discovery/Establishments/Colombia/Bogot%C3%A1/Pajares-Salinas.html' },
+        { name: 'Prudencia', note: 'Welcoming lunch spot', link: 'https://www.theworlds50best.com/discovery/Establishments/Colombia/Bogot%C3%A1/Prudencia.html' },
+        { name: 'Salvo Patria', note: 'Adventurous impactful eating', link: 'https://www.theworlds50best.com/discovery/Establishments/Colombia/Bogot%C3%A1/Salvo-Patria.html' },
+        { name: 'Selma', note: 'Bold and brilliant Med flavours', link: 'https://www.theworlds50best.com/discovery/Establishments/Colombia/Bogot%C3%A1/Selma.html' }
+      ],
     }
   },
   'Mexico City': {
@@ -512,7 +653,47 @@ const cityProfilesByName: Record<string, CityProfile> = {
         description: 'MEX with a vast domestic network plus AIFA overflow.',
         rideshareFromAirport: true,
       },
-      timeToNature: 'Forest parks are inside the city and proper mountain escapes are weekend-ready.'
+      timeToNature: 'Forest parks are inside the city and proper mountain escapes are weekend-ready.',
+      bars: [
+        { name: 'Baltra Bar', note: 'Evolutionary cocktail den', link: 'https://www.theworlds50best.com/discovery/Establishments/Mexico/Mexico-City/Baltra-Bar.html' },
+        { name: 'Bar Mauro', note: 'Milanese nostalgia, reinvented', link: 'https://www.theworlds50best.com/discovery/Establishments/Mexico/Mexico-City/Bar-Mauro.html' },
+        { name: 'Bijou Drinkery Room', note: 'Sparkling speakeasy gem', link: 'https://www.theworlds50best.com/discovery/Establishments/Mexico/Mexico-City/Bijou-Drinkery-Room.html' },
+        { name: 'Brujas', note: 'Witchcraft and herbalism', link: 'https://www.theworlds50best.com/discovery/Establishments/Mexico/Mexico-City/Brujas.html' },
+        { name: 'Cafe Tacobar', note: 'Street tacos and cocktails', link: 'https://www.theworlds50best.com/discovery/Establishments/Mexico/Mexico-City/Cafe-Tacobar.html' },
+        { name: 'Café de Nadie', note: 'Eclectic symphony of food and booze', link: 'https://www.theworlds50best.com/discovery/Establishments/Mexico/Mexico-City/Caf%C3%A9-de-Nadie.html' },
+        { name: 'Form + Matter', note: 'Sleek speakeasy', link: 'https://www.theworlds50best.com/discovery/Establishments/Mexico/Mexico-City/Form-Matter.html' },
+        { name: 'Handshake Speakeasy', note: 'Refined Mexican speakeasy', link: 'https://www.theworlds50best.com/discovery/Establishments/Mexico/Mexico-City/Handshake-Speakeasy.html' },
+        { name: 'Hanky Panky', note: 'Globally inspired speakeasy', link: 'https://www.theworlds50best.com/discovery/Establishments/Mexico/Mexico-City/Hanky-Panky.html' },
+        { name: 'Kaito del Valle', note: 'Izakaya-style cocktails', link: 'https://www.theworlds50best.com/discovery/Establishments/Mexico/Mexico-City/Kaito-del-Valle.html' },
+        { name: 'Less Is More', note: 'Maths meets cocktails', link: 'https://www.theworlds50best.com/discovery/Establishments/Mexico/Mexico-City/Less-Is-More.html' },
+        { name: 'Licoreria Limantour', note: 'Laidback liquor destination', link: 'https://www.theworlds50best.com/discovery/Establishments/Mexico/Mexico-City/Licoreria-Limantour.html' },
+        { name: 'Maison Artemisia', note: 'Absinthe and live music', link: 'https://www.theworlds50best.com/discovery/Establishments/Mexico/Mexico-City/Maison-Artemisia.html' },
+        { name: 'Rayo', note: 'Local spirit champion', link: 'https://www.theworlds50best.com/discovery/Establishments/Mexico/Mexico-City/Rayo.html' },
+        { name: 'Ticuchi', note: 'Agave cave', link: 'https://www.theworlds50best.com/discovery/Establishments/Mexico/Mexico-City/Ticuchi.html' }
+      ],
+      restaurants: [
+        { name: 'Azul Histórico', note: 'Casual and classic Mexican', link: 'https://www.theworlds50best.com/discovery/Establishments/Mexico/Mexico-City/Azul-Hist%C3%B3rico.html' },
+        { name: 'Bakéa', note: 'Basque-French-Mexican fusion', link: 'https://www.theworlds50best.com/discovery/Establishments/Mexico/Mexico-City/Bak%C3%A9a.html' },
+        { name: 'Botánico', note: 'Bistro fare with finesse', link: 'https://www.theworlds50best.com/discovery/Establishments/Mexico/Mexico-City/Bot%C3%A1nico.html' },
+        { name: 'Carmela y Sal', note: 'Tabascan culinary symphony', link: 'https://www.theworlds50best.com/discovery/Establishments/Mexico/Mexico-City/Carmela-y-Sal.html' },
+        { name: 'Contramar', note: 'Iconic seafood cantina', link: 'https://www.theworlds50best.com/discovery/Establishments/Mexico/Mexico-City/Contramar.html' },
+        { name: 'Em', note: 'Japanese-Mexican culinary theatre', link: 'https://www.theworlds50best.com/discovery/Establishments/Mexico/Mexico-City/Em.html' },
+        { name: 'Expendio de Maiz Sin Nombre', note: 'Rural maize meets city', link: 'https://www.theworlds50best.com/discovery/Establishments/Mexico/Mexico-City/Expendio-de-Maiz-Sin-Nombre.html' },
+        { name: 'Gaba', note: 'Fresh takes on Mexican flavours', link: 'https://www.theworlds50best.com/discovery/Establishments/Mexico/Mexico-City/Gaba.html' },
+        { name: 'La Docena Oyster Bar & Grill', note: 'Bustling community oyster house', link: 'https://www.theworlds50best.com/discovery/Establishments/Mexico/Mexico-City/La-Docena-Oyster-Bar-and-Grill.html' },
+        { name: 'La Once Mil', note: 'Tacos worth waiting for', link: 'https://www.theworlds50best.com/discovery/Establishments/Mexico/Mexico-City/La-Once-Mil.html' },
+        { name: 'Lardo', note: 'European-inspired all-day café', link: 'https://www.theworlds50best.com/discovery/Establishments/Mexico/Mexico-City/Lardo.html' },
+        { name: 'Lorea', note: 'Austerity simplicity beauty', link: 'https://www.theworlds50best.com/discovery/Establishments/Mexico/Mexico-City/Lorea.html' },
+        { name: 'Maizajo', note: 'A love letter to Mexican corn', link: 'https://www.theworlds50best.com/discovery/Establishments/Mexico/Mexico-City/Maizajo.html' },
+        { name: 'Máximo', note: 'Sustainable Mexican dining', link: 'https://www.theworlds50best.com/discovery/Establishments/Mexico/Mexico-City/M%C3%A1ximo.html' },
+        { name: 'Nicos', note: 'Authentic family-run landmark', link: 'https://www.theworlds50best.com/discovery/Establishments/Mexico/Mexico-City/Nicos.html' },
+        { name: 'Pujol', note: 'Ground-breaking Mexican gastronomy', link: 'https://www.theworlds50best.com/discovery/Establishments/Mexico/Mexico-City/Pujol.html' },
+        { name: 'Quintonil', note: 'Precise imaginative sustainability', link: 'https://www.theworlds50best.com/discovery/Establishments/Mexico/Mexico-City/Quintonil.html' },
+        { name: 'Rosetta', note: 'Invigorated Mexican classics', link: 'https://www.theworlds50best.com/discovery/Establishments/Mexico/Mexico-City/Rosetta.html' },
+        { name: 'Sarde', note: 'Seafood with a spin', link: 'https://www.theworlds50best.com/discovery/Establishments/Mexico/Mexico-City/Sarde.html' },
+        { name: 'Sud 777', note: 'Cool contemporary Mexican', link: 'https://www.theworlds50best.com/discovery/Establishments/Mexico/Mexico-City/Sud-777.html' },
+        { name: 'Ultramarinos Demar', note: 'Capital seafood star', link: 'https://www.theworlds50best.com/discovery/Establishments/Mexico/Mexico-City/Ultramarinos-Demar.html' }
+      ],
     }
   },
   'Medellín': {
@@ -542,7 +723,16 @@ const cityProfilesByName: Record<string, CityProfile> = {
         description: 'MDE with strong domestic connectivity.',
         rideshareFromAirport: true,
       },
-      timeToNature: 'Green hills and reservoir trips are straightforward day outings.'
+      timeToNature: 'Green hills and reservoir trips are straightforward day outings.',
+      bars: [
+        { name: 'Bar Carmen', note: 'Colombian culinary cocktails', link: 'https://www.theworlds50best.com/discovery/Establishments/Colombia/Medell%C3%ADn/Bar-Carmen.html' },
+        { name: 'Mala Audio Bar', note: 'Cocktails and vinyl', link: 'https://www.theworlds50best.com/discovery/Establishments/Colombia/Medell%C3%ADn/Mala-Audio-Bar.html' },
+        { name: 'Mamba Negra', note: 'Legendary skyline views', link: 'https://www.theworlds50best.com/discovery/Establishments/Colombia/Medell%C3%ADn/Mamba-Negra.html' }
+      ],
+      restaurants: [
+        { name: 'Carmen', note: 'Experimental celebratory Colombian', link: 'https://www.theworlds50best.com/discovery/Establishments/Colombia/Medell%C3%ADn/Carmen.html' },
+        { name: 'Sambombi Bistró Local', note: 'Hyperlocal sustainable cuisine', link: 'https://www.theworlds50best.com/discovery/Establishments/Colombia/Medell%C3%ADn/Sambombi-Bistr%C3%B3-Local.html' }
+      ],
     }
   },
   Cali: {
@@ -572,7 +762,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
         description: 'CLO with solid domestic links.',
         rideshareFromAirport: true,
       },
-      timeToNature: 'Cloud forest escapes and mountain roads are close.'
+      timeToNature: 'Cloud forest escapes and mountain roads are close.',
+      restaurants: [
+        { name: 'Domingo', note: 'Colombian cooking with soul', link: 'https://www.theworlds50best.com/discovery/Establishments/Colombia/Cali/Domingo.html' }
+      ],
     }
   },
   'Rio de Janeiro': {
@@ -632,7 +825,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
         description: 'BAQ with easy domestic access.',
         rideshareFromAirport: true,
       },
-      timeToNature: 'Beaches and mangrove areas are easy day trips.'
+      timeToNature: 'Beaches and mangrove areas are easy day trips.',
+      restaurants: [
+        { name: 'Manuel', note: 'Vibrant Colombian cooking', link: 'https://www.theworlds50best.com/discovery/Establishments/Colombia/Barranquilla/Manuel.html' }
+      ],
     }
   },
   'São Paulo': {
@@ -662,7 +858,54 @@ const cityProfilesByName: Record<string, CityProfile> = {
         description: 'GRU for global links and CGH for domestic speed.',
         rideshareFromAirport: true,
       },
-      timeToNature: 'Atlantic forest and beach escapes are weekend-easy but not instant.'
+      timeToNature: 'Atlantic forest and beach escapes are weekend-easy but not instant.',
+      bars: [
+        { name: 'Bar dos Arcos', note: 'Dramatic underground drinking destination', link: 'https://www.theworlds50best.com/discovery/Establishments/Brazil/S%C3%A3o-Paulo/Bar-dos-Arcos.html' },
+        { name: 'Caledonia', note: 'One-stop whisky destination', link: 'https://www.theworlds50best.com/discovery/Establishments/Brazil/S%C3%A3o-Paulo/Caledonia.html' },
+        { name: 'Exímia', note: 'Brazilian ingredient-focused spectacle', link: 'https://www.theworlds50best.com/discovery/Establishments/Brazil/Sao-Paulo/Ex%C3%ADmia.html' },
+        { name: 'Guilhotina Bar', note: 'Buzzy cocktail joint', link: 'https://www.theworlds50best.com/discovery/Establishments/Brazil/S%C3%A3o-Paulo/Guilhotina-Bar.html' },
+        { name: 'Locale Caffè', note: 'All-day Italian', link: 'https://www.theworlds50best.com/discovery/Establishments/Brazil/S%C3%A3o-Paulo/locale-caffe.html' },
+        { name: 'Picco', note: 'Casual cocktail and pizza joint', link: 'https://www.theworlds50best.com/discovery/Establishments/Brazil/S%C3%A3o-Paulo/Picco.html' },
+        { name: 'Santana Bar', note: 'Classic cocktail specialist', link: 'https://www.theworlds50best.com/discovery/Establishments/Brazil/S%C3%A3o-Paulo/Santana-Bar.html' },
+        { name: 'Sub Astor', note: 'Hidden cocktail basement', link: 'https://www.theworlds50best.com/discovery/Establishments/Brazil/S%C3%A3o-Paulo/Sub-Astor.html' },
+        { name: 'SubAstor', note: 'Flamboyant subterranean speakeasy', link: 'https://www.theworlds50best.com/discovery/Establishments/Brazil/S%C3%A3o-Paulo/SubAstor.html' },
+        { name: 'Tan Tan', note: 'Japanese-inspired basement bar', link: 'https://www.theworlds50best.com/discovery/Establishments/Brazil/S%C3%A3o-Paulo/Tan-Tan.html' },
+        { name: 'The Liquor Store', note: 'Minimal mod hideaway', link: 'https://www.theworlds50best.com/discovery/Establishments/Brazil/S%C3%A3o-Paulo/The-Liquor-Store.html' }
+      ],
+      restaurants: [
+        { name: 'A Casa do Porco', note: 'Ultimate pig out', link: 'https://www.theworlds50best.com/discovery/Establishments/Brazil/S%C3%A3o-Paulo/A-Casa-do-Porco.html' },
+        { name: 'Bar da Dona Onça', note: 'Lady Jaguar\'s home', link: 'https://www.theworlds50best.com/discovery/Establishments/Brazil/S%C3%A3o-Paulo/Bar-da-Dona-On%C3%A7a.html' },
+        { name: 'Bar do Biu', note: 'Deceptively simple dining', link: 'https://www.theworlds50best.com/discovery/Establishments/Brazil/S%C3%A3o-Paulo/Bar-do-Biu.html' },
+        { name: 'Borgo Mooca', note: 'Stylish Italian haven', link: 'https://www.theworlds50best.com/discovery/Establishments/Brazil/S%C3%A3o-Paulo/Borgo-Mooca.html' },
+        { name: 'Cais', note: 'Versatile culinary bolthole', link: 'https://www.theworlds50best.com/discovery/Establishments/Brazil/S%C3%A3o-Paulo/Cais.html' },
+        { name: 'Cala del Tanit', note: 'Light and bright bites', link: 'https://www.theworlds50best.com/discovery/Establishments/Brazil/S%C3%A3o-Paulo/Cala-del-Tanit.html' },
+        { name: 'Charco', note: 'Southern Brazilian spirit', link: 'https://www.theworlds50best.com/discovery/Establishments/Brazil/S%C3%A3o-Paulo/Charco.html' },
+        { name: 'Chef Rouge', note: 'Unapologetically French', link: 'https://www.theworlds50best.com/discovery/Establishments/Brazil/S%C3%A3o-Paulo/Chef-Rouge.html' },
+        { name: 'Cora', note: 'Sky-high vibrant cooking', link: 'https://www.theworlds50best.com/discovery/Establishments/Brazil/S%C3%A3o-Paulo/Cora.html' },
+        { name: 'Corrutela', note: 'Sustainable organic cuisine', link: 'https://www.theworlds50best.com/discovery/Establishments/Brazil/S%C3%A3o-Paulo/Corrutela.html' },
+        { name: 'D.O.M.', note: 'Trailblazing hyperlocal institution', link: 'https://www.theworlds50best.com/discovery/Establishments/Brazil/S%C3%A3o-Paulo/D-O-M.html' },
+        { name: 'Evvai', note: 'Upscale Italian cuisine', link: 'https://www.theworlds50best.com/discovery/Establishments/Brazil/S%C3%A3o-Paulo/Evvai.html' },
+        { name: 'Fame Osteria', note: 'Covert intimate Italian', link: 'https://www.theworlds50best.com/discovery/Establishments/Brazil/S%C3%A3o-Paulo/Fame-Osteria.html' },
+        { name: 'Fasano', note: 'Refined contemporary Italian', link: 'https://www.theworlds50best.com/discovery/Establishments/Brazil/S%C3%A3o-Paulo/Fasano.html' },
+        { name: 'Jun Sakamoto', note: 'Exceptionally-executed omakase', link: 'https://www.theworlds50best.com/discovery/Establishments/Brazil/S%C3%A3o-Paulo/Jun-Sakamoto.html' },
+        { name: 'Kotori', note: 'Slick Japanese fusion', link: 'https://www.theworlds50best.com/discovery/Establishments/Brazil/S%C3%A3o-Paulo/Kotori.html' },
+        { name: 'Kuro Restaurante', note: 'Epic omakase bar', link: 'https://www.theworlds50best.com/discovery/Establishments/Brazil/S%C3%A3o-Paulo/Kuro-Restaurante.html' },
+        { name: 'Madê', note: 'Organic fish-focussed fare', link: 'https://www.theworlds50best.com/discovery/Establishments/Brazil/S%C3%A3o-Paulo/Made%CC%82.html' },
+        { name: 'Maní', note: 'Contemporary Brazilian cuisine', link: 'https://www.theworlds50best.com/discovery/Establishments/Brazil/S%C3%A3o-Paulo/Man%C3%AD.html' },
+        { name: 'Metzi', note: 'Mexican fine dining', link: 'https://www.theworlds50best.com/discovery/Establishments/Brazil/S%C3%A3o-Paulo/Metzi.html' },
+        { name: 'Mocotó', note: 'Brazilian comfort food', link: 'https://www.theworlds50best.com/discovery/Establishments/Brazil/S%C3%A3o-Paulo/Mocot%C3%B3.html' },
+        { name: 'Murakami', note: 'Ever-changing omakase counter', link: 'https://www.theworlds50best.com/discovery/Establishments/Brazil/S%C3%A3o-Paulo/Murakami.html' },
+        { name: 'Nelita', note: 'Female-led Italian favourites', link: 'https://www.theworlds50best.com/discovery/Establishments/Brazil/S%C3%A3o-Paulo/Nelita.html' },
+        { name: 'Notiê', note: 'Nature-led Brazilian', link: 'https://www.theworlds50best.com/discovery/Establishments/Brazil/S%C3%A3o-Paulo/Noti%C3%AA.html' },
+        { name: 'Picchi', note: 'Upscale Italian nostalgia', link: 'https://www.theworlds50best.com/discovery/Establishments/Brazil/S%C3%A3o-Paulo/Picchi.html' },
+        { name: 'Ping Yang Thai Bar & Food', note: 'Down-to-earth Thai', link: 'https://www.theworlds50best.com/discovery/Establishments/Brazil/S%C3%A3o-Paulo/Ping-Yang-Thai-Bar-and-Food.html' },
+        { name: 'Restaurante Aizomê at Japan House', note: 'Authentic Japanese hospitality', link: 'https://www.theworlds50best.com/discovery/Establishments/Brazil/S%C3%A3o-Paulo/Restaurante-Aizom%C3%AA-at-Japan-House.html' },
+        { name: 'Restaurante Cepa', note: 'Market-fresh home cooking', link: 'https://www.theworlds50best.com/discovery/Establishments/Brazil/S%C3%A3o-Paulo/Restaurante-Cepa.html' },
+        { name: 'Ryo Gastronomia', note: 'Kaiseki done right', link: 'https://www.theworlds50best.com/discovery/Establishments/Brazil/S%C3%A3o-Paulo/Ryo-Gastronomia.html' },
+        { name: 'Shin-zushi', note: 'Sushi with Nippon soul', link: 'https://www.theworlds50best.com/discovery/Establishments/Brazil/S%C3%A3o-Paulo/Shin-zushi.html' },
+        { name: 'Tordesilhas', note: 'From-the-heart Brazilian fare', link: 'https://www.theworlds50best.com/discovery/Establishments/Brazil/S%C3%A3o-Paulo/Tordesilhas.html' },
+        { name: 'Tuju', note: 'Contemporary Brazilian cuisine', link: 'https://www.theworlds50best.com/discovery/Establishments/Brazil/S%C3%A3o-Paulo/Tuju.html' }
+      ],
     }
   },
   Curitiba: {
@@ -692,7 +935,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
         description: 'CWB with good domestic service.',
         rideshareFromAirport: true,
       },
-      timeToNature: 'Parks are everywhere and the coast is reachable for weekends.'
+      timeToNature: 'Parks are everywhere and the coast is reachable for weekends.',
+      restaurants: [
+        { name: 'Manu', note: 'Unlocking Curitiba’s flavours', link: 'https://www.theworlds50best.com/discovery/Establishments/Brazil/Curitiba/Manu.html' }
+      ],
     }
   },
   Caracas: {
@@ -722,7 +968,15 @@ const cityProfilesByName: Record<string, CityProfile> = {
         description: 'CCS for regional access, subject to operational variability.',
         rideshareFromAirport: true,
       },
-      timeToNature: 'Mountain viewpoints and the coast are geographically close.'
+      timeToNature: 'Mountain viewpoints and the coast are geographically close.',
+      bars: [
+        { name: 'Robusto', note: 'Sophisticated cigar specialist', link: 'https://www.theworlds50best.com/discovery/Establishments/Venezuela/Caracas/Robusto.html' }
+      ],
+      restaurants: [
+        { name: 'El Bosque Bistró', note: 'Venezuelan neighbourhood gem', link: 'https://www.theworlds50best.com/discovery/Establishments/Venezuela/Caracas/El-Bosque-Bistr%C3%B3.html' },
+        { name: 'La Casa Bistro', note: 'Convivial lunch spot', link: 'https://www.theworlds50best.com/discovery/Establishments/Venezuela/Caracas/La-Casa-Bistro.html' },
+        { name: 'La Posada De Cervantes', note: 'Sharing plates with soul', link: 'https://www.theworlds50best.com/discovery/Establishments/Venezuela/Caracas/La-Posada-De-Cervantes.html' }
+      ],
     }
   },
   Quito: {
@@ -755,9 +1009,20 @@ const cityProfilesByName: Record<string, CityProfile> = {
       },
       timeToNature: 'Volcanic viewpoints and cloud forest escapes are close.',
       restaurants: [
-        { name: 'Somos Ecuador Restaurante', note: 'Regional Ecuadorian cooking in a warm, no-fuss setting — one of the best ways to eat local in Quito', link: 'https://www.google.com/maps/place/Somos+Ecuador+Restaurante/@-0.1826728,-78.4805985,17z/data=!3m1!4b1!4m6!3m5!1s0x91d59b558de798cf:0xf810e099a48a864a!8m2!3d-0.1826782!4d-78.4759904!16s%2Fg%2F11l8glkhv5!5m1!1e4?entry=ttu&g_ep=EgoyMDI2MDMxNS4wIKXMDSoASAFQAw%3D%3D' },
-        { name: 'NUEMA', note: 'Modern tasting menus built around Andean biodiversity — the most ambitious table in the city', link: 'https://www.google.com/maps/place/NUEMA/@-0.1981843,-78.4851386,17z/data=!3m1!4b1!4m6!3m5!1s0x91d5997942f86bf1:0xf1e5cf13911f8da5!8m2!3d-0.1981897!4d-78.4825583!16s%2Fg%2F11fj6p1_68!5m1!1e4?entry=ttu&g_ep=EgoyMDI2MDMxNS4wIKXMDSoASAFQAw%3D%3D' },
-        { name: 'Clara', note: 'Focused menu, calm room, good light — the kind of neighborhood spot that earns a second visit', link: 'https://www.google.com/maps/place/Clara+Restaurante/@-0.2066458,-78.488334,17z/data=!3m1!4b1!4m6!3m5!1s0x91d59b2a850bedd1:0x644ec64910d224ed!8m2!3d-0.2066512!4d-78.4857537!16s%2Fg%2F11y2ch0bjs!5m1!1e4?entry=ttu&g_ep=EgoyMDI2MDMxNS4wIKXMDSoASAFQAw%3D%3D' }
+        { name: 'Casa Gangotena Restaurant', note: 'Artful Ecuadorian fusions', link: 'https://www.theworlds50best.com/discovery/Establishments/Ecuador/Quito/Casa-Gangotena-Restaurant.html' },
+        { name: 'Chez Jérôme', note: 'No-frills French fare', link: 'https://www.theworlds50best.com/discovery/Establishments/Ecuador/Quito/Chez-J%C3%A9r%C3%B4me.html' },
+        { name: 'Ciré', note: 'Progressive cuisine with a view', link: 'https://www.theworlds50best.com/discovery/Establishments/Ecuador/Quito/Cir%C3%A9.html' },
+        { name: 'Clara', note: 'Rising star of Ecuadorian gastronomy', link: 'https://www.theworlds50best.com/discovery/Establishments/Ecuador/Quito/Clara.html' },
+        { name: 'Nuema', note: 'Colourful creative Ecuadorean cuisine', link: 'https://www.theworlds50best.com/discovery/Establishments/Ecuador/Quito/Nuema.html' },
+        { name: 'Nuum', note: 'Made in Ecaudor', link: 'https://www.theworlds50best.com/discovery/Establishments/Ecuador/Quito/Nuum.html' },
+        { name: 'Pez Bela', note: 'Vibrant ceviche spot', link: 'https://www.theworlds50best.com/discovery/Establishments/Ecuador/Quito/Pez-Bela.html' },
+        { name: 'Quitu', note: 'Ecuadorian culinary exploration', link: 'https://www.theworlds50best.com/discovery/Establishments/Ecuador/Quito/Quitu.html' },
+        { name: 'Rincón de Francia', note: 'Longstanding French legacy', link: 'https://www.theworlds50best.com/discovery/Establishments/Ecuador/Quito/Rinc%C3%B3n-de-Francia.html' },
+        { name: 'Shibumi', note: 'Superb sushi sessions', link: 'https://www.theworlds50best.com/discovery/Establishments/Ecuador/Quito/Shibumi.html' },
+        { name: 'Somos', note: 'Charming Ecuadorean journey', link: 'https://www.theworlds50best.com/discovery/Establishments/Ecuador/Quito/Somos.html' },
+        { name: 'Tributo', note: 'A carnivore’s dream', link: 'https://www.theworlds50best.com/discovery/Establishments/Ecuador/Quito/Tributo.html' },
+        { name: 'Urko', note: 'Ever-changing experimental cuisine', link: 'https://www.theworlds50best.com/discovery/Establishments/Ecuador/Quito/Urko.html' },
+        { name: 'Z-Food', note: 'Sustainable seafood shop', link: 'https://www.theworlds50best.com/discovery/Establishments/Ecuador/Quito/Z-Food.html' }
       ],
       cafes: [
         { name: 'Strato' },
@@ -828,7 +1093,15 @@ const cityProfilesByName: Record<string, CityProfile> = {
         description: 'ASU handles regional connectivity well enough.',
         rideshareFromAirport: true,
       },
-      timeToNature: 'River edges and countryside escapes are easy day trips.'
+      timeToNature: 'River edges and countryside escapes are easy day trips.',
+      restaurants: [
+        { name: '1688 Resto', note: 'La dolce vita indulgence', link: 'https://www.theworlds50best.com/discovery/Establishments/Paraguay/Asuncion/1688-Resto.html' },
+        { name: 'Cocina Clandestina', note: 'Paraguayan classics, reimagined', link: 'https://www.theworlds50best.com/discovery/Establishments/Paraguay/Asuncion/Cocina-Clandestina.html' },
+        { name: 'Pakuri', note: 'Creative Paraguayan cuisine', link: 'https://www.theworlds50best.com/discovery/Establishments/Paraguay/Asuncion/Pakuri.html' },
+        { name: 'Tierra Colorada Gastró', note: 'Colourful Paraguayan cooking', link: 'https://www.theworlds50best.com/discovery/Establishments/Paraguay/Asuncion/Tierra-Colorada-Gastr%C3%B3.html' },
+        { name: 'Toro', note: 'A carnivore\'s dream', link: 'https://www.theworlds50best.com/discovery/Establishments/Paraguay/Asuncion/Toro.html' },
+        { name: 'Táva Comedor', note: 'Contemporary Paraguayan cuisine', link: 'https://www.theworlds50best.com/discovery/Establishments/Paraguay/Asuncion/T%C3%A1va-Comedor.html' }
+      ],
     }
   },
   'La Paz': {
@@ -858,7 +1131,16 @@ const cityProfilesByName: Record<string, CityProfile> = {
         description: 'LPB and nearby El Alto connections provide domestic reach.',
         rideshareFromAirport: true,
       },
-      timeToNature: 'Mountain access is immediate and dramatic.'
+      timeToNature: 'Mountain access is immediate and dramatic.',
+      restaurants: [
+        { name: 'Ali Pacha', note: 'Bolivia’s vegan universe', link: 'https://www.theworlds50best.com/discovery/Establishments/Bolivia/La-Paz/Ali-Pacha.html' },
+        { name: 'Ancestral', note: 'Carnivorous Bolivian paradise', link: 'https://www.theworlds50best.com/discovery/Establishments/Bolivia/La-Paz/Ancestral.html' },
+        { name: 'Arami', note: 'Where Andes meet Amazon', link: 'https://www.theworlds50best.com/discovery/Establishments/Bolivia/La-Paz/Arami.html' },
+        { name: 'Gustu', note: 'Plating Bolivia’s larder', link: 'https://www.theworlds50best.com/discovery/Establishments/Bolivia/La-Paz/Gustu.html' },
+        { name: 'La Rufina', note: 'Street food inspired sophistication', link: 'https://www.theworlds50best.com/discovery/Establishments/Bolivia/La-Paz/La-Rufina.html' },
+        { name: 'Phayawi', note: 'Authentic Bolivian experience', link: 'https://www.theworlds50best.com/discovery/Establishments/Bolivia/La-Paz/Phayawi.html' },
+        { name: 'Popular Cocina Boliviana', note: 'Simple but accomplished', link: 'https://www.theworlds50best.com/discovery/Establishments/Bolivia/La-Paz/Popular-Cocina-Boliviana.html' }
+      ],
     }
   },
   'Santa Cruz de la Sierra': {
@@ -948,7 +1230,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
         description: 'SAL is one of Central America’s more useful regional hubs.',
         rideshareFromAirport: true,
       },
-      timeToNature: 'Volcano viewpoints and surf breaks are reachable within an hour or so.'
+      timeToNature: 'Volcano viewpoints and surf breaks are reachable within an hour or so.',
+      restaurants: [
+        { name: 'El Xolo', note: 'A tribute to corn', link: 'https://www.theworlds50best.com/discovery/Establishments/El-Salvador/San-Salvador/El-Xolo.html' }
+      ],
     }  },
   Cuenca: {
     id: 'cuenca',
@@ -977,7 +1262,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
         description: 'CUE with regional connections to Quito and Guayaquil.',
         rideshareFromAirport: true,
       },
-      timeToNature: 'Mountain trails and nature reserves are easy day outings.'
+      timeToNature: 'Mountain trails and nature reserves are easy day outings.',
+      restaurants: [
+        { name: 'Tiesto\'s', note: 'Homely hearty Ecuadorean', link: 'https://www.theworlds50best.com/discovery/Establishments/Ecuador/Cuenca/Tiestos.html' }
+      ],
     }
   },
   Arequipa: {
@@ -1007,7 +1295,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
         description: 'AQP with connections to Lima and Cusco.',
         rideshareFromAirport: true,
       },
-      timeToNature: 'El Misti hikes and Colca Canyon are serious nature options within a short drive.'
+      timeToNature: 'El Misti hikes and Colca Canyon are serious nature options within a short drive.',
+      restaurants: [
+        { name: 'La Nueva Palomino', note: 'Traditional Peru on a plate', link: 'https://www.theworlds50best.com/discovery/Establishments/Peru/Arequipa/La-Nueva-Palomino.html' }
+      ],
     }
   },
   Puebla: {
@@ -1097,7 +1388,14 @@ const cityProfilesByName: Record<string, CityProfile> = {
         description: 'CTG with solid domestic links and growing Caribbean routes.',
         rideshareFromAirport: true,
       },
-      timeToNature: 'The Rosario Islands and nearby beaches are easy boat trips.'
+      timeToNature: 'The Rosario Islands and nearby beaches are easy boat trips.',
+      bars: [
+        { name: 'Alquímico', note: 'Agenda-setting destination bar', link: 'https://www.theworlds50best.com/discovery/Establishments/Colombia/Cartagena/Alqu%C3%ADmico.html' },
+        { name: 'El Barón', note: 'Rustic sustainability champion', link: 'https://www.theworlds50best.com/discovery/Establishments/Colombia/Cartagena/El-Bar%C3%B3n.html' }
+      ],
+      restaurants: [
+        { name: 'Celele', note: 'Carribean-Columbian groundbreaker', link: 'https://www.theworlds50best.com/discovery/Establishments/Colombia/Cartagena/Celele.html' }
+      ],
     }
   },
   Cusco: {
@@ -1127,7 +1425,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
         description: 'CUZ with good Lima connections and some direct international routes.',
         rideshareFromAirport: true,
       },
-      timeToNature: 'Sacred Valley and Machu Picchu are the immediate draws; trekking options are extensive.'
+      timeToNature: 'Sacred Valley and Machu Picchu are the immediate draws; trekking options are extensive.',
+      restaurants: [
+        { name: 'Mauka', note: 'A celebration of the hyper-local', link: 'https://www.theworlds50best.com/discovery/Establishments/Peru/Cusco/Mauka.html' }
+      ],
     }
   },
   Trujillo: {
@@ -1277,7 +1578,11 @@ const cityProfilesByName: Record<string, CityProfile> = {
         description: 'COR with domestic links and some direct international routes.',
         rideshareFromAirport: true,
       },
-      timeToNature: 'Sierras de Córdoba hills are quick day-trip escapes with hiking and rivers.'
+      timeToNature: 'Sierras de Córdoba hills are quick day-trip escapes with hiking and rivers.',
+      restaurants: [
+        { name: 'El Papagayo', note: 'Distinctive elegant elevated', link: 'https://www.theworlds50best.com/discovery/Establishments/Argentina/Cord%C3%B3ba/El-Papagayo.html' },
+        { name: 'Noor', note: 'Andalusian-Moorish exploration', link: 'https://www.theworlds50best.com/discovery/Establishments/Spain/Cordoba/Noor.html' }
+      ],
     }
   },
   Manaus: {
@@ -1367,7 +1672,13 @@ const cityProfilesByName: Record<string, CityProfile> = {
         description: 'CNF (Confins) for major routes; PLU (Pampulha) for select domestic hops.',
         rideshareFromAirport: true,
       },
-      timeToNature: 'Serra do Cipó and Inhotim (world-class outdoor art museum) are easy day trips.'
+      timeToNature: 'Serra do Cipó and Inhotim (world-class outdoor art museum) are easy day trips.',
+      restaurants: [
+        { name: 'Birosca S2', note: 'Bright inventive Brazilian', link: 'https://www.theworlds50best.com/discovery/Establishments/Brazil/Belo-Horizonte/Birosca-S2.html' },
+        { name: 'Cozinha Tupis', note: 'Up market Brazilian fusion', link: 'https://www.theworlds50best.com/discovery/Establishments/Brazil/Belo-Horizonte/Cozinha-Tupis.html' },
+        { name: 'Glouton', note: 'Mineira-French haute cuisine', link: 'https://www.theworlds50best.com/discovery/Establishments/Brazil/Belo-Horizonte/Glouton.html' },
+        { name: 'Pacato', note: 'Elevated local ingredients', link: 'https://www.theworlds50best.com/discovery/Establishments/Brazil/Belo-Horizonte/Pacato.html' }
+      ],
     }
   },
   'Florianópolis': {
@@ -1397,7 +1708,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
         description: 'FLN with solid domestic connections.',
         rideshareFromAirport: true,
       },
-      timeToNature: 'Beaches and lagoons are immediate; Serra Gaúcha is a weekend trip.'
+      timeToNature: 'Beaches and lagoons are immediate; Serra Gaúcha is a weekend trip.',
+      restaurants: [
+        { name: 'Ostradamus', note: 'Brazilian oyster specialist', link: 'https://www.theworlds50best.com/discovery/Establishments/Brazil/Florianopolis/Ostradamus.html' }
+      ],
     }
   },
   Vitória: {
@@ -1547,7 +1861,13 @@ const cityProfilesByName: Record<string, CityProfile> = {
         description: 'MID with good domestic links and some US connections.',
         rideshareFromAirport: true,
       },
-      timeToNature: 'Cenotes and Chichén Itzá are within an hour or two; the Gulf coast is close.'
+      timeToNature: 'Cenotes and Chichén Itzá are within an hour or two; the Gulf coast is close.',
+      restaurants: [
+        { name: 'Huniik', note: 'Evocative Yucatán sanctuary', link: 'https://www.theworlds50best.com/discovery/Establishments/Mexico/Merida/Huniik.html' },
+        { name: 'Ixi\'im Restaurant', note: 'Inventive Mexican magic', link: 'https://www.theworlds50best.com/discovery/Establishments/Mexico/Merida/Ixiim-Restaurant.html' },
+        { name: 'Ku\'uk', note: 'Ancient roots reimagined', link: 'https://www.theworlds50best.com/discovery/Establishments/Mexico/Merida/kuuk.html' },
+        { name: 'Nectar', note: 'New Yucatecan Cuisine', link: 'https://www.theworlds50best.com/discovery/Establishments/Mexico/Merida/nectar-merida.html' }
+      ],
     }
   },
   'León': {
@@ -1728,7 +2048,11 @@ const cityProfilesByName: Record<string, CityProfile> = {
         rideshareFromAirport: false,
         rideshareNote: 'The nearest commercial airport is SCL in Santiago (90 min away) — rideshare is not legal from that terminal; use official taxis.',
       },
-      timeToNature: 'Pacific beaches and coastal trails are immediate; wine country is under an hour east.'
+      timeToNature: 'Pacific beaches and coastal trails are immediate; wine country is under an hour east.',
+      restaurants: [
+        { name: 'La Caperucita y el Lobo', note: 'Quirky sea-view Chilean', link: 'https://www.theworlds50best.com/discovery/Establishments/Chile/Valpara%C3%ADso/La-Caperucita-y-el-Lobo.html' },
+        { name: 'La Concepción', note: 'Chilean seafood', link: 'https://www.theworlds50best.com/discovery/Establishments/Chile/Valpara%C3%ADso/La-Concepci%C3%B3n.html' }
+      ],
     }
   },
   Concepción: {
@@ -1938,7 +2262,10 @@ const cityProfilesByName: Record<string, CityProfile> = {
         description: 'SMR (Simón Bolívar) with flights to Bogotá, Medellín, and some Caribbean destinations.',
         rideshareFromAirport: true,
       },
-      timeToNature: 'Tayrona National Park is 45 minutes away; Ciudad Perdida trek departs from here; Minca cloud forest in the hills above.'
+      timeToNature: 'Tayrona National Park is 45 minutes away; Ciudad Perdida trek departs from here; Minca cloud forest in the hills above.',
+      restaurants: [
+        { name: 'Proyecto Nativa', note: 'Taste of adventure', link: 'https://www.theworlds50best.com/discovery/Establishments/Bolivia/Sucre/Proyecto-Nativa.html' }
+      ],
     }
   },
   Chiclayo: {
@@ -2118,7 +2445,17 @@ const cityProfilesByName: Record<string, CityProfile> = {
         description: 'Small regional airport; routing through Guayaquil or Quito is typical.',
         rideshareFromAirport: true,
       },
-      timeToNature: 'Cloud forests and indigenous reserves are close; rivers and waterfalls nearby.'
+      timeToNature: 'Cloud forests and indigenous reserves are close; rivers and waterfalls nearby.',
+      bars: [
+        { name: 'Acorde', note: 'Sumptuous, stylish lounge', link: 'https://www.theworlds50best.com/discovery/Establishments/Ecuador/Guayaquil/Acorde.html' },
+        { name: 'Juliana', note: 'Compelling love letter to Ecuador', link: 'https://www.theworlds50best.com/discovery/Establishments/Ecuador/Guayaquil/Juliana.html' },
+        { name: 'Nicanor', note: 'Golden hour guaranteed', link: 'https://www.theworlds50best.com/discovery/Establishments/Ecuador/Guayaquil/Nicanor.html' }
+      ],
+      restaurants: [
+        { name: 'Casa Julián', note: 'Stylishly executed Ecuadorean cuisine', link: 'https://www.theworlds50best.com/discovery/Establishments/Ecuador/Guayaquil/Casa-Juli%C3%A1n.html' },
+        { name: 'Marrecife', note: 'Homespun with heart and soul', link: 'https://www.theworlds50best.com/discovery/Establishments/Ecuador/Guayaquil/Marrecife.html' },
+        { name: 'Mikka', note: 'Swanky Nikkei feast', link: 'https://www.theworlds50best.com/discovery/Establishments/Ecuador/Guayaquil/Mikka.html' }
+      ],
     }
   },
   Manta: {

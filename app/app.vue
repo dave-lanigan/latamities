@@ -229,6 +229,40 @@ const filteredCities = computed(() =>
 )
 const filteredCityIds = computed(() => new Set(filteredCities.value.map(city => city.id)))
 
+const CITY_INDICATOR_THRESHOLDS = {
+  cheapHousingRank: 20,
+  fastInternetMbps: 150,
+  eliteDiningCount: 5
+}
+
+const world50RestaurantCount = (city: CityProfile) =>
+  (city.details.restaurants ?? []).filter((restaurant) => isWorlds50Best(restaurant)).length
+
+const averageHousingRank = cityProfiles.reduce((total, city) => total + city.snapshot.purchasingPowerRank, 0) / cityProfiles.length
+const averageDownloadMbps = cityProfiles.reduce((total, city) => total + city.snapshot.internet.downloadMbps, 0) / cityProfiles.length
+const relativePercent = (value: number, average: number) => Math.round(Math.abs((value - average) / average) * 100)
+
+const cityIndicators = (city: CityProfile) => ({
+  cheapHousing: city.snapshot.purchasingPowerRank <= CITY_INDICATOR_THRESHOLDS.cheapHousingRank,
+  fastInternet: city.snapshot.internet.downloadMbps >= CITY_INDICATOR_THRESHOLDS.fastInternetMbps,
+  eliteDining: world50RestaurantCount(city) >= CITY_INDICATOR_THRESHOLDS.eliteDiningCount
+})
+
+const selectedCityIndicatorSummary = computed(() => {
+  if (!selectedCity.value) return null
+
+  const city = selectedCity.value
+  const housingPercent = relativePercent(city.snapshot.purchasingPowerRank, averageHousingRank)
+  const internetPercent = relativePercent(city.snapshot.internet.downloadMbps, averageDownloadMbps)
+
+  return {
+    restaurants: world50RestaurantCount(city),
+    bars: city.details.bars?.length ?? 0,
+    housing: `${housingPercent}% ${city.snapshot.purchasingPowerRank <= averageHousingRank ? 'below' : 'above'} average`,
+    internet: `${internetPercent}% ${city.snapshot.internet.downloadMbps >= averageDownloadMbps ? 'above' : 'below'} average`
+  }
+})
+
 type PrimaryResourceGroup = ResourceGroup & { primaryItem: ResolvedResourceLink }
 type PrimaryResourceCard = {
   id: ResourceGroup['id']
@@ -296,9 +330,16 @@ const selectedRestaurants = computed(() => selectedCity.value?.details.restauran
 const selectedCafes = computed(() => selectedCity.value?.details.cafes ?? [])
 const selectedBars = computed(() => selectedCity.value?.details.bars ?? [])
 const selectedAttractions = computed(() => selectedCity.value?.details.attractions ?? [])
-const selectedEssentialGroups = computed(() =>
-  selectedCityResourceGroups.value.filter((group) => group.id !== 'flights')
+const selectedRideSharingOptions = computed(() =>
+  selectedCityResourceGroups.value.find((group) => group.id === 'getting-around')?.items ?? []
 )
+const selectedFoodDeliveryOptions = computed(() =>
+  selectedCityResourceGroups.value.find((group) => group.id === 'delivery')?.items ?? []
+)
+const selectedRideAndDeliveryOptions = computed(() => [
+  ...selectedRideSharingOptions.value,
+  ...selectedFoodDeliveryOptions.value
+])
 const selectedClimateMetric = computed<ClimateMetric>(() => {
   if (climateView.value === 'rainfall') {
     const values = selectedRainfallByMonth.value
@@ -471,6 +512,7 @@ const endClimateSpin = (event?: PointerEvent) => {
 }
 
 const mapsSearchUrl = (query: string) => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`
+const isWorlds50Best = (place: { link?: string }) => place.link?.includes('theworlds50best.com') ?? false
 
 const resolveFlightOriginFromLocation = async () => {
   if (!import.meta.client || !navigator.geolocation) {
@@ -668,6 +710,13 @@ onMounted(() => {
               <p class="mt-1 text-xs leading-5 text-slate-500">A map-first guide to Latin American cities for remote workers and digital nomads. Data covers climate, cost of living, internet, and travel logistics.</p>
             </div>
             <div class="h-px bg-slate-100" />
+            <div class="space-y-2">
+              <p class="text-[10px] font-bold uppercase tracking-wide text-slate-400">City indicators</p>
+              <p class="text-xs leading-5 text-slate-500"><span class="font-semibold text-slate-700">Cheap housing:</span> purchasing-power rank {{ CITY_INDICATOR_THRESHOLDS.cheapHousingRank }} or better.</p>
+              <p class="text-xs leading-5 text-slate-500"><span class="font-semibold text-slate-700">Fast internet:</span> download speed of at least {{ CITY_INDICATOR_THRESHOLDS.fastInternetMbps }} Mbps.</p>
+              <p class="text-xs leading-5 text-slate-500"><span class="font-semibold text-slate-700">Elite dining:</span> at least {{ CITY_INDICATOR_THRESHOLDS.eliteDiningCount }} World’s 50 Best restaurant listings.</p>
+            </div>
+            <div class="h-px bg-slate-100" />
             <div class="space-y-1.5 text-xs">
               <a href="/about" class="block font-semibold text-lagoon-500 hover:underline">About</a>
               <a href="/terms" class="block font-semibold text-lagoon-500 hover:underline">Terms of use</a>
@@ -852,6 +901,11 @@ onMounted(() => {
                 </button>
               </div>
               <CardDescription class="text-sm leading-5">{{ selectedCity.details.tagline }}</CardDescription>
+              <div v-if="Object.values(cityIndicators(selectedCity)).some(Boolean)" class="flex flex-wrap gap-1.5">
+                <Badge v-if="cityIndicators(selectedCity).cheapHousing" variant="secondary" class="bg-emerald-50 text-emerald-700">Cheap housing</Badge>
+                <Badge v-if="cityIndicators(selectedCity).fastInternet" variant="secondary" class="bg-sky-50 text-sky-700">Fast internet</Badge>
+                <Badge v-if="cityIndicators(selectedCity).eliteDining" variant="secondary" class="bg-rose-50 text-rose-700">Elite dining</Badge>
+              </div>
             </CardHeader>
             <CardContent class="space-y-3 pb-4">
               <div class="grid grid-cols-2 gap-1.5">
@@ -998,6 +1052,28 @@ onMounted(() => {
           <!-- 1 · About -->
           <Accordion title="About" :default-open="true">
             <p class="text-sm leading-7 text-slate-600">{{ selectedCity.details.overview }}</p>
+            <div v-if="selectedCityIndicatorSummary && (selectedCityIndicatorSummary.restaurants || selectedCityIndicatorSummary.bars || cityIndicators(selectedCity).cheapHousing || cityIndicators(selectedCity).fastInternet)" class="mt-4 grid grid-cols-2 gap-2">
+              <div v-if="selectedCityIndicatorSummary.restaurants" class="rounded-xl bg-rose-50 p-3">
+                <p class="text-[10px] font-bold uppercase tracking-wide text-rose-600">Elite dining</p>
+                <p class="mt-1 text-sm font-extrabold text-slate-900">{{ selectedCityIndicatorSummary.restaurants }} restaurants</p>
+                <p class="mt-0.5 text-xs text-slate-500">World’s 50 Best listings</p>
+              </div>
+              <div v-if="selectedCityIndicatorSummary.bars" class="rounded-xl bg-violet-50 p-3">
+                <p class="text-[10px] font-bold uppercase tracking-wide text-violet-600">After dark</p>
+                <p class="mt-1 text-sm font-extrabold text-slate-900">{{ selectedCityIndicatorSummary.bars }} bars</p>
+                <p class="mt-0.5 text-xs text-slate-500">Curated bar listings</p>
+              </div>
+              <div class="rounded-xl bg-emerald-50 p-3">
+                <p class="text-[10px] font-bold uppercase tracking-wide text-emerald-600">Housing</p>
+                <p class="mt-1 text-sm font-extrabold text-slate-900">{{ selectedCityIndicatorSummary.housing }}</p>
+                <p class="mt-0.5 text-xs text-slate-500">Purchasing-power cost rank</p>
+              </div>
+              <div class="rounded-xl bg-sky-50 p-3">
+                <p class="text-[10px] font-bold uppercase tracking-wide text-sky-600">Internet</p>
+                <p class="mt-1 text-sm font-extrabold text-slate-900">{{ selectedCityIndicatorSummary.internet }}</p>
+                <p class="mt-0.5 text-xs text-slate-500">Download speed</p>
+              </div>
+            </div>
             <div v-if="selectedCity.details.knownFor?.length" class="mt-3 flex flex-wrap gap-2">
               <Badge v-for="tag in selectedCity.details.knownFor" :key="tag" variant="secondary">{{ tag }}</Badge>
             </div>
@@ -1211,66 +1287,111 @@ onMounted(() => {
             </div>
           </Accordion>
 
-          <Accordion title="Getting Around & Essentials">
-            <div class="space-y-4">
-              <div v-for="group in selectedEssentialGroups" :key="group.id" class="rounded-xl bg-slate-50 p-4">
-                <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-slate-400">{{ group.title }}</p>
-                <p class="mt-1 text-sm leading-6 text-slate-600">{{ group.summary }}</p>
-                <div class="mt-3 space-y-2">
+          <Accordion v-if="selectedRideAndDeliveryOptions.length" title="Ride Sharing & Food Delivery">
+            <div class="space-y-5">
+              <section v-if="selectedRideSharingOptions.length">
+                <p class="text-sm font-bold text-slate-900">Ride sharing</p>
+                <p class="mt-1 text-sm leading-6 text-slate-600">App-based rides are the simplest option for most trips, including getting between neighborhoods and handling airport transfers where pickup rules allow.</p>
+                <div class="mt-3 flex flex-wrap gap-2">
                   <a
-                    v-for="item in group.items"
+                    v-for="item in selectedRideSharingOptions"
                     :key="item.id"
                     :href="item.href"
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="flex items-start gap-3 rounded-lg bg-white px-3 py-2.5 transition hover:bg-lagoon-50"
+                    class="inline-flex items-center gap-1.5 rounded-lg bg-slate-50 px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-lagoon-50 hover:text-lagoon-600"
                   >
-                    <div class="min-w-0 flex-1">
-                      <p class="text-sm font-semibold text-lagoon-500">
-                        {{ item.label }}<span v-if="item.badge" class="ml-1.5 inline-block rounded bg-slate-100 px-1 py-0.5 text-[9px] font-bold uppercase tracking-wide text-slate-400">{{ item.badge }}</span>
-                      </p>
-                      <p v-if="item.description" class="mt-0.5 text-xs leading-4 text-slate-500">{{ item.description }}</p>
-                    </div>
-                    <span class="mt-0.5 shrink-0 text-slate-300">↗</span>
+                    {{ item.label }} <span class="text-slate-300">↗</span>
                   </a>
                 </div>
-              </div>
+              </section>
+              <section v-if="selectedFoodDeliveryOptions.length" class="border-t border-slate-100 pt-5">
+                <p class="text-sm font-bold text-slate-900">Food delivery</p>
+                <p class="mt-1 text-sm leading-6 text-slate-600">Delivery is useful for meals, groceries, pharmacy runs, and late arrivals. Coverage is generally strongest in central and residential neighborhoods.</p>
+                <div class="mt-3 flex flex-wrap gap-2">
+                  <a
+                    v-for="item in selectedFoodDeliveryOptions"
+                    :key="item.id"
+                    :href="item.href"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="inline-flex items-center gap-1.5 rounded-lg bg-slate-50 px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-lagoon-50 hover:text-lagoon-600"
+                  >
+                    {{ item.label }} <span class="text-slate-300">↗</span>
+                  </a>
+                </div>
+              </section>
             </div>
           </Accordion>
 
-          <Accordion title="Restaurants">
+          <Accordion v-if="selectedRestaurants.length" title="Restaurants">
             <div class="space-y-4">
-              <ul v-if="selectedRestaurants.length" class="space-y-3">
-                <li v-for="r in selectedRestaurants" :key="r.name" class="border-l-2 border-coral-400 pl-3">
-                  <a :href="r.link ?? mapsSearchUrl(`${r.name} ${selectedCity.name}`)" target="_blank" rel="noopener noreferrer" class="text-sm font-semibold text-slate-900 hover:text-lagoon-500">
-                    {{ r.name }}
+              <div class="flex items-end justify-between gap-4">
+                <div>
+                  <p class="text-sm font-bold text-slate-900">Where to eat</p>
+                  <p class="mt-0.5 text-xs text-slate-500">Local restaurant recommendations</p>
+                </div>
+                <span v-if="selectedRestaurants.length" class="shrink-0 rounded-full bg-amber-50 px-2.5 py-1 text-xs font-bold text-amber-700">{{ selectedRestaurants.length }} picks</span>
+              </div>
+              <ul v-if="selectedRestaurants.length" class="grid gap-2 sm:grid-cols-2" role="list">
+                <li v-for="r in selectedRestaurants" :key="r.name">
+                  <a
+                    :href="r.link ?? mapsSearchUrl(`${r.name} ${selectedCity.name}`)"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="group flex h-full gap-3 rounded-xl border border-slate-200 bg-white p-3 transition hover:border-amber-300 hover:bg-amber-50/40"
+                  >
+                    <span class="min-w-0 flex-1">
+                      <span class="flex items-start justify-between gap-2">
+                        <span class="text-sm font-bold leading-5 text-slate-900 group-hover:text-amber-800">{{ r.name }}</span>
+                        <span class="flex shrink-0 items-center gap-2">
+                          <Badge v-if="isWorlds50Best(r)" variant="secondary" class="bg-amber-50 text-[10px] text-amber-700">World’s 50 Best</Badge>
+                          <ArrowRight class="mt-0.5 h-3.5 w-3.5 text-slate-300 transition group-hover:translate-x-0.5 group-hover:text-amber-500" />
+                        </span>
+                      </span>
+                      <span v-if="r.note" class="mt-1 block text-xs leading-5 text-slate-500">{{ r.note }}</span>
+                    </span>
                   </a>
-                  <p v-if="r.note" class="text-xs text-slate-400 mt-0.5">{{ r.note }}</p>
                 </li>
               </ul>
-              <p v-else class="text-sm text-slate-400 italic">Restaurant picks coming soon.</p>
+              <div v-else class="rounded-xl border border-dashed border-slate-200 px-4 py-5 text-center">
+                <UtensilsCrossed class="mx-auto h-5 w-5 text-slate-300" />
+                <p class="mt-2 text-sm text-slate-500">No World’s 50 Best restaurant picks for this city yet.</p>
+              </div>
               <a
                 :href="mapsSearchUrl(`${selectedCity.name} restaurants`)"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="group flex items-center gap-1.5 text-xs font-semibold text-lagoon-500 hover:underline"
+                class="group inline-flex items-center gap-1.5 text-xs font-semibold text-lagoon-500 hover:underline"
               >
-                Open restaurant map <ArrowRight class="h-3 w-3 transition group-hover:translate-x-0.5" />
+                Browse all restaurants on the map <ArrowRight class="h-3 w-3 transition group-hover:translate-x-0.5" />
               </a>
             </div>
           </Accordion>
 
-          <Accordion title="Cafes">
+          <Accordion v-if="selectedCafes.length" title="Cafes">
             <div class="space-y-4">
-              <ul v-if="selectedCafes.length" class="space-y-3">
-                <li v-for="c in selectedCafes" :key="c.name" class="border-l-2 border-amber-400 pl-3">
-                  <a :href="c.link ?? mapsSearchUrl(`${c.name} ${selectedCity.name}`)" target="_blank" rel="noopener noreferrer" class="text-sm font-semibold text-slate-900 hover:text-lagoon-500">
-                    {{ c.name }}
+              <ul class="grid gap-2 sm:grid-cols-2" role="list">
+                <li v-for="c in selectedCafes" :key="c.name">
+                  <a
+                    :href="c.link ?? mapsSearchUrl(`${c.name} ${selectedCity.name}`)"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="group flex h-full rounded-xl border border-slate-200 bg-white p-3 transition hover:border-amber-300 hover:bg-amber-50/40"
+                  >
+                    <span class="min-w-0 flex-1">
+                      <span class="flex items-start justify-between gap-2">
+                        <span class="text-sm font-bold leading-5 text-slate-900 group-hover:text-amber-800">{{ c.name }}</span>
+                        <span class="flex shrink-0 items-center gap-2">
+                          <Badge v-if="isWorlds50Best(c)" variant="secondary" class="bg-amber-50 text-[10px] text-amber-700">World’s 50 Best</Badge>
+                          <ArrowRight class="mt-0.5 h-3.5 w-3.5 text-slate-300 transition group-hover:translate-x-0.5 group-hover:text-amber-500" />
+                        </span>
+                      </span>
+                      <span v-if="c.note" class="mt-1 block text-xs leading-5 text-slate-500">{{ c.note }}</span>
+                    </span>
                   </a>
-                  <p v-if="c.note" class="text-xs text-slate-400 mt-0.5">{{ c.note }}</p>
                 </li>
               </ul>
-              <p v-else class="text-sm text-slate-400 italic">Cafe picks coming soon.</p>
               <a
                 :href="mapsSearchUrl(`${selectedCity.name} cafes`)"
                 target="_blank"
@@ -1282,24 +1403,47 @@ onMounted(() => {
             </div>
           </Accordion>
 
-          <Accordion title="Bars">
+          <Accordion v-if="selectedBars.length" title="Bars">
             <div class="space-y-4">
-              <ul v-if="selectedBars.length" class="space-y-3">
-                <li v-for="b in selectedBars" :key="b.name" class="border-l-2 border-violet-400 pl-3">
-                  <a :href="b.link ?? mapsSearchUrl(`${b.name} ${selectedCity.name}`)" target="_blank" rel="noopener noreferrer" class="text-sm font-semibold text-slate-900 hover:text-lagoon-500">
-                    {{ b.name }}
+              <div class="flex items-end justify-between gap-4">
+                <div>
+                  <p class="text-sm font-bold text-slate-900">After dark</p>
+                  <p class="mt-0.5 text-xs text-slate-500">Cocktail and bar recommendations</p>
+                </div>
+                <span v-if="selectedBars.length" class="shrink-0 rounded-full bg-fuchsia-50 px-2.5 py-1 text-xs font-bold text-fuchsia-700">{{ selectedBars.length }} picks</span>
+              </div>
+              <ul v-if="selectedBars.length" class="grid gap-2 sm:grid-cols-2" role="list">
+                <li v-for="b in selectedBars" :key="b.name">
+                  <a
+                    :href="b.link ?? mapsSearchUrl(`${b.name} ${selectedCity.name}`)"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="group flex h-full gap-3 rounded-xl border border-slate-200 bg-white p-3 transition hover:border-fuchsia-300 hover:bg-fuchsia-50/40"
+                  >
+                    <span class="min-w-0 flex-1">
+                      <span class="flex items-start justify-between gap-2">
+                        <span class="text-sm font-bold leading-5 text-slate-900 group-hover:text-fuchsia-800">{{ b.name }}</span>
+                        <span class="flex shrink-0 items-center gap-2">
+                          <Badge v-if="isWorlds50Best(b)" variant="secondary" class="bg-fuchsia-50 text-[10px] text-fuchsia-700">World’s 50 Best</Badge>
+                          <ArrowRight class="mt-0.5 h-3.5 w-3.5 text-slate-300 transition group-hover:translate-x-0.5 group-hover:text-fuchsia-500" />
+                        </span>
+                      </span>
+                      <span v-if="b.note" class="mt-1 block text-xs leading-5 text-slate-500">{{ b.note }}</span>
+                    </span>
                   </a>
-                  <p v-if="b.note" class="text-xs text-slate-400 mt-0.5">{{ b.note }}</p>
                 </li>
               </ul>
-              <p v-else class="text-sm text-slate-400 italic">Bar picks coming soon.</p>
+              <div v-else class="rounded-xl border border-dashed border-slate-200 px-4 py-5 text-center">
+                <Wine class="mx-auto h-5 w-5 text-slate-300" />
+                <p class="mt-2 text-sm text-slate-500">No World’s 50 Best bar picks for this city yet.</p>
+              </div>
               <a
                 :href="mapsSearchUrl(`${selectedCity.name} cocktail bars`)"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="group flex items-center gap-1.5 text-xs font-semibold text-lagoon-500 hover:underline"
+                class="group inline-flex items-center gap-1.5 text-xs font-semibold text-lagoon-500 hover:underline"
               >
-                Open bar map <ArrowRight class="h-3 w-3 transition group-hover:translate-x-0.5" />
+                Browse all bars on the map <ArrowRight class="h-3 w-3 transition group-hover:translate-x-0.5" />
               </a>
             </div>
           </Accordion>

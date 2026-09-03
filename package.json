@@ -8,7 +8,8 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "airbnb:averages": "bun scripts/update-airbnb-averages.mjs"
+    "airbnb:averages": "bun scripts/update-airbnb-averages.mjs",
+    "50-best:update": "bun scripts/update-50-best.mjs --write"
   },
   "dependencies": {
     "@nuxtjs/tailwindcss": "^6.14.0",

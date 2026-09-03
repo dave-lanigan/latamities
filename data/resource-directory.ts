@@ -1,6 +1,6 @@
 import type { CityProfile } from './city-profiles'
 
-export type ResourceCategory = 'flights' | 'getting-around' | 'delivery' | 'money-cash' | 'connectivity'
+export type ResourceCategory = 'flights' | 'getting-around' | 'delivery' | 'money-cash'
 
 export interface ResourceLink {
   id: string
@@ -28,16 +28,14 @@ const categoryTitles: Record<ResourceCategory, string> = {
   flights: 'Flights',
   'getting-around': 'Getting around',
   delivery: 'Delivery',
-  'money-cash': 'Money & cash',
-  connectivity: 'eSIM & connectivity'
+  'money-cash': 'Money & cash'
 }
 
 const categorySummaries: Record<ResourceCategory, string> = {
   flights: 'Search and price discovery for getting into the city.',
   'getting-around': 'Use the strongest ride and taxi options first, then fall back to local cash or airport transport when app coverage is weaker.',
   delivery: 'Rappi dominates in many large cities, but local delivery density still varies a lot by neighborhood.',
-  'money-cash': 'Wise is still the cleanest default for transfers, while local QR and cash-offramp tools matter more in specific markets.',
-  connectivity: 'Keep one eSIM fallback ready for arrival day so you are not solving SIM issues from the airport.'
+  'money-cash': 'Wise is still the cleanest default for transfers, while local QR and cash-offramp tools matter more in specific markets.'
 }
 
 export const resourceProviders: Record<string, ResourceLink> = {
@@ -106,29 +104,12 @@ export const resourceProviders: Record<string, ResourceLink> = {
     description: 'Convert crypto to local cash via QR code — a practical option in markets where banking infrastructure is less accessible.',
     websiteUrl: 'https://www.offramp.xyz/',
     affiliateUrl: ''
-  },
-  esimio: {
-    id: 'esimio',
-    label: 'esim.io',
-    category: 'connectivity',
-    description: 'Buy and activate a data eSIM before you fly — you\'ll have a working number and data the moment you land, no SIM hunting required.',
-    websiteUrl: 'https://esim.io/',
-    affiliateUrl: ''
-  },
-  gigsky: {
-    id: 'gigsky',
-    label: 'GigSky',
-    category: 'connectivity',
-    description: 'Alternative eSIM provider — worth comparing plans as regional coverage and pricing vary between carriers.',
-    websiteUrl: 'https://www.gigsky.com/',
-    affiliateUrl: ''
   }
 }
 
 const basePlacements: Partial<Record<ResourceCategory, string[]>> = {
   flights: ['skyscanner'],
-  'money-cash': ['wise', 'moneygram'],
-  connectivity: ['esimio', 'gigsky']
+  'money-cash': ['wise', 'moneygram']
 }
 
 const countryPlacements: Partial<Record<string, Partial<Record<ResourceCategory, string[]>>>> = {
@@ -139,8 +120,7 @@ const countryPlacements: Partial<Record<string, Partial<Record<ResourceCategory,
   },
   Bolivia: {
     'getting-around': ['uber'],
-    'money-cash': ['wise', 'meru', 'moneygram'],
-    connectivity: ['esimio', 'gigsky']
+    'money-cash': ['wise', 'meru', 'moneygram']
   },
   Brazil: {
     'getting-around': ['uber'],
