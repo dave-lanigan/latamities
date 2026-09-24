@@ -1,12 +1,25 @@
+export interface AirbnbStayLink {
+  label: string
+  url: string
+  note?: string
+}
+
 export interface CityStayGuide {
   blurb: string
   buildings: string[]
+  // Airbnb affiliate stays — paste affiliate-tracked listing/search links here per city.
+  airbnbStays?: AirbnbStayLink[]
 }
 
 export const cityStayGuides: Partial<Record<string, CityStayGuide>> = {
   'buenos-aires': {
     blurb: 'Palermo and Colegiales are the easiest bases for first-time stays because cafes, gyms, and day-to-day errands all stack together. Recoleta works better if you want a more polished residential rhythm and easier access to classic apartment stock.',
-    buildings: ['Torre Quartier Palermo', 'Mirabilia Palermo', 'Palermo View Tower']
+    buildings: ['Torre Quartier Palermo', 'Mirabilia Palermo', 'Palermo View Tower'],
+    // Paste your Airbnb affiliate links here, e.g.:
+    // airbnbStays: [
+    //   { label: 'Bright 1BR in Palermo Soho', url: 'https://www.airbnb.com/rooms/XXXX?...affiliate', note: 'Walkable, fast wifi' }
+    // ]
+    airbnbStays: []
   },
   bogota: {
     blurb: 'Chapinero Alto and Zona G are the safest default picks for short and medium stays because they balance cafes, coworking, and quick rides. Parque 93 and Usaquen suit a quieter residential setup with more serviced-building inventory.',
@@ -34,6 +47,18 @@ export const cityStayGuides: Partial<Record<string, CityStayGuide>> = {
   },
   cochabamba: {
     blurb: 'Recoleta and Queru Queru tend to make the most sense for medium stays because they balance good apartment stock with easier day-to-day errands. El Prado is more central and social, but the best longer-stay buildings are usually a bit farther out.',
-    buildings: ['Torre Alameda', 'El Prado executive apartments', 'Queru Queru residential towers']
+    buildings: ['Condominio Juan de la Rosa']
+  },
+  tegucigalpa: {
+    blurb: 'Centro Histórico is the main tourist reference point, while Lomas del Guijarro is the more residential stay pattern and Colonia Palmira is the better fit for a livelier café-and-restaurant base. Use ride share for most cross-city movement rather than planning around long walks.',
+    buildings: []
+  },
+  quito: {
+    blurb: 'La Floresta and González Suárez are the easiest bases for a working month, with cafés, parks, and quick rides close by. Cumbayá is a calmer, sunnier valley option if you prefer a more residential rhythm over walkable city energy.',
+    buildings: ['Aquarela Quito', 'YOO Quito', 'Metropolitan Tower'],
+    airbnbStays: [
+      { label: 'Sunny 1BR in La Floresta', url: 'https://www.airbnb.com/rooms/00000001?example-affiliate', note: 'Walk to cafés, 300 Mbps wifi — example listing' },
+      { label: 'Studio with Andes view, González Suárez', url: 'https://www.airbnb.com/rooms/00000002?example-affiliate', note: 'Quiet building, workspace desk — example listing' }
+    ]
   }
 }

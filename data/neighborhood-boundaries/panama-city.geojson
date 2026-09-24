@@ -1,0 +1,87 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Casco Viejo",
+        "category": "Tourist",
+        "osmType": "way",
+        "osmId": 301268838,
+        "stroke": "#f59e0b",
+        "stroke-width": 2,
+        "stroke-opacity": 0.95,
+        "fill": "#f59e0b",
+        "fill-opacity": 0.16
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -79.5378393,
+              8.9544127
+            ],
+            [
+              -79.5377672,
+              8.9540307
+            ],
+            [
+              -79.537545,
+              8.954196
+            ],
+            [
+              -79.5376561,
+              8.9544551
+            ],
+            [
+              -79.5378393,
+              8.9544127
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Miraflores",
+        "category": "Residential",
+        "osmType": "way",
+        "osmId": 1095218311,
+        "stroke": "#0f766e",
+        "stroke-width": 2,
+        "stroke-opacity": 0.95,
+        "fill": "#0f766e",
+        "fill-opacity": 0.16
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -79.5911771,
+              9.0015574
+            ],
+            [
+              -79.5910565,
+              9.0013347
+            ],
+            [
+              -79.5906827,
+              9.0015247
+            ],
+            [
+              -79.5908098,
+              9.0017685
+            ],
+            [
+              -79.5911771,
+              9.0015574
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Jalatlaco",
+        "category": "Residential",
+        "osmType": "way",
+        "osmId": 1495317621,
+        "stroke": "#0f766e",
+        "stroke-width": 2,
+        "stroke-opacity": 0.95,
+        "fill": "#0f766e",
+        "fill-opacity": 0.16
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -96.7175358,
+              17.0674205
+            ],
+            [
+              -96.7175264,
+              17.0674195
+            ],
+            [
+              -96.7175171,
+              17.0674997
+            ],
+            [
+              -96.7175265,
+              17.0675007
+            ],
+            [
+              -96.7175358,
+              17.0674205
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

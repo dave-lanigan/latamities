@@ -50,7 +50,7 @@ export const cityFlightDestinations: Partial<Record<string, CityFlightDestinatio
   recife: { iata: 'REC', label: 'Recife' },
   merida: { iata: 'MID', label: 'Merida' },
   leon: { iata: 'BJX', label: 'Leon' },
-  tegucigalpa: { iata: 'TGU', label: 'Tegucigalpa' },
+  tegucigalpa: { iata: 'XPL', label: 'Palmerola / Tegucigalpa' },
   'guatemala-city': { iata: 'GUA', label: 'Guatemala City' },
   managua: { iata: 'MGA', label: 'Managua' },
   'san-pedro-sula': { iata: 'SAP', label: 'San Pedro Sula' },

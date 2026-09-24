@@ -1,4 +1,5 @@
 import type { CityProfile } from './city-profiles'
+import { cityServiceCoverage } from './city-services'
 
 export type ResourceCategory = 'flights' | 'getting-around' | 'delivery' | 'money-cash'
 
@@ -33,8 +34,8 @@ const categoryTitles: Record<ResourceCategory, string> = {
 
 const categorySummaries: Record<ResourceCategory, string> = {
   flights: 'Search and price discovery for getting into the city.',
-  'getting-around': 'Use the strongest ride and taxi options first, then fall back to local cash or airport transport when app coverage is weaker.',
-  delivery: 'Rappi dominates in many large cities, but local delivery density still varies a lot by neighborhood.',
+  'getting-around': 'Reported city coverage; vehicle options, driver availability, and airport pickup rules vary.',
+  delivery: 'Reported city coverage; restaurants and delivery areas depend on your address.',
   'money-cash': 'Wise is still the cleanest default for transfers, while local QR and cash-offramp tools matter more in specific markets.'
 }
 
@@ -52,16 +53,40 @@ export const resourceProviders: Record<string, ResourceLink> = {
     id: 'uber',
     label: 'Uber',
     category: 'getting-around',
-    description: 'Set up before you land — fixed-price rides from the airport mean no haggling on arrival day.',
+    description: 'Request rides in the app. Vehicle options and airport pickup rules vary by city.',
     websiteUrl: 'https://www.uber.com/',
     affiliateUrl: ''
   },
   didi: {
     id: 'didi',
-    label: 'Didi',
+    label: 'DiDi',
     category: 'getting-around',
-    description: 'Worth having as a backup — in some cities Didi has more drivers and lower prices than Uber.',
-    websiteUrl: 'https://www.didiglobal.com/',
+    description: 'Compare app-based ride options, prices, and pickup times.',
+    websiteUrl: 'https://web.didiglobal.com/',
+    affiliateUrl: ''
+  },
+  indrive: {
+    id: 'indrive',
+    label: 'inDrive',
+    category: 'getting-around',
+    description: 'Offer a fare and choose from available drivers in the app. Vehicle types vary by city, including mototaxis in Iquitos.',
+    websiteUrl: 'https://indrive.com/',
+    affiliateUrl: ''
+  },
+  yango: {
+    id: 'yango',
+    label: 'Yango',
+    category: 'getting-around',
+    description: 'Book app-based rides with local transport partners.',
+    websiteUrl: 'https://yango.com/',
+    affiliateUrl: ''
+  },
+  ubereats: {
+    id: 'ubereats',
+    label: 'Uber Eats',
+    category: 'delivery',
+    description: 'Order restaurant delivery; selection depends on your address.',
+    websiteUrl: 'https://www.ubereats.com/',
     affiliateUrl: ''
   },
   rappi: {
@@ -70,6 +95,14 @@ export const resourceProviders: Record<string, ResourceLink> = {
     category: 'delivery',
     description: 'The Latin American super-app for food, groceries, pharmacy, and errands. More useful than DoorDash or Deliveroo in most major cities here.',
     websiteUrl: 'https://www.rappi.com/',
+    affiliateUrl: ''
+  },
+  pedidosya: {
+    id: 'pedidosya',
+    label: 'PedidosYa',
+    category: 'delivery',
+    description: 'A delivery app for restaurant meals, groceries, and convenience orders.',
+    websiteUrl: 'https://www.pedidosya.com/',
     affiliateUrl: ''
   },
   wise: {
@@ -114,47 +147,31 @@ const basePlacements: Partial<Record<ResourceCategory, string[]>> = {
 
 const countryPlacements: Partial<Record<string, Partial<Record<ResourceCategory, string[]>>>> = {
   Argentina: {
-    'getting-around': ['uber', 'didi'],
-    delivery: ['rappi'],
     'money-cash': ['wise', 'offramp', 'moneygram']
   },
   Bolivia: {
-    'getting-around': ['uber'],
     'money-cash': ['wise', 'meru', 'moneygram']
   },
   Brazil: {
-    'getting-around': ['uber'],
-    delivery: ['rappi'],
     'money-cash': ['wise', 'offramp', 'moneygram']
   },
   Colombia: {
-    'getting-around': ['uber', 'didi'],
-    delivery: ['rappi'],
     'money-cash': ['wise', 'moneygram']
   },
   Mexico: {
-    'getting-around': ['uber', 'didi'],
-    delivery: ['rappi'],
     'money-cash': ['wise', 'moneygram']
   },
   Peru: {
-    'getting-around': ['uber', 'didi'],
-    delivery: ['rappi'],
     'money-cash': ['wise', 'offramp', 'moneygram']
+  },
+  Honduras: {
+    'money-cash': ['wise', 'moneygram']
   }
 }
 
 const cityPlacements: Partial<Record<string, Partial<Record<ResourceCategory, string[]>>>> = {
   'buenos-aires': {
     'money-cash': ['wise', 'offramp', 'moneygram']
-  },
-  medellin: {
-    'getting-around': ['uber', 'didi'],
-    delivery: ['rappi']
-  },
-  'mexico-city': {
-    'getting-around': ['uber', 'didi'],
-    delivery: ['rappi']
   },
   'la-paz': {
     'money-cash': ['wise', 'meru', 'moneygram']
@@ -169,13 +186,18 @@ const uniq = (values: string[]) => [...new Set(values)]
 export const resolveResourceGroups = (city: Pick<CityProfile, 'id' | 'country'>): ResourceGroup[] => {
   const countryGroup = countryPlacements[city.country] ?? {}
   const cityGroup = cityPlacements[city.id] ?? {}
+  const cityServiceIds = cityServiceCoverage
+    .filter((coverage) => coverage.cityIds.includes(city.id))
+    .map((coverage) => coverage.providerId)
 
   return (Object.keys(categoryTitles) as ResourceCategory[]).map((category) => {
-    const providerIds = uniq([
-      ...(basePlacements[category] ?? []),
-      ...(countryGroup[category] ?? []),
-      ...(cityGroup[category] ?? [])
-    ])
+    const providerIds = category === 'getting-around' || category === 'delivery'
+      ? uniq(cityServiceIds.filter((providerId) => resourceProviders[providerId]?.category === category))
+      : uniq([
+        ...(basePlacements[category] ?? []),
+        ...(countryGroup[category] ?? []),
+        ...(cityGroup[category] ?? [])
+      ])
 
     const items = providerIds
       .map((providerId) => resourceProviders[providerId])

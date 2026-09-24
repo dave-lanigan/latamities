@@ -1,0 +1,107 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Centro",
+        "category": "Tourist",
+        "osmType": "way",
+        "osmId": 1020609631,
+        "stroke": "#f59e0b",
+        "stroke-width": 2,
+        "stroke-opacity": 0.95,
+        "fill": "#f59e0b",
+        "fill-opacity": 0.16
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -73.2732526,
+              10.4616721
+            ],
+            [
+              -73.2732071,
+              10.4608067
+            ],
+            [
+              -73.2729864,
+              10.4607709
+            ],
+            [
+              -73.2728308,
+              10.4604486
+            ],
+            [
+              -73.272324,
+              10.4604247
+            ],
+            [
+              -73.2721177,
+              10.4606933
+            ],
+            [
+              -73.2722239,
+              10.4617914
+            ],
+            [
+              -73.2726639,
+              10.4619974
+            ],
+            [
+              -73.273113,
+              10.4616781
+            ],
+            [
+              -73.2732526,
+              10.4616721
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Novalito",
+        "category": "Residential",
+        "osmType": "way",
+        "osmId": 1433185339,
+        "stroke": "#0f766e",
+        "stroke-width": 2,
+        "stroke-opacity": 0.95,
+        "fill": "#0f766e",
+        "fill-opacity": 0.16
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -73.254714,
+              10.4884707
+            ],
+            [
+              -73.2541535,
+              10.4877137
+            ],
+            [
+              -73.2538761,
+              10.4879167
+            ],
+            [
+              -73.254435,
+              10.4883339
+            ],
+            [
+              -73.254714,
+              10.4884707
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

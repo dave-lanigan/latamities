@@ -8,6 +8,7 @@ import {
   CircleX,
   CloudRain,
   Filter,
+  Coffee,
   Globe2,
   Home,
   Info,
@@ -40,6 +41,7 @@ import cityProfiles, { type CityProfile, type MonthlyDatum } from '~~/data/city-
 import { countryFinanceProfiles } from '~~/data/country-finance'
 import countryData, { type CountryProfile } from '~~/data/country-profiles'
 import { cityStayGuides } from '~~/data/city-stay-guides'
+import { getHousingTier } from '~~/data/housing-tiers'
 import { resolveResourceGroups, type ResourceGroup, type ResolvedResourceLink } from '~~/data/resource-directory'
 
 const MAP_ID = 'main'
@@ -230,7 +232,6 @@ const filteredCities = computed(() =>
 const filteredCityIds = computed(() => new Set(filteredCities.value.map(city => city.id)))
 
 const CITY_INDICATOR_THRESHOLDS = {
-  cheapHousingRank: 20,
   fastInternetMbps: 150,
   eliteDiningCount: 5
 }
@@ -238,27 +239,31 @@ const CITY_INDICATOR_THRESHOLDS = {
 const world50RestaurantCount = (city: CityProfile) =>
   (city.details.restaurants ?? []).filter((restaurant) => isWorlds50Best(restaurant)).length
 
-const averageHousingRank = cityProfiles.reduce((total, city) => total + city.snapshot.purchasingPowerRank, 0) / cityProfiles.length
 const averageDownloadMbps = cityProfiles.reduce((total, city) => total + city.snapshot.internet.downloadMbps, 0) / cityProfiles.length
 const relativePercent = (value: number, average: number) => Math.round(Math.abs((value - average) / average) * 100)
 
-const cityIndicators = (city: CityProfile) => ({
-  cheapHousing: city.snapshot.purchasingPowerRank <= CITY_INDICATOR_THRESHOLDS.cheapHousingRank,
-  fastInternet: city.snapshot.internet.downloadMbps >= CITY_INDICATOR_THRESHOLDS.fastInternetMbps,
-  eliteDining: world50RestaurantCount(city) >= CITY_INDICATOR_THRESHOLDS.eliteDiningCount
-})
+const cityIndicators = (city: CityProfile) => {
+  const housingTier = getHousingTier(city)
+  return {
+    cheapHousing: housingTier.tier === 'cheap',
+    fastInternet: city.snapshot.internet.downloadMbps >= CITY_INDICATOR_THRESHOLDS.fastInternetMbps,
+    eliteDining: world50RestaurantCount(city) >= CITY_INDICATOR_THRESHOLDS.eliteDiningCount
+  }
+}
 
 const selectedCityIndicatorSummary = computed(() => {
   if (!selectedCity.value) return null
 
   const city = selectedCity.value
-  const housingPercent = relativePercent(city.snapshot.purchasingPowerRank, averageHousingRank)
+  const housingTier = getHousingTier(city)
   const internetPercent = relativePercent(city.snapshot.internet.downloadMbps, averageDownloadMbps)
 
   return {
     restaurants: world50RestaurantCount(city),
     bars: city.details.bars?.length ?? 0,
-    housing: `${housingPercent}% ${city.snapshot.purchasingPowerRank <= averageHousingRank ? 'below' : 'above'} average`,
+    housing: housingTier.hasData && housingTier.avgMonthlyUSD != null
+      ? `${housingTier.label} · $${housingTier.avgMonthlyUSD.toLocaleString('en-US')}/mo`
+      : housingTier.label,
     internet: `${internetPercent}% ${city.snapshot.internet.downloadMbps >= averageDownloadMbps ? 'above' : 'below'} average`
   }
 })
@@ -324,6 +329,57 @@ const selectedCityStayGuide = computed(() => {
 })
 const selectedCityOutdoorGuide = computed(() => selectedCity.value ? cityOutdoorGuides[selectedCity.value.id] ?? null : null)
 const selectedCityStayBuildings = computed(() => selectedCityStayGuide.value?.buildings ?? [])
+const selectedCityAirbnbStays = computed(() => selectedCityStayGuide.value?.airbnbStays ?? [])
+
+type CityMapOverlay = {
+  label: string
+  color: string
+  coordinates: [number, number]
+  x: number
+  y: number
+}
+
+type CityMapResponse = {
+  image: string
+  width: number
+  height: number
+  markers: CityMapOverlay[]
+}
+
+const cityMap = ref<CityMapResponse | null>(null)
+const cityMapRequestId = ref(0)
+const selectedMapOverlayLabel = ref<string | null>(null)
+const neighborhoodCategoryColors: Record<string, string> = {
+  Tourist: '#f59e0b',
+  Residential: '#0f766e',
+  Hip: '#f43f5e'
+}
+const displayMapLabel = (label: string) => label.split(':').pop()?.trim() ?? label
+const neighborhoodColor = (label: string) => neighborhoodCategoryColors[label.split(':')[0]]
+
+const loadCityMap = async () => {
+  if (!selectedCity.value) {
+    cityMap.value = null
+    return
+  }
+
+  const cityId = selectedCity.value.id
+  const requestId = ++cityMapRequestId.value
+
+  try {
+    const response = await $fetch<CityMapResponse>('/api/city-map', {
+      query: { city: cityId, width: 720, height: 360 }
+    })
+
+    if (requestId === cityMapRequestId.value) {
+      cityMap.value = response
+    }
+  } catch {
+    if (requestId === cityMapRequestId.value) {
+      cityMap.value = null
+    }
+  }
+}
 const selectedTemperatureByMonth = computed(() => selectedClimate.value?.temperatureByMonth ?? [])
 const selectedRainfallByMonth = computed(() => selectedClimate.value?.rainfallByMonth ?? [])
 const selectedRestaurants = computed(() => selectedCity.value?.details.restaurants ?? [])
@@ -632,6 +688,8 @@ watch(() => selectedCity.value?.id, () => {
   flightPriceQuote.value = null
   airbnbAverageError.value = ''
   airbnbAverage.value = null
+  selectedMapOverlayLabel.value = null
+  void loadCityMap()
 
   if (flightOriginCode.value && selectedCityFlightDestination.value) {
     void lookupFlightPrice()
@@ -663,6 +721,7 @@ const toggleCountries = () => {
 
 const fmtGdp = (b: number) => b >= 1000 ? `$${(b / 1000).toFixed(1)}T` : `$${b}B`
 const fmtPc = (n: number) => `$${n >= 1000 ? (n / 1000).toFixed(1) + 'k' : n}`
+const pppNominalRatio = (country: CountryProfile) => country.gdpPerCapitaPpp / country.gdpPerCapita
 
 useHead({
   title: 'Latamities',
@@ -679,7 +738,8 @@ onMounted(() => {
   <div class="fixed inset-0">
     <!-- Title – top left -->
     <div v-show="!isMobile || (!selectedCity && !isPanelOpen)" class="absolute left-4 top-4 z-40 pointer-events-none select-none">
-      <div class="rounded-2xl bg-white/80 backdrop-blur px-4 py-2 shadow-[0_4px_20px_rgba(15,23,42,0.15)]">
+      <div class="flex items-center gap-2 rounded-2xl bg-white/80 backdrop-blur px-4 py-2 shadow-[0_4px_20px_rgba(15,23,42,0.15)]">
+        <img src="/icon.svg" alt="LatAmities" width="40" height="40" class="h-10 w-10" />
         <span class="text-lg font-bold tracking-tight text-slate-800">LatAmities</span>
       </div>
     </div>
@@ -712,7 +772,7 @@ onMounted(() => {
             <div class="h-px bg-slate-100" />
             <div class="space-y-2">
               <p class="text-[10px] font-bold uppercase tracking-wide text-slate-400">City indicators</p>
-              <p class="text-xs leading-5 text-slate-500"><span class="font-semibold text-slate-700">Cheap housing:</span> purchasing-power rank {{ CITY_INDICATOR_THRESHOLDS.cheapHousingRank }} or better.</p>
+              <p class="text-xs leading-5 text-slate-500"><span class="font-semibold text-slate-700">Cheap housing:</span> bottom third of cities by trusted monthly Airbnb average.</p>
               <p class="text-xs leading-5 text-slate-500"><span class="font-semibold text-slate-700">Fast internet:</span> download speed of at least {{ CITY_INDICATOR_THRESHOLDS.fastInternetMbps }} Mbps.</p>
               <p class="text-xs leading-5 text-slate-500"><span class="font-semibold text-slate-700">Elite dining:</span> at least {{ CITY_INDICATOR_THRESHOLDS.eliteDiningCount }} World’s 50 Best restaurant listings.</p>
             </div>
@@ -1066,7 +1126,7 @@ onMounted(() => {
               <div class="rounded-xl bg-emerald-50 p-3">
                 <p class="text-[10px] font-bold uppercase tracking-wide text-emerald-600">Housing</p>
                 <p class="mt-1 text-sm font-extrabold text-slate-900">{{ selectedCityIndicatorSummary.housing }}</p>
-                <p class="mt-0.5 text-xs text-slate-500">Purchasing-power cost rank</p>
+                <p class="mt-0.5 text-xs text-slate-500">Monthly housing tier</p>
               </div>
               <div class="rounded-xl bg-sky-50 p-3">
                 <p class="text-[10px] font-bold uppercase tracking-wide text-sky-600">Internet</p>
@@ -1076,6 +1136,50 @@ onMounted(() => {
             </div>
             <div v-if="selectedCity.details.knownFor?.length" class="mt-3 flex flex-wrap gap-2">
               <Badge v-for="tag in selectedCity.details.knownFor" :key="tag" variant="secondary">{{ tag }}</Badge>
+            </div>
+            <div v-if="selectedCity.details.foodAndDrink" class="mt-4 overflow-hidden rounded-2xl border border-orange-100 bg-gradient-to-br from-orange-50 via-white to-amber-50">
+              <div class="border-b border-orange-100 px-4 py-3">
+                <div class="flex items-center gap-2 text-orange-700">
+                  <UtensilsCrossed class="h-4 w-4" />
+                  <p class="text-sm font-extrabold">Food & drink identity</p>
+                </div>
+              </div>
+              <div class="space-y-4 p-4">
+                <div>
+                  <p class="mb-2 text-[10px] font-bold uppercase tracking-[0.16em] text-orange-500">Local dishes</p>
+                  <div class="flex flex-wrap gap-2">
+                    <Badge v-for="food in selectedCity.details.foodAndDrink.foods" :key="food" class="bg-orange-100 text-orange-800">{{ food }}</Badge>
+                  </div>
+                </div>
+                <div class="grid gap-2 sm:grid-cols-2">
+                  <div class="rounded-xl bg-white/80 p-3 shadow-sm ring-1 ring-orange-100">
+                    <div class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wide text-amber-700">
+                      <Coffee class="h-3.5 w-3.5" /> Coffee
+                    </div>
+                    <p class="mt-1 text-xs leading-5 text-slate-600">{{ selectedCity.details.foodAndDrink.coffee }}</p>
+                  </div>
+                  <div class="rounded-xl bg-white/80 p-3 shadow-sm ring-1 ring-orange-100">
+                    <div class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wide text-rose-700">
+                      <Wine class="h-3.5 w-3.5" /> Wine
+                    </div>
+                    <p class="mt-1 text-xs leading-5 text-slate-600">{{ selectedCity.details.foodAndDrink.wine }}</p>
+                  </div>
+                </div>
+                <div class="grid gap-3 sm:grid-cols-2">
+                  <div>
+                    <p class="mb-2 text-[10px] font-bold uppercase tracking-[0.16em] text-violet-500">Local spirits</p>
+                    <div class="flex flex-wrap gap-2">
+                      <Badge v-for="spirit in selectedCity.details.foodAndDrink.spirits" :key="spirit" class="bg-violet-100 text-violet-800">{{ spirit }}</Badge>
+                    </div>
+                  </div>
+                  <div v-if="selectedCity.details.foodAndDrink.cocktails.length">
+                    <p class="mb-2 text-[10px] font-bold uppercase tracking-[0.16em] text-teal-500">Cocktails</p>
+                    <div class="flex flex-wrap gap-2">
+                      <Badge v-for="cocktail in selectedCity.details.foodAndDrink.cocktails" :key="cocktail" class="bg-teal-100 text-teal-800">{{ cocktail }}</Badge>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
             <div class="mt-4 space-y-3">
               <div class="rounded-xl bg-teal-50 p-3">
@@ -1104,19 +1208,51 @@ onMounted(() => {
                   </li>
                 </ul>
               </div>
+              <figure v-if="cityMap" class="relative overflow-hidden rounded-2xl bg-sand-50 ring-1 ring-slate-100" @click.self="selectedMapOverlayLabel = null">
+                <img
+                  :src="cityMap.image"
+                  :alt="`Map highlighting the central stay area around ${selectedCity.details.neighborhoods.slice(0, 2).join(' and ')} in ${selectedCity.name}`"
+                  class="aspect-[2/1] h-auto w-full object-cover"
+                  loading="lazy"
+                  @click="selectedMapOverlayLabel = null"
+                />
+                <template v-for="item in cityMap.markers" :key="item.label">
+                  <button
+                    type="button"
+                    class="absolute h-6 w-6 -translate-x-1/2 -translate-y-full"
+                    :style="{ left: `${item.x}%`, top: `${item.y}%` }"
+                    :aria-label="item.label"
+                    @click="selectedMapOverlayLabel = selectedMapOverlayLabel === item.label ? null : item.label"
+                  >
+                    <MapPin class="h-6 w-6 fill-white" :style="{ color: item.color }" />
+                  </button>
+                  <div
+                    v-if="selectedMapOverlayLabel === item.label"
+                    class="absolute z-10 -translate-x-1/2 -translate-y-[calc(100%+0.75rem)] whitespace-nowrap rounded-full bg-slate-900 px-3 py-1.5 text-xs font-bold text-white"
+                    :style="{ left: `${item.x}%`, top: `${item.y}%` }"
+                  >
+                    {{ displayMapLabel(item.label) }}
+                  </div>
+                </template>
+              </figure>
+              <p v-if="cityMap?.markers.length" class="text-xs leading-5 text-slate-500">
+                Verified boundary unavailable: {{ cityMap.markers.map(item => displayMapLabel(item.label)).join(', ') }}.
+              </p>
             </div>
           </Accordion>
 
-          <Accordion title="Neighborhoods & Stays">
+          <Accordion title="Neighborhoods & Stays" :default-open="true">
             <div class="space-y-4">
               <p class="text-sm leading-7 text-slate-600">{{ selectedCityStayGuide?.blurb }}</p>
               <div class="flex flex-wrap gap-2">
                 <span
                   v-for="n in selectedCity.details.neighborhoods"
                   :key="n"
-                  class="rounded-xl bg-sand-50 px-3 py-1.5 text-sm font-semibold text-slate-800"
+                  class="rounded-xl px-3 py-1.5 text-sm font-semibold"
+                  :class="neighborhoodColor(n) ? 'bg-white text-slate-900 ring-1' : 'bg-sand-50 text-slate-800'"
+                  :style="neighborhoodColor(n) ? { borderColor: neighborhoodColor(n), color: neighborhoodColor(n) } : {}"
                 >
-                  <MapPin class="mr-1 inline h-3 w-3 text-slate-400" />{{ n }}
+                  <MapPin class="mr-1 inline h-3 w-3" :style="neighborhoodColor(n) ? { color: neighborhoodColor(n) } : {}" />{{ n }}
                 </span>
               </div>
               <div class="rounded-xl bg-sand-50 px-4 py-3">
@@ -1164,10 +1300,32 @@ onMounted(() => {
                 </div>
                 <p v-else class="text-sm text-slate-400 italic">Building picks coming soon.</p>
               </div>
+              <div v-if="selectedCityAirbnbStays.length" class="border-l-2 border-rose-300 pl-4">
+                <div class="mb-3 flex items-baseline justify-between gap-3">
+                  <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-rose-500">Recommended Airbnb stays</p>
+                  <p class="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-300">Affiliate picks</p>
+                </div>
+                <ol class="space-y-3">
+                  <li v-for="(stay, index) in selectedCityAirbnbStays" :key="stay.url" class="group grid grid-cols-[1.75rem_1fr] gap-3">
+                    <span class="pt-1 text-rose-400">◆</span>
+                    <span class="min-w-0">
+                      <a
+                        :href="stay.url"
+                        target="_blank"
+                        rel="noopener noreferrer sponsored"
+                        class="inline-flex items-center gap-1 text-sm font-extrabold text-slate-900 decoration-rose-300 decoration-2 underline-offset-4 hover:text-rose-600 hover:underline"
+                      >
+                        {{ stay.label }} <ArrowRight class="h-3 w-3 text-rose-300 transition group-hover:translate-x-0.5 group-hover:text-rose-500" />
+                      </a>
+                      <span v-if="stay.note" class="mt-0.5 block text-xs leading-5 text-slate-500">{{ stay.note }}</span>
+                    </span>
+                  </li>
+                </ol>
+              </div>
             </div>
           </Accordion>
 
-          <Accordion title="Flights">
+          <Accordion title="Flights" :default-open="true">
             <div class="space-y-4">
               <div>
                 <p class="mb-2 text-[11px] font-bold uppercase tracking-[0.16em] text-slate-400">Airport transport</p>
@@ -1218,7 +1376,7 @@ onMounted(() => {
           </Accordion>
 
           <!-- 5 · Work -->
-          <Accordion title="Working Here">
+          <Accordion title="Working Here" :default-open="true">
             <div class="space-y-3">
               <div class="grid grid-cols-3 gap-2">
                 <div class="rounded-xl bg-sky-50 p-3 text-center">
@@ -1253,7 +1411,7 @@ onMounted(() => {
             </div>
           </Accordion>
 
-          <Accordion v-if="selectedCityAmenityProfile" title="Coworking & Gyms">
+          <Accordion v-if="selectedCityAmenityProfile" title="Coworking & Gyms" :default-open="true">
             <div class="space-y-4">
               <div class="rounded-xl bg-sand-50 p-3">
                 <div class="flex items-center justify-between gap-3">
@@ -1287,7 +1445,7 @@ onMounted(() => {
             </div>
           </Accordion>
 
-          <Accordion v-if="selectedRideAndDeliveryOptions.length" title="Ride Sharing & Food Delivery">
+          <Accordion v-if="selectedRideAndDeliveryOptions.length" title="Ride Sharing & Food Delivery" :default-open="true">
             <div class="space-y-5">
               <section v-if="selectedRideSharingOptions.length">
                 <p class="text-sm font-bold text-slate-900">Ride sharing</p>
@@ -1324,7 +1482,7 @@ onMounted(() => {
             </div>
           </Accordion>
 
-          <Accordion v-if="selectedRestaurants.length" title="Restaurants">
+          <Accordion v-if="selectedRestaurants.length" title="Restaurants" :default-open="true">
             <div class="space-y-4">
               <div class="flex items-end justify-between gap-4">
                 <div>
@@ -1369,7 +1527,7 @@ onMounted(() => {
             </div>
           </Accordion>
 
-          <Accordion v-if="selectedCafes.length" title="Cafes">
+          <Accordion v-if="selectedCafes.length" title="Cafes" :default-open="true">
             <div class="space-y-4">
               <ul class="grid gap-2 sm:grid-cols-2" role="list">
                 <li v-for="c in selectedCafes" :key="c.name">
@@ -1403,7 +1561,7 @@ onMounted(() => {
             </div>
           </Accordion>
 
-          <Accordion v-if="selectedBars.length" title="Bars">
+          <Accordion v-if="selectedBars.length" title="Bars" :default-open="true">
             <div class="space-y-4">
               <div class="flex items-end justify-between gap-4">
                 <div>
@@ -1449,7 +1607,7 @@ onMounted(() => {
           </Accordion>
 
           <!-- 7 · See & Do -->
-          <Accordion title="Top Attractions">
+          <Accordion title="Top Attractions" :default-open="true">
             <div class="space-y-3">
               <template v-if="selectedAttractions.length">
                 <ul class="space-y-1.5">
@@ -1473,7 +1631,7 @@ onMounted(() => {
           </Accordion>
 
           <!-- 8 · Climate & Nature -->
-          <Accordion title="Climate & Nature">
+          <Accordion title="Climate & Nature" :default-open="true">
             <div class="space-y-4">
               <div class="grid grid-cols-2 gap-2">
                 <button
@@ -1598,7 +1756,7 @@ onMounted(() => {
             </div>
           </Accordion>
 
-          <Accordion v-if="selectedCityExchangeSummary" title="Money & Exchange">
+          <Accordion v-if="selectedCityExchangeSummary" title="Money & Exchange" :default-open="true">
             <div class="space-y-3">
               <div class="rounded-xl bg-sand-50 p-3">
                 <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-slate-400">{{ selectedCityExchangeSummary?.label }}</p>
